@@ -104,3 +104,7 @@
 จากนั้นเลือก Passenger เป็น Stakeholder หลักเพื่อทำ Customer Journey Map และสรุป Action Items เพื่อใช้ต่อยอดออกแบบฟังก์ชันของระบบให้ตรงกับความต้องการผู้ใช้
 
 ---
+
+## 8) Activity Diagram ของ Stakeholder (Passenger)
+
+ไฟล์ real_time_driver_tracking.png แสดง Activity Diagram ของผู้โดยสารในมุมมองของ Stakeholder โดยเน้นฟังก์ชันที่ผู้เรียกรถต้องการเพิ่มเติม คือการติดตามตำแหน่งคนขับแบบเรียลไทม์ตลอดการเดินทาง
