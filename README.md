@@ -8,7 +8,8 @@
 
 ![hippo](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmZuazR0bHVmNjNiMXJldjNwM3ExbGh5Y2kyZXR3emMwbXkyM3FxciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cF7QqO5DYdft6/giphy.gif)
 
-- **ชื่อ-นามสกุล:** นายจักรพันธ์ แสงพรม
+
+**ชื่อ-นามสกุล:** นายจักรพันธ์ แสงพรม
   - **รหัสนักศึกษา:** 643020037-5
 - **ชื่อ-นามสกุล:** นายนราวิชญ์ คำปุทา
   - **รหัสนักศึกษา:** 663380017-6
