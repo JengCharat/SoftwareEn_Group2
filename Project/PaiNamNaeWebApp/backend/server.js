@@ -16,18 +16,28 @@ const ensureAdmin = require('./src/bootstrap/ensureAdmin');
 const app = express();
 promClient.collectDefaultMetrics();
 
-app.use(helmet());
-
+// CORS Configuration
 const corsOptions = {
-    origin: ['http://localhost:3001',
-        'https://amazing-crisp-9bcb1a.netlify.app'],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+  origin: '*',
+  credentials: false,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning'],
+  exposedHeaders: ['Content-Length', 'Content-Type'],
+  optionsSuccessStatus: 204,
+  preflightContinue: false,
 };
 
+// Handle preflight OPTIONS requests FIRST
+app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // เปิดรับ preflight สำหรับทุก route
+
+// Helmet - disable features that interfere with CORS
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  crossOriginOpenerPolicy: false,
+  crossOriginEmbedderPolicy: false,
+  contentSecurityPolicy: false,
+}));
 
 app.use(express.json());
 
@@ -75,7 +85,7 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 // --- Start Server ---
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 (async () => {
     try {
         await ensureAdmin();

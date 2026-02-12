@@ -5,15 +5,16 @@ export default defineNuxtPlugin(() => {
 
   const api = $fetch.create({
     baseURL: config.public.apiBase,
-    credentials: 'include',
+    credentials: 'omit',
 
     async onRequest({ options }) {
       const token = useCookie('token').value
+      options.headers = {
+        ...options.headers,
+        'ngrok-skip-browser-warning': 'true',
+      }
       if (token) {
-        options.headers = {
-          ...options.headers,
-          Authorization: `Bearer ${token}`,
-        }
+        options.headers.Authorization = `Bearer ${token}`
       }
     },
 

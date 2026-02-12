@@ -5,13 +5,13 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      apiBase: "http://localhost:3000/api/",
+      apiBase: "http://10.198.200.88:3002/api",
       // apiBase:"https://painamnae-backend.onrender.com/api/",
       googleMapsApiKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
     },
   },
   devServer: {
-    port: 3001,
+    port: 3003,
   },
   plugins: ["~/plugins/api.client.js"],
   app: {
