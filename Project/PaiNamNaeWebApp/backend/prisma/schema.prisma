@@ -211,6 +211,22 @@ model Booking {
     pickupLocation  Json          @db.Json
     dropoffLocation Json          @db.Json
     createdAt       DateTime      @default(now())
+    messages        Message[]     @relation("BookingMessages")
+}
+
+// ระบบข้อความแบบปลอดภัย - สื่อสารผ่าน booking โดยไม่เปิดเผยข้อมูลส่วนตัว
+model Message {
+    id         String    @id @default(cuid())
+    bookingId  String
+    booking    Booking   @relation("BookingMessages", fields: [bookingId], references: [id], onDelete: Cascade)
+    senderId   String // user id ของคนส่ง (driver หรือ passenger)
+    senderRole String // 'DRIVER' หรือ 'PASSENGER' - ระบุบทบาทของคนส่ง
+    content    String // เนื้อหาข้อความ
+    readAt     DateTime? // เวลาที่อ่านข้อความ
+    createdAt  DateTime  @default(now())
+
+    @@index([bookingId, createdAt])
+    @@index([senderId])
 }
 
 model ActivityLog {
