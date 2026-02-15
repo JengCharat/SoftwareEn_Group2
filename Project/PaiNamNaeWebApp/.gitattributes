@@ -1,0 +1,4 @@
+*.js filter=hidekey
+git config filter.hidekey.clean "sed 's/AIzaSy[0-9A-Za-z_-]*/YOUR_GOOGLE_KEY/g'"
+git config filter.hidekey.smudge cat
+git add --renormalize.
