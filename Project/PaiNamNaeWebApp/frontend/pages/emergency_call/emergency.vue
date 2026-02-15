@@ -19,14 +19,14 @@
   <div class="p-6 max-w-4xl mx-auto">
     <h1 class="text-2xl font-bold text-red-600 mb-6 underline">SOS EMERGENCY</h1>
     
-    <div class="grid grid-cols-2 gap-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
       <div class="flex flex-col items-center gap-6">
         <select v-model="selected" class="w-full p-3 border-2 border-gray-400 rounded">
           <option :value="null">เลือกเบอร์ฉุกเฉิน</option>
           <option v-for="c in contacts" :key="c.phone" :value="c">{{ c.name }}</option>
         </select>
 
-        <div v-if="selected" class="text-4xl font-mono font-bold text-red-600 border p-4 w-full text-center bg-gray-50">
+        <div v-if="selected" class="text-4xl font-mono font-bold text-red-600 border p-4 w-full max-w-[300px] text-center bg-gray-50">
           {{ selected.phone }}
         </div>
 
