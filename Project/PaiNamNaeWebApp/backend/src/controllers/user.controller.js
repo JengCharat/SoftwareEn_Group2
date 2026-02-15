@@ -220,6 +220,25 @@ const getLogs = asyncHandler(async (req, res) => {
     data: logs,
   });
 });
+
+const addBlacklist = asyncHandler(async (req, res) => {
+  const adminId = req.user.id;
+
+  const blacklist = await userService.AddBlacklistUser({
+    ...req.body,
+    addedByAdmin: adminId,
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "User added to blacklist successfully",
+    data: blacklist,
+  });
+});
+
+module.exports = {
+  addBlacklist,
+};
 module.exports = {
   adminListUsers,
   getAllUsers,
@@ -233,4 +252,5 @@ module.exports = {
   setUserStatus,
 
   getLogs,
+  addBlacklist,
 };

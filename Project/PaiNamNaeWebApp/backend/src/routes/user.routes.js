@@ -101,4 +101,14 @@ router.put(
   validate({ body: updateMyProfileSchema }),
   userController.updateCurrentUserProfile,
 );
+
+// POST /api/users/blacklist
+router.post(
+  "/blacklist",
+
+  protect,
+  requireAdmin,
+  // validate({ body: addBlacklistSchema }),
+  userController.addBlacklist,
+);
 module.exports = router;

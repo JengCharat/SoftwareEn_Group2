@@ -263,6 +263,31 @@ const validateBlacklist = async (nationalIdNumber) => {
     );
   }
 };
+
+const AddBlacklistUser = async (payload) => {
+  const { nationalIdNumber, userId, reason, addedByAdmin, expiresAt } = payload;
+  if (!nationalIdNumber) {
+    throw new ApiError(400, "nationalIdNumber is required");
+  }
+  const existing = await prisma.blacklist.findUnique({
+    where: {
+      nationalIdNumber,
+    },
+  });
+  if (existing) {
+    throw new ApiError(409, "This national ID is already blacklisted");
+  }
+  const blacklist = await prisma.blacklist.create({
+    data: {
+      nationalIdNumber,
+      userId: userId || null,
+      reason: reason || null,
+      addedByAdmin: addedByAdmin || null,
+      expiresAt: expiresAt ? new Date(expiresAt) : null,
+    },
+  });
+  return blacklist;
+};
 module.exports = {
   searchUsers,
   getAllUsers,
@@ -277,4 +302,5 @@ module.exports = {
   getUserPublicById,
 
   validateBlacklist,
+  AddBlacklistUser,
 };
