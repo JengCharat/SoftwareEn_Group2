@@ -9,6 +9,12 @@
                         </div>
                     </NuxtLink>
 
+                    <div class="flex items-center space-x-4">
+                    
+                        <div v-if="user" class="flex items-center">
+                            <SOSButton />
+                        </div>
+
                     <nav class="items-center hidden space-x-6 md:flex lg:space-x-8">
                         <NuxtLink to="/findTrip"
                             class="font-medium text-gray-600 transition-colors duration-200 hover:text-blue-700"
@@ -62,9 +68,6 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="mr-2 border-r pr-2 border-gray-200">
-                                    <SOSButton />
-                                </div>
                         <div v-if="!token" class="flex items-center space-x-3 ">
                             <NuxtLink to="/register"
                                 class="text-gray-600 transition-colors duration-200 hover:text-blue-600">สมัครสมาชิก
@@ -269,6 +272,7 @@
                             </svg>
                         </button>
                     </div>
+                </div>
                 </div>
 
                 <!-- ==================== Mobile Menu ==================== -->
