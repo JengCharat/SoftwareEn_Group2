@@ -1,10 +1,10 @@
 <template>
   <div>
     <AdminHeader />
-    <AdminSidebar />
+    <AdminSidebar />  
 
-    <!-- Main Content -->
-    <main id="main-content" class="main-content mt-16 ml-0 lg:ml-[280px] p-6">
+    <!-- <!-- Main Content --> -->
+    <main id="main-content" class="main-content mt-16 ml-0 lg:ml-70 p-6">
 
       <h1 class="text-2xl font-semibold mb-6">Activity Logs</h1>
 
@@ -84,23 +84,27 @@
     </main>
 
     <!-- Mobile Overlay -->
-    <div
-      id="overlay"
-      class="fixed inset-0 z-40 hidden bg-black bg-opacity-50 lg:hidden"
-      @click="closeMobileSidebar"
-    ></div>
+  <!--   <div -->
+  <!--     id="overlay" -->
+  <!--     class="fixed inset-0 z-40 hidden bg-black bg-opacity-50 lg:hidden" -->
+  <!--     @click="closeMobileSidebar" -->
+  <!--   ></div> -->
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useCookie } from '#app'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
+import { useRuntimeConfig, useCookie } from '#app'
 import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
 import AdminHeader from '~/components/admin/AdminHeader.vue'
 import AdminSidebar from '~/components/admin/AdminSidebar.vue'
+import ConfirmModal from '~/components/ConfirmModal.vue'
 import { useToast } from '~/composables/useToast'
+
+
+
 
 dayjs.locale('th')
 dayjs.extend(buddhistEra)
@@ -241,6 +245,15 @@ function defineGlobalScripts() {
 
   window.addEventListener('resize', window.__adminResizeHandler__)
 }
+useHead({
+  title: 'TailAdmin Dashboard',
+  link: [
+    { 
+      rel: 'stylesheet', 
+      href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' 
+    }
+  ]
+})
 
 function cleanupGlobalScripts() {
   window.removeEventListener('resize', window.__adminResizeHandler__ || (() => {}))
