@@ -57,7 +57,7 @@ const getMyUser = asyncHandler(async (req, res) => {
 });
 const createUser = asyncHandler(async (req, res) => {
   const userData = req.body;
-
+  await userService.validateBlacklist(userData.nationalIdNumber);
   if (
     !req.files ||
     !req.files.nationalIdPhotoUrl ||

@@ -89,6 +89,7 @@ model User {
     createdRoutes           Route[]             @relation("DriverRoutes")
     bookings                Booking[]           @relation("PassengerBookings")
     activityLogs            ActivityLog[]
+    blacklists              Blacklist[]
 
     @@index([role])
     @@index([isActive])
@@ -246,4 +247,20 @@ model ActivityLog {
     @@index([userId])
     @@index([createdAt])
     @@index([endpoint])
+}
+
+model Blacklist {
+    id String @id @default(cuid())
+
+    nationalIdNumber String  @unique
+    userId           String?
+
+    user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+    reason       String?
+    addedByAdmin String?
+    expiresAt    DateTime?
+    createdAt    DateTime  @default(now())
+
+    @@index([userId])
 }

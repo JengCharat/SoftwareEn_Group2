@@ -248,7 +248,21 @@ const deleteUser = async (id) => {
 //     const { password, ...safeUser } = updatedUser;
 //     return safeUser;
 // };
+const validateBlacklist = async (nationalIdNumber) => {
+  const blacklist = await prisma.blacklist.findFirst({
+    where: {
+      nationalIdNumber,
+      OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+    },
+  });
 
+  if (blacklist) {
+    throw new ApiError(
+      403,
+      "You are not allowed to register. Please contact support.",
+    );
+  }
+};
 module.exports = {
   searchUsers,
   getAllUsers,
@@ -261,4 +275,6 @@ module.exports = {
   deleteUser,
   updateUserProfile,
   getUserPublicById,
+
+  validateBlacklist,
 };
