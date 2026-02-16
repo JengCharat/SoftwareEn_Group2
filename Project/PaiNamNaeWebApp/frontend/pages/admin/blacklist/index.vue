@@ -16,6 +16,7 @@
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
 
+          <!-- National ID -->
           <div>
             <label class="block mb-1 text-sm font-medium text-gray-700">
               เลขบัตรประชาชน *
@@ -28,6 +29,7 @@
             />
           </div>
 
+          <!-- Reason -->
           <div>
             <label class="block mb-1 text-sm font-medium text-gray-700">
               เหตุผล
@@ -40,9 +42,10 @@
             />
           </div>
 
+          <!-- Expire -->
           <div>
             <label class="block mb-1 text-sm font-medium text-gray-700">
-              วันหมดอายุ
+              วันหมดอายุ *
             </label>
             <input
               v-model="blacklistForm.expiresAt"
@@ -63,7 +66,6 @@
           </button>
         </div>
       </div>
-
 
 
       <!-- ======================
@@ -90,6 +92,7 @@
               <th class="p-2 border">Reason</th>
               <th class="p-2 border">Expire</th>
               <th class="p-2 border">Created</th>
+              <th class="p-2 border">Action</th>
             </tr>
           </thead>
 
@@ -119,10 +122,19 @@
               <td class="p-2 border">
                 {{ new Date(item.createdAt).toLocaleString() }}
               </td>
+
+              <td class="p-2 border text-center">
+                <button
+                  @click="deleteBlacklist(item.id)"
+                  class="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+                >
+                  ลบ
+                </button>
+              </td>
             </tr>
 
             <tr v-if="blacklistAll.length === 0">
-              <td colspan="6" class="p-4 text-center text-gray-400">
+              <td colspan="7" class="p-4 text-center text-gray-400">
                 ไม่มีข้อมูล
               </td>
             </tr>
@@ -135,7 +147,6 @@
 
     </main>
 
-    <!-- Mobile Overlay -->
     <div
       id="overlay"
       class="fixed inset-0 z-40 hidden bg-black bg-opacity-50 lg:hidden"
@@ -146,7 +157,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, onUnmounted } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { useRuntimeConfig, useCookie } from '#app'
 import AdminHeader from '~/components/admin/AdminHeader.vue'
 import AdminSidebar from '~/components/admin/AdminSidebar.vue'
@@ -155,10 +166,6 @@ import { useToast } from '~/composables/useToast'
 definePageMeta({ middleware: ['admin-auth'] })
 
 const { toast } = useToast()
-
-/* ======================
-   STATE
-====================== */
 
 const blacklistAll = ref([])
 const isLoading = ref(false)
@@ -173,61 +180,52 @@ const blacklistForm = reactive({
 const isSubmitting = ref(false)
 
 
-
 /* ======================
-   FETCH LIST
+   FETCH
 ====================== */
 
 async function fetchBlacklistUser() {
   isLoading.value = true
-  loadError.value = ''
 
   try {
     const config = useRuntimeConfig()
-
     const token =
       useCookie('token').value ||
-      (process.client ? localStorage.getItem('token') : '')
+      localStorage.getItem('token')
 
     const res = await fetch(
       `${config.public.apiBase}/users/admin/blacklistUserlist`,
       {
         headers: {
           Accept: 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
-        },
-        credentials: 'include'
+          Authorization: `Bearer ${token}`
+        }
       }
     )
 
     const body = await res.json()
 
-    if (!res.ok) {
-      throw new Error(body?.message || `Request failed: ${res.status}`)
-    }
+    if (!res.ok) throw new Error(body.message)
 
-    blacklistAll.value = Array.isArray(body?.data) ? body.data : []
+    blacklistAll.value = body.data || []
 
   } catch (err) {
-    console.error(err)
-    loadError.value = err?.message || 'ไม่สามารถโหลดข้อมูลได้'
-    blacklistAll.value = []
-    toast.error('Error', loadError.value)
+    loadError.value = err.message
+    toast.error('Error', err.message)
   } finally {
     isLoading.value = false
   }
 }
 
 
-
 /* ======================
-   SUBMIT
+   ADD
 ====================== */
 
 async function submitBlacklist() {
 
-  if (!blacklistForm.nationalIdNumber) {
-    toast.error('กรอกข้อมูลไม่ครบ', 'กรุณาใส่เลขบัตรประชาชน')
+  if (!blacklistForm.nationalIdNumber || !blacklistForm.expiresAt) {
+    toast.error('กรอกข้อมูลไม่ครบ', 'กรุณากรอก National ID และ Expire Date')
     return
   }
 
@@ -235,25 +233,22 @@ async function submitBlacklist() {
 
   try {
     const config = useRuntimeConfig()
-
     const token =
       useCookie('token').value ||
-      (process.client ? localStorage.getItem('token') : '')
+      localStorage.getItem('token')
 
-     await fetch(`${config.public.apiBase}/users/blacklist`, {
+    const res = await fetch(`${config.public.apiBase}/users/blacklist`, {
       method: 'POST',
-      baseURL: config.public.apiBase,
       headers: {
-        Accept: 'application/json',
-         'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {})
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
       },
-       body: JSON.stringify({
-        nationalIdNumber: blacklistForm.nationalIdNumber,
-        reason: blacklistForm.reason || undefined,
-        expiresAt: blacklistForm.expiresAt || undefined
-      })
+      body: JSON.stringify(blacklistForm)
     })
+
+    const body = await res.json()
+
+    if (!res.ok) throw new Error(body.message)
 
     toast.success('สำเร็จ', 'เพิ่ม Blacklist เรียบร้อย')
 
@@ -261,20 +256,55 @@ async function submitBlacklist() {
     blacklistForm.reason = ''
     blacklistForm.expiresAt = ''
 
-    await fetchBlacklistUser()
+    fetchBlacklistUser()
 
   } catch (err) {
-    console.error(err)
-    toast.error(
-      'เกิดข้อผิดพลาด',
-      err?.data?.message || err?.message || 'ไม่สามารถเพิ่ม blacklist ได้'
-    )
+    toast.error('Error', err.message)
   } finally {
     isSubmitting.value = false
   }
 }
 
 
+/* ======================
+   DELETE
+====================== */
+
+async function deleteBlacklist(id) {
+
+  if (!confirm('ต้องการลบ blacklist นี้ใช่หรือไม่ ?')) return
+
+  try {
+    const config = useRuntimeConfig()
+
+    const token =
+      useCookie('token').value ||
+      localStorage.getItem('token')
+
+    const res = await fetch(
+      `${config.public.apiBase}/blacklist/${id}`,   
+      {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    const body = await res.json()
+
+    if (!res.ok) throw new Error(body.message)
+
+    toast.success('สำเร็จ', 'ลบเรียบร้อย')
+
+    fetchBlacklistUser()
+
+  } catch (err) {
+    console.error(err)
+    toast.error('Error', err.message)
+  }
+}
 
 /* ======================
    SIDEBAR
@@ -288,47 +318,13 @@ function closeMobileSidebar() {
   overlay.classList.add('hidden')
 }
 
-function defineGlobalScripts() {
-
-  window.toggleSidebar = function () {
-    const sidebar = document.getElementById('sidebar')
-    const mainContent = document.getElementById('main-content')
-
-    if (!sidebar || !mainContent) return
-
-    sidebar.classList.toggle('collapsed')
-
-    mainContent.style.marginLeft =
-      sidebar.classList.contains('collapsed') ? '80px' : '280px'
-  }
-
-  window.toggleMobileSidebar = function () {
-    const sidebar = document.getElementById('sidebar')
-    const overlay = document.getElementById('overlay')
-
-    if (!sidebar || !overlay) return
-
-    sidebar.classList.toggle('mobile-open')
-    overlay.classList.toggle('hidden')
-  }
-
-}
 useHead({
-  title: 'TailAdmin Dashboard',
-  link: [
-    { 
-      rel: 'stylesheet', 
-      href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' 
-    }
-  ]
+    title: 'TailAdmin Dashboard',
+    link: [{ rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' }]
 })
 onMounted(() => {
-  defineGlobalScripts()
   fetchBlacklistUser()
 })
-
-onUnmounted(() => {})
-
 </script>
 
 <style>

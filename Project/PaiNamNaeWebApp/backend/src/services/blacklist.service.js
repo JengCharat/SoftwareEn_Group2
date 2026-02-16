@@ -55,3 +55,23 @@ export const checkUserAccess = async (userId) => {
     where: { id: blacklist.id },
   });
 };
+
+export const deleteBlacklist = async (id) => {
+  const blacklist = await prisma.blacklist.findUnique({
+    where: { id },
+  });
+
+  if (!blacklist) {
+    throw new ApiError(404, "Blacklist not found");
+  }
+
+  await prisma.blacklist.delete({
+    where: { id },
+  });
+
+  // reactivate user
+  await prisma.user.updateMany({
+    where: { nationalIdNumber: blacklist.nationalIdNumber },
+    data: { isActive: true },
+  });
+};
