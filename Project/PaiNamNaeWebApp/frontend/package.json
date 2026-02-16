@@ -4,11 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-<<<<<<< HEAD
     "dev": "npx nuxt dev --host 0.0.0.0 --port 3009",
-=======
-    "dev": "npx nuxt dev --host 0.0.0.0 --port 3013",
->>>>>>> c52d1e1febf39086395f1122ddb52f4292e30dca
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
