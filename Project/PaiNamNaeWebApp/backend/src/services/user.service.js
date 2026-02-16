@@ -288,6 +288,25 @@ const AddBlacklistUser = async (payload) => {
   });
   return blacklist;
 };
+
+const getAllblacklistUser = async () => {
+  const blacklists = await prisma.blacklist.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          email: true,
+          username: true,
+        },
+      },
+    },
+  });
+
+  return blacklists;
+};
 module.exports = {
   searchUsers,
   getAllUsers,
@@ -303,4 +322,5 @@ module.exports = {
 
   validateBlacklist,
   AddBlacklistUser,
+  getAllblacklistUser,
 };

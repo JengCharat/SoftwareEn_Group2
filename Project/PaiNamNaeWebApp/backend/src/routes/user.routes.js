@@ -24,6 +24,12 @@ router.get(
   userController.adminListUsers,
 );
 
+router.get(
+  "/admin/blacklistUserlist",
+  protect,
+  requireAdmin,
+  userController.getBlacklistUser,
+);
 //get /api/users/admin/logs
 router.get("/admin/logs", protect, requireAdmin, userController.getLogs);
 // PUT /api/users/admin/:id
@@ -111,4 +117,7 @@ router.post(
   // validate({ body: addBlacklistSchema }),
   userController.addBlacklist,
 );
+
+//get /api/users/admin/blacklistUserlist
+
 module.exports = router;
