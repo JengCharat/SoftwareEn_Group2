@@ -14,6 +14,12 @@
                             โปรไฟล์ของฉัน
                         </NuxtLink>
                     </li>
+                    <li>
+                        <NuxtLink to="/profile/manage_contacts" class="block px-4 py-2 text-sm rounded-md"
+                            :class="isActive('/profile/manage_contacts') ? 'font-semibold text-blue-600 bg-blue-100' : 'text-gray-700 hover:bg-gray-100'">
+                            จัดการเบอร์ติดต่อฉุกเฉิน
+                        </NuxtLink>
+                    </li>
                 </ul>
             </div>
             <div>
