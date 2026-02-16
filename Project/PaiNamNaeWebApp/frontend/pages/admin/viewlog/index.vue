@@ -26,10 +26,9 @@
               <th class="text-left p-2">Endpoint</th>
               <th class="text-left p-2">Status</th>
               <th class="text-left p-2">IP</th>
+              <th class="text-left p-2">UserAgent</th>
+
               <th class="text-left p-2">Time</th>
-              <th class="text-left p-2">deviceType</th>
-              <th class="text-left p-2">os</th>
-              <th class="text-left p-2">browser</th>
             </tr>
           </thead>
 
@@ -69,20 +68,12 @@
                 {{ log.ipAddress || '-' }}
               </td>
 
+              <td class="p-2">
+                {{ log.userAgent || '-' }}
+              </td>
+
               <td class="p-2 whitespace-nowrap">
                 {{ formatDate(log.createdAt) }}
-              </td>
-
-              <td class="p-2">
-                {{ log.deviceType || '-' }}
-              </td>
-
-              <td class="p-2">
-                {{ log.os || '-' }}
-              </td>
-
-              <td class="p-2">
-                {{ log.browser || '-' }}
               </td>
 
 

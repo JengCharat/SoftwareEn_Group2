@@ -2,12 +2,15 @@ import prisma from "../utils/prisma.js";
 import { UAParser } from "ua-parser-js";
 
 export const activityLogger = (req, res, next) => {
+  const startTime = Date.now();
+
   res.on("finish", async () => {
     try {
       const userAgent = req.headers["user-agent"] || "";
-
       const parser = new UAParser(userAgent);
-      const result = parser.getResult();
+      const ua = parser.getResult();
+
+      const duration = Date.now() - startTime;
 
       await prisma.activityLog.create({
         data: {
@@ -15,12 +18,9 @@ export const activityLogger = (req, res, next) => {
           method: req.method,
           endpoint: req.originalUrl,
           statusCode: res.statusCode,
+
           ipAddress: req.ip,
           userAgent: userAgent,
-
-          deviceType: result.device.type || "desktop",
-          os: result.os.name || null,
-          browser: result.browser.name || null,
         },
       });
     } catch (err) {
