@@ -286,6 +286,14 @@ const AddBlacklistUser = async (payload) => {
       expiresAt: expiresAt ? new Date(expiresAt) : null,
     },
   });
+  await prisma.user.update({
+    where: {
+      nationalIdNumber: nationalIdNumber,
+    },
+    data: {
+      isActive: false,
+    },
+  });
   return blacklist;
 };
 
