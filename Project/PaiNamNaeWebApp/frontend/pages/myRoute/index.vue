@@ -349,6 +349,7 @@
                                     </template>
 
                                     <button v-else-if="trip.status === 'confirmed'"
+                                        @click.stop="openChat(trip.id)"
                                         class="px-4 py-2 text-sm text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700">
                                         แชทกับผู้โดยสาร
                                     </button>
@@ -392,12 +393,14 @@ import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
 import ConfirmModal from '~/components/ConfirmModal.vue'
 import { useToast } from '~/composables/useToast'
+import { useRouter } from 'vue-router'
 
 dayjs.locale('th')
 dayjs.extend(buddhistEra)
 
 const { $api } = useNuxtApp()
 const { toast } = useToast()
+const router = useRouter()
 
 // --- State Management ---
 const activeTab = ref('pending')
@@ -789,6 +792,11 @@ const openConfirmModal = (trip, action) => {
 const closeConfirmModal = () => {
     isModalVisible.value = false
     tripToAction.value = null
+}
+
+// เปิดห้องแชทกับผู้โดยสาร
+const openChat = (bookingId) => {
+    router.push(`/chat/${bookingId}`)
 }
 
 const handleConfirmAction = async () => {

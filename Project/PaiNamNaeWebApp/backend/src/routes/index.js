@@ -7,6 +7,7 @@ const driverVerifRoutes = require('./driverVerification.routes');
 const bookingRoutes = require('./booking.routes');
 const notificationRoutes = require('./notification.routes')
 const mapRoutes = require('./maps.routes')
+const messageRoutes = require('./message.routes')
 
 const router = express.Router();
 
@@ -16,6 +17,8 @@ router.use('/vehicles', vehicleRoutes);
 router.use('/routes', routeRoutes);
 router.use('/driver-verifications', driverVerifRoutes);
 router.use('/bookings', bookingRoutes);
+// Message routes - nested under /bookings/:bookingId
+router.use('/bookings/:bookingId', messageRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/api/maps', mapRoutes);
 
