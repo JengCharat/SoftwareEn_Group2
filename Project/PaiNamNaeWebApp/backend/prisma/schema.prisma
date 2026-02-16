@@ -241,8 +241,10 @@ model ActivityLog {
     statusCode Int?
     ipAddress  String?
     userAgent  String?
-
-    createdAt DateTime @default(now())
+    deviceType String?
+    os         String?
+    browser    String?
+    createdAt  DateTime @default(now())
 
     @@index([userId])
     @@index([createdAt])
