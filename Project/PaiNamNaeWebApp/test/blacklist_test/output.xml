@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.14.0 on darwin)" generated="2026-02-17T17:06:47.923162" rpa="false" schemaversion="5">
+<suite id="s1" name="Addblacklist" source="/Users/jengcharat/Desktop/SoftwareEn_Group2/Project/PaiNamNaeWebApp/test/blacklist_test/addblacklist.robot">
+<test id="s1-t1" name="Addblacklist" line="6">
+<kw name="Open Browser To Login Page" owner="resource">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:06:48.056933" level="INFO">Opening browser 'Chrome' to base url 'http://10.198.200.88:3013/login'.</msg>
+<arg>${LOGIN URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-02-17T17:06:48.056789" elapsed="12.133069"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-02-17T17:07:00.191862" elapsed="0.323099"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-02-17T17:07:00.515105" elapsed="0.000853"/>
+</kw>
+<kw name="Login Page Should Be Open" owner="resource">
+<kw name="Title Should Be" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:07:00.521328" level="INFO">Page title is 'ไปนำแหน่'.</msg>
+<arg>ไปนำแหน่</arg>
+<doc>Verifies that the current page title equals ``title``.</doc>
+<status status="PASS" start="2026-02-17T17:07:00.516456" elapsed="0.005136"/>
+</kw>
+<status status="PASS" start="2026-02-17T17:07:00.516177" elapsed="0.005780"/>
+</kw>
+<status status="PASS" start="2026-02-17T17:06:48.056367" elapsed="12.466252"/>
+</kw>
+<kw name="Logout" owner="resource">
+<kw name="Delete All Cookies" owner="SeleniumLibrary">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" start="2026-02-17T17:07:00.523701" elapsed="0.100230"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:07:00.624412" level="INFO">Opening url 'http://10.198.200.88:3013/login'</msg>
+<arg>${LOGIN_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-17T17:07:00.624059" elapsed="0.809173"/>
+</kw>
+<status status="PASS" start="2026-02-17T17:07:00.523505" elapsed="0.909887"/>
+</kw>
+<kw name="Input Username" owner="resource">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:07:01.434312" level="INFO">Typing text 'admin1' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${username}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-17T17:07:01.433828" elapsed="0.189769"/>
+</kw>
+<arg>admin1</arg>
+<status status="PASS" start="2026-02-17T17:07:01.433627" elapsed="0.190056"/>
+</kw>
+<kw name="Input Password" owner="resource">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:07:01.624298" level="INFO">Typing text '12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${password}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-17T17:07:01.624128" elapsed="0.103251"/>
+</kw>
+<arg>12345678</arg>
+<status status="PASS" start="2026-02-17T17:07:01.623882" elapsed="0.103676"/>
+</kw>
+<kw name="Submit Login" owner="resource">
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:07:01.728305" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-17T17:07:01.728021" elapsed="0.064121"/>
+</kw>
+<status status="PASS" start="2026-02-17T17:07:01.727806" elapsed="0.064418"/>
+</kw>
+<kw name="Wait Until Location Contains" owner="SeleniumLibrary">
+<arg>${SERVER}</arg>
+<arg>10s</arg>
+<doc>Waits until the current URL contains ``expected``.</doc>
+<status status="PASS" start="2026-02-17T17:07:01.792357" elapsed="0.002030"/>
+</kw>
+<kw name="Open Blacklist Page" owner="resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:07:01.794721" level="INFO">Opening url 'http://10.198.200.88:3013/admin/blacklist'</msg>
+<arg>${BLACKLIST URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-02-17T17:07:01.794653" elapsed="1.852704"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Blacklist Management</arg>
+<arg>5s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-17T17:07:03.647519" elapsed="0.008027"/>
+</kw>
+<kw name="Title Should Be" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:07:03.657268" level="INFO">Page title is 'TailAdmin Dashboard'.</msg>
+<arg>TailAdmin Dashboard</arg>
+<doc>Verifies that the current page title equals ``title``.</doc>
+<status status="PASS" start="2026-02-17T17:07:03.655657" elapsed="0.001655"/>
+</kw>
+<status status="PASS" start="2026-02-17T17:07:01.794524" elapsed="1.862836"/>
+</kw>
+<kw name="Input Blacklist Form" owner="resource">
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-02-17T17:07:03.663324" level="INFO">${expire} = 19-02-2026</msg>
+<var>${expire}</var>
+<arg>(__import__('datetime').datetime.now() + __import__('datetime').timedelta(days=2)).strftime("%d-%m-%Y")</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-02-17T17:07:03.657730" elapsed="0.005638"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//input[@placeholder="1234567890123"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-02-17T17:07:03.663494" elapsed="0.014813"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:07:03.678564" level="INFO">Typing text '1111111111111' into text field 'xpath=//input[@placeholder="1234567890123"]'.</msg>
+<arg>xpath=//input[@placeholder="1234567890123"]</arg>
+<arg>1111111111111</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-17T17:07:03.678428" elapsed="0.067564"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-02-17T17:07:06.747818" level="INFO">Slept 3 seconds.</msg>
+<arg>3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-02-17T17:07:03.746120" elapsed="3.002031"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>xpath=//input[@placeholder="Fraud / Abuse"]</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-02-17T17:07:06.748603" elapsed="0.014189"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:07:06.763047" level="INFO">Typing text 'add blacklist test' into text field 'xpath=//input[@placeholder="Fraud / Abuse"]'.</msg>
+<arg>xpath=//input[@placeholder="Fraud / Abuse"]</arg>
+<arg>add blacklist test</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-17T17:07:06.762918" elapsed="0.056934"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-02-17T17:07:09.821211" level="INFO">Slept 3 seconds.</msg>
+<arg>3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-02-17T17:07:06.819991" elapsed="3.001852"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:07:09.823585" level="INFO">Typing text '19-02-2026' into text field 'xpath://input[@type="date"]'.</msg>
+<arg>xpath://input[@type="date"]</arg>
+<arg>${expire}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-17T17:07:09.822496" elapsed="0.059256"/>
+</kw>
+<status status="PASS" start="2026-02-17T17:07:03.657549" elapsed="6.224327"/>
+</kw>
+<kw name="Submit Blacklist" owner="resource">
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-02-17T17:07:09.882559" level="INFO">Clicking button 'xpath=//button[contains(.,"เพิ่ม Blacklist")]'.</msg>
+<arg>xpath=//button[contains(.,"เพิ่ม Blacklist")]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-02-17T17:07:09.882360" elapsed="0.041746"/>
+</kw>
+<status status="PASS" start="2026-02-17T17:07:09.882138" elapsed="0.042037"/>
+</kw>
+<kw name="Blacklist Success Should Be Visible" owner="resource">
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>สำเร็จ</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-02-17T17:07:09.924471" elapsed="0.238774"/>
+</kw>
+<status status="PASS" start="2026-02-17T17:07:09.924326" elapsed="0.239046"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-02-17T17:07:10.163706" elapsed="0.240945"/>
+</kw>
+<status status="PASS" start="2026-02-17T17:06:48.055999" elapsed="22.348814"/>
+</test>
+<doc>A test suite with a single test for valid login.</doc>
+<status status="PASS" start="2026-02-17T17:06:47.924701" elapsed="22.480605"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Addblacklist" id="s1" pass="1" fail="0" skip="0">Addblacklist</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
