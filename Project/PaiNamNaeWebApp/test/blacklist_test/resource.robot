@@ -95,6 +95,10 @@ Blacklist InvalidnationalID Should Be Visible
 
 
 
+
+Blacklist InvalidnationalID_empty Should Be Visible
+    Wait Until Page Contains    กรุณากรอก National ID และ Expire Dat    10s
+
 Invalid Blacklist By National ID
     ${expire}=    Evaluate    (__import__('datetime').datetime.now() + __import__('datetime').timedelta(days=2)).strftime("%d-%m-%Y")
     Wait Until Element Is Visible    xpath=//input[@placeholder="1234567890123"]    10s
@@ -124,6 +128,18 @@ Addblacklist Invalid NationalID Text
     ${expire}=    Evaluate    (__import__('datetime').datetime.now() + __import__('datetime').timedelta(days=2)).strftime("%d-%m-%Y")
     Wait Until Element Is Visible    xpath=//input[@placeholder="1234567890123"]    10s
     Input Text    xpath=//input[@placeholder="1234567890123"]    hello
+    Sleep    3s
+
+    Wait Until Element Is Visible    xpath=//input[@placeholder="Fraud / Abuse"]    10s
+    Input Text    xpath=//input[@placeholder="Fraud / Abuse"]    add blacklist test
+    Sleep    3s
+
+    Input Text    xpath://input[@type="date"]    ${expire}
+
+Addblacklist Invalid NationalID Empty
+    ${expire}=    Evaluate    (__import__('datetime').datetime.now() + __import__('datetime').timedelta(days=2)).strftime("%d-%m-%Y")
+    Wait Until Element Is Visible    xpath=//input[@placeholder="1234567890123"]    10s
+    Input Text    xpath=//input[@placeholder="1234567890123"]    ${EMPTY}
     Sleep    3s
 
     Wait Until Element Is Visible    xpath=//input[@placeholder="Fraud / Abuse"]    10s
