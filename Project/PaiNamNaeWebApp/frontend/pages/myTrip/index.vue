@@ -4,8 +4,9 @@
             <div class="mb-8">
                 <h2 class="text-2xl font-bold text-gray-900">การเดินทางของฉัน</h2>
                 <p class="mt-2 text-gray-600">จัดการและติดตามการเดินทางทั้งหมดของคุณ</p>
+            
             </div>
-
+            
             <div class="p-6 mb-8 bg-white border border-gray-300 rounded-lg shadow-md">
                 <div class="flex flex-wrap gap-2">
                     <button v-for="tab in tabs" :key="tab.status" @click="activeTab = tab.status"
