@@ -1,27 +1,27 @@
-const { z } = require('zod');
-const prisma = require('../utils/prisma');
+const { z } = require("zod");
+const prisma = require("../utils/prisma");
 
 const createEmergencyContactSchema = z.object({
   name: z
-    .string({ required_error: 'Name is required' })
-    .min(1, 'Name cannot be empty')
-    .max(100, 'Name must be at most 100 characters'),
+    .string({ required_error: "Name is required" })
+    .min(1, "Name cannot be empty")
+    .max(100, "Name must be at most 100 characters"),
   phone: z
-    .string({ required_error: 'Phone number is required' })
-    .min(1, 'Phone number cannot be empty')
-    .max(20, 'Phone number must be at most 20 characters'),
+    .string({ required_error: "Phone number is required" })
+    .min(1, "Phone number cannot be empty")
+    .max(20, "Phone number must be at most 20 characters"),
 });
 
 const updateEmergencyContactSchema = z.object({
   name: z
     .string()
-    .min(1, 'Name cannot be empty')
-    .max(100, 'Name must be at most 100 characters')
+    .min(1, "Name cannot be empty")
+    .max(100, "Name must be at most 100 characters")
     .optional(),
   phone: z
     .string()
-    .min(1, 'Phone number cannot be empty')
-    .max(20, 'Phone number must be at most 20 characters')
+    .min(1, "Phone number cannot be empty")
+    .max(20, "Phone number must be at most 20 characters")
     .optional(),
 });
 
@@ -36,7 +36,7 @@ const getMyEmergencyContacts = async (req, res) => {
 
     const contacts = await prisma.emergencyContact.findMany({
       where: { userId },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: "asc" },
     });
 
     return res.status(200).json({
@@ -44,10 +44,10 @@ const getMyEmergencyContacts = async (req, res) => {
       data: contacts,
     });
   } catch (error) {
-    console.error('getMyEmergencyContacts error:', error);
+    console.error("getMyEmergencyContacts error:", error);
     return res.status(500).json({
       success: false,
-      message: 'Internal server error',
+      message: "Internal server error",
     });
   }
 };
@@ -64,7 +64,7 @@ const createEmergencyContact = async (req, res) => {
     if (!parsed.success) {
       return res.status(400).json({
         success: false,
-        message: 'Validation error',
+        message: "Validation error",
         errors: parsed.error.errors,
       });
     }
@@ -77,14 +77,14 @@ const createEmergencyContact = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: 'Emergency contact created successfully',
+      message: "Emergency contact created successfully",
       data: contact,
     });
   } catch (error) {
-    console.error('createEmergencyContact error:', error);
+    console.error("createEmergencyContact error:", error);
     return res.status(500).json({
       success: false,
-      message: 'Internal server error',
+      message: "Internal server error",
     });
   }
 };
@@ -102,7 +102,7 @@ const updateEmergencyContact = async (req, res) => {
     if (!parsed.success) {
       return res.status(400).json({
         success: false,
-        message: 'Validation error',
+        message: "Validation error",
         errors: parsed.error.errors,
       });
     }
@@ -114,14 +114,14 @@ const updateEmergencyContact = async (req, res) => {
     if (!existing) {
       return res.status(404).json({
         success: false,
-        message: 'Emergency contact not found',
+        message: "Emergency contact not found",
       });
     }
 
     if (existing.userId !== userId) {
       return res.status(403).json({
         success: false,
-        message: 'You do not have permission to update this contact',
+        message: "You do not have permission to update this contact",
       });
     }
 
@@ -132,14 +132,14 @@ const updateEmergencyContact = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: 'Emergency contact updated successfully',
+      message: "Emergency contact updated successfully",
       data: updated,
     });
   } catch (error) {
-    console.error('updateEmergencyContact error:', error);
+    console.error("updateEmergencyContact error:", error);
     return res.status(500).json({
       success: false,
-      message: 'Internal server error',
+      message: "Internal server error",
     });
   }
 };
@@ -160,14 +160,14 @@ const deleteEmergencyContact = async (req, res) => {
     if (!existing) {
       return res.status(404).json({
         success: false,
-        message: 'Emergency contact not found',
+        message: "Emergency contact not found",
       });
     }
 
     if (existing.userId !== userId) {
       return res.status(403).json({
         success: false,
-        message: 'You do not have permission to delete this contact',
+        message: "You do not have permission to delete this contact",
       });
     }
 
@@ -177,13 +177,13 @@ const deleteEmergencyContact = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: 'Emergency contact deleted successfully',
+      message: "Emergency contact deleted successfully",
     });
   } catch (error) {
-    console.error('deleteEmergencyContact error:', error);
+    console.error("deleteEmergencyContact error:", error);
     return res.status(500).json({
       success: false,
-      message: 'Internal server error',
+      message: "Internal server error",
     });
   }
 };
@@ -196,7 +196,7 @@ const deleteEmergencyContact = async (req, res) => {
 const adminGetAllEmergencyContacts = async (req, res) => {
   try {
     const contacts = await prisma.emergencyContact.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
       include: {
         user: {
           select: { id: true, username: true, email: true },
@@ -209,10 +209,10 @@ const adminGetAllEmergencyContacts = async (req, res) => {
       data: contacts,
     });
   } catch (error) {
-    console.error('adminGetAllEmergencyContacts error:', error);
+    console.error("adminGetAllEmergencyContacts error:", error);
     return res.status(500).json({
       success: false,
-      message: 'Internal server error',
+      message: "Internal server error",
     });
   }
 };
@@ -232,13 +232,13 @@ const adminGetContactsByUser = async (req, res) => {
     if (!userExists) {
       return res.status(404).json({
         success: false,
-        message: 'User not found',
+        message: "User not found",
       });
     }
 
     const contacts = await prisma.emergencyContact.findMany({
       where: { userId: targetUserId },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: "asc" },
     });
 
     return res.status(200).json({
@@ -246,10 +246,10 @@ const adminGetContactsByUser = async (req, res) => {
       data: contacts,
     });
   } catch (error) {
-    console.error('adminGetContactsByUser error:', error);
+    console.error("adminGetContactsByUser error:", error);
     return res.status(500).json({
       success: false,
-      message: 'Internal server error',
+      message: "Internal server error",
     });
   }
 };
@@ -269,7 +269,7 @@ const adminDeleteEmergencyContact = async (req, res) => {
     if (!existing) {
       return res.status(404).json({
         success: false,
-        message: 'Emergency contact not found',
+        message: "Emergency contact not found",
       });
     }
 
@@ -279,13 +279,13 @@ const adminDeleteEmergencyContact = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: 'Emergency contact deleted successfully',
+      message: "Emergency contact deleted successfully",
     });
   } catch (error) {
-    console.error('adminDeleteEmergencyContact error:', error);
+    console.error("adminDeleteEmergencyContact error:", error);
     return res.status(500).json({
       success: false,
-      message: 'Internal server error',
+      message: "Internal server error",
     });
   }
 };
@@ -299,3 +299,4 @@ module.exports = {
   adminGetContactsByUser,
   adminDeleteEmergencyContact,
 };
+
