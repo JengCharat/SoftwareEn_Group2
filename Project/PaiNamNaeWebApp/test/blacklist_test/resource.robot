@@ -7,7 +7,7 @@ Documentation     A resource file with reusable keywords and variables.
 Library           SeleniumLibrary
 
 *** Variables ***
-${SERVER}         http://10.198.200.88:3013
+${SERVER}         10.198.200.88:3013
 ${BROWSER}        Chrome
 ${DELAY}          0
 ${VALID USER}     demo
@@ -30,7 +30,7 @@ Open Browser To Login Page
     Login Page Should Be Open
 
 Login Page Should Be Open
-    Title Should Be    ไปนำแแหน่
+    Title Should Be    ไปนำแหน่
 
 Go To Register Page
     Go To    ${REGISTER URL}
@@ -39,6 +39,17 @@ Go To Register Page
 Go To Login Page
     Go To    ${Login URL}
     Login Page Should Be Open
+
+Input Username
+    [Arguments]    ${username}
+    Input Text    id:identifier    ${username}
+
+Input Password
+    [Arguments]    ${password}
+    Input Text    id:password    ${password}
+
+Submit Login
+    Click Button    xpath://button[@type="submit"]
 
 Input Firstname
     [Arguments]    ${firstname}
@@ -66,6 +77,10 @@ Submit Register
 Success Page Should Be Open
     Location Should Contain    ${SUCCESS URL}
     Title Should Be    Success
+
+FirstPage Should Be Open
+    Location Should Contain    ${SERVER}
+    Title Should Be    ไปนำแหน่
 
 Element Text Success Should Be
     [Arguments]    ${text}
