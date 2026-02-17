@@ -26,6 +26,8 @@
               <th class="text-left p-2">Endpoint</th>
               <th class="text-left p-2">Status</th>
               <th class="text-left p-2">IP</th>
+              <th class="text-left p-2">UserAgent</th>
+
               <th class="text-left p-2">Time</th>
             </tr>
           </thead>
@@ -66,9 +68,15 @@
                 {{ log.ipAddress || '-' }}
               </td>
 
+              <td class="p-2">
+                {{ log.userAgent || '-' }}
+              </td>
+
               <td class="p-2 whitespace-nowrap">
                 {{ formatDate(log.createdAt) }}
               </td>
+
+
             </tr>
 
             <tr v-if="logsAll.length === 0">
