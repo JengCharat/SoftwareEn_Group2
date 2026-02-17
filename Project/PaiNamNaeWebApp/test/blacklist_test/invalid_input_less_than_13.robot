@@ -3,7 +3,7 @@ Documentation     A test suite with a single test for valid login.
 Resource          resource.robot
 
 *** Test Cases ***
-Addblacklist
+blacklist invalid less than 13
 
     Open Browser To Login Page
     Logout
@@ -15,4 +15,6 @@ Addblacklist
     Invalid Blacklist By National ID
     Submit Blacklist
     Blacklist InvalidnationalID Should Be Visible
+    Logout
     [Teardown]    Close Browser
+
