@@ -9,6 +9,8 @@
                         </div>
                     </NuxtLink>
 
+                    <div class="flex items-center space-x-4">
+
                     <nav class="items-center hidden space-x-6 md:flex lg:space-x-8">
                         <NuxtLink to="/findTrip"
                             class="font-medium text-gray-600 transition-colors duration-200 hover:text-blue-700"
@@ -35,8 +37,9 @@
                         </div>
 
                         <!-- คนขับ: แสดงคำว่า การเดินทางทั้งหมด + ดรอปดาวน์ (การเดินทางของฉัน / คำขอจองเส้นทางของฉัน) -->
-                        <div v-if="user && (user.role === 'DRIVER' || user.role === 'ADMIN')">
-                            <div class="relative dropdown-trigger">
+                        <div v-if="user && (user.role === 'DRIVER' || user.role === 'ADMIN')"class="flex items-center">
+                            <div class="relative dropdown-trigger flex items-center">
+
                                 <NuxtLink to="/myTrip"
                                     class="flex items-center text-gray-600 transition-colors duration-200 hover:text-blue-600"
                                     :class="{ 'text-blue-600': $route.path.startsWith('/myTrip') || $route.path.startsWith('/myRoute') }">
@@ -61,7 +64,9 @@
                                 </div>
                             </div>
                         </div>
-
+                         <div class="mr-2 border-r pr-2 border-gray-200">
+                                    <SOSButton />
+                                </div>
                         <div v-if="!token" class="flex items-center space-x-3 ">
                             <NuxtLink to="/register"
                                 class="text-gray-600 transition-colors duration-200 hover:text-blue-600">สมัครสมาชิก
@@ -267,7 +272,8 @@
                         </button>
                     </div>
                 </div>
-
+                </div>
+                
                 <!-- ==================== Mobile Menu ==================== -->
                 <div v-show="isMobileMenuOpen" class="border-t border-gray-200 md:hidden">
                     <div class="px-2 pt-2 pb-3 space-y-1 bg-white">

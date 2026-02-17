@@ -15,6 +15,12 @@
                         </NuxtLink>
                     </li>
                 </ul>
+                    <li>
+                        <NuxtLink to="/profile/manage_contacts" class="block px-4 py-2 text-sm rounded-md"
+                            :class="isActive('/profile/manage_contacts') ? 'font-semibold text-blue-600 bg-blue-100' : 'text-gray-700 hover:bg-gray-100'">
+                            จัดการเบอร์ติดต่อฉุกเฉิน
+                        </NuxtLink>
+                    </li>
             </div>
             <div>
                 <h3 class="text-sm font-semibold text-gray-900 mb-2 px-4">การยืนยันตัวตน</h3>
@@ -43,6 +49,7 @@
                         </NuxtLink>
                     </li>
                 </ul>
+
             </div>
         </nav>
     </aside>
