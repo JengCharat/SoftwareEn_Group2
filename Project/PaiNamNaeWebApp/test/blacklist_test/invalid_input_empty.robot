@@ -3,7 +3,7 @@ Documentation     A test suite with a single test for valid login.
 Resource          resource.robot
 
 *** Test Cases ***
-Addblacklist Invalid NationalID Text
+Addblacklist Invalid empty NationalID
 
     Open Browser To Login Page
     Logout

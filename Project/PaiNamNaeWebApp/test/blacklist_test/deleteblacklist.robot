@@ -3,7 +3,7 @@ Documentation     A test suite with a single test for valid login.
 Resource          resource.robot
 
 *** Test Cases ***
-Addblacklist
+DELETE blacklist
 
     Open Browser To Login Page
     Logout
