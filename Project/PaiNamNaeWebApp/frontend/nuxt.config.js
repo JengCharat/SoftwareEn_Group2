@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     public: {
       apiBase: "http://10.198.200.88:3004/api",
       // apiBase:"https://painamnae-backend.onrender.com/api/",
-      googleMapsApiKey:"AIzaSyAMv0Z4zyKvQgGk9zr66XqvAN4E13JQnuw"
+      googleMapsApiKey: "AIzaSyAMv0Z4zyKvQgGk9zr66XqvAN4E13JQnuw"
     },
   },
   devServer: {

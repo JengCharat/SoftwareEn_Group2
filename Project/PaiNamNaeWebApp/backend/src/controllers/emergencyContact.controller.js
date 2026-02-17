@@ -32,7 +32,7 @@ const updateEmergencyContactSchema = z.object({
  */
 const getMyEmergencyContacts = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.sub;
 
     const contacts = await prisma.emergencyContact.findMany({
       where: { userId },
@@ -58,7 +58,7 @@ const getMyEmergencyContacts = async (req, res) => {
  */
 const createEmergencyContact = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.sub;
 
     const parsed = createEmergencyContactSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -95,7 +95,7 @@ const createEmergencyContact = async (req, res) => {
  */
 const updateEmergencyContact = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.sub;
     const contactId = req.params.id;
 
     const parsed = updateEmergencyContactSchema.safeParse(req.body);
@@ -150,7 +150,7 @@ const updateEmergencyContact = async (req, res) => {
  */
 const deleteEmergencyContact = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.sub;
     const contactId = req.params.id;
 
     const existing = await prisma.emergencyContact.findUnique({

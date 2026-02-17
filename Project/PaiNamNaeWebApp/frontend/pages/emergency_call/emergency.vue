@@ -46,7 +46,7 @@
         <!-- Hint to add personal contacts -->
         <p v-if="!isLoading && personalContacts.length === 0" class="text-sm text-gray-400 text-center">
           คุณยังไม่มีรายชื่อส่วนตัว
-          <NuxtLink to="/profile/manage_contacts" class="text-blue-500 underline">
+          <NuxtLink to="/profile/manage-contacts" class="text-blue-500 underline">
             เพิ่มได้ที่นี่
           </NuxtLink>
         </p>
@@ -61,6 +61,7 @@ import { ref, onMounted } from 'vue'
 
 const { $api } = useNuxtApp()
 
+//เบอร์โทรฉุกเฉินเริ่มต้น
 const defaultContacts = [
   { name: 'ตำรวจ (191)',         phone: '191' },
   { name: 'รถพยาบาล (1669)',     phone: '1669' },
@@ -71,11 +72,12 @@ const personalContacts = ref([])
 const selected = ref(null)
 const isLoading = ref(false)
 
+//ดึงข้อมูลจาก Emergency Contacts ที่บันทึกไว้
 const fetchPersonalContacts = async () => {
   isLoading.value = true
   try {
     const res = await $api('/emergency-contacts')
-    personalContacts.value = res.data
+    personalContacts.value = res
   } catch (err) {
     // Non-critical — the page still works with just the default numbers
     console.error('fetchPersonalContacts error:', err)

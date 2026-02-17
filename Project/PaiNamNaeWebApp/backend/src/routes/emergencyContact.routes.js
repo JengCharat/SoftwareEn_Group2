@@ -8,12 +8,11 @@ const {
   adminGetContactsByUser,
   adminDeleteEmergencyContact,
 } = require('../controllers/emergencyContact.controller');
-const { authenticate } = require('../middlewares/auth');
-const { authorizeAdmin } = require('../middlewares/role');
+const { protect, requireAdmin } = require('../middlewares/auth');
+
 
 const router = Router();
-
-//User Route - ต้อง log in ก่อน
+//User Route (ต้อง Login)
 /**
  * @swagger
  * /api/emergency-contacts:
@@ -28,7 +27,7 @@ const router = Router();
  *       401:
  *         description: Unauthorized
  */
-router.get('/', authenticate, getMyEmergencyContacts);
+router.get('/', protect, getMyEmergencyContacts);
 
 /**
  * @swagger
@@ -62,7 +61,7 @@ router.get('/', authenticate, getMyEmergencyContacts);
  *       401:
  *         description: Unauthorized
  */
-router.post('/', authenticate, createEmergencyContact);
+router.post('/', protect, createEmergencyContact);
 
 /**
  * @swagger
@@ -97,7 +96,7 @@ router.post('/', authenticate, createEmergencyContact);
  *       404:
  *         description: Contact not found
  */
-router.put('/:id', authenticate, updateEmergencyContact);
+router.put('/:id', protect, updateEmergencyContact);
 
 /**
  * @swagger
@@ -121,9 +120,9 @@ router.put('/:id', authenticate, updateEmergencyContact);
  *       404:
  *         description: Contact not found
  */
-router.delete('/:id', authenticate, deleteEmergencyContact);
+router.delete('/:id', protect, deleteEmergencyContact);
 
-//Admin Routes
+//Admin Route
 /**
  * @swagger
  * /api/emergency-contacts/admin:
@@ -138,7 +137,7 @@ router.delete('/:id', authenticate, deleteEmergencyContact);
  *       403:
  *         description: Forbidden
  */
-router.get('/admin', authenticate, authorizeAdmin, adminGetAllEmergencyContacts);
+router.get('/admin', protect, requireAdmin, adminGetAllEmergencyContacts);
 
 /**
  * @swagger
@@ -160,7 +159,7 @@ router.get('/admin', authenticate, authorizeAdmin, adminGetAllEmergencyContacts)
  *       404:
  *         description: User not found
  */
-router.get('/admin/user/:userId', authenticate, authorizeAdmin, adminGetContactsByUser);
+router.get('/admin/user/:userId', protect, requireAdmin, adminGetContactsByUser);
 
 /**
  * @swagger
@@ -182,6 +181,6 @@ router.get('/admin/user/:userId', authenticate, authorizeAdmin, adminGetContacts
  *       404:
  *         description: Contact not found
  */
-router.delete('/admin/:id', authenticate, authorizeAdmin, adminDeleteEmergencyContact);
+router.delete('/admin/:id', protect, requireAdmin, adminDeleteEmergencyContact);
 
 module.exports = router;

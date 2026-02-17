@@ -116,7 +116,7 @@ const fetchContacts = async () => {
     error.value = null
     try {
         const res = await $api('/emergency-contacts')
-        contacts.value = res.data
+        contacts.value = res
     } catch (err) {
         error.value = 'ไม่สามารถโหลดรายชื่อได้ กรุณาลองใหม่อีกครั้ง'
         console.error('fetchContacts error:', err)
@@ -140,7 +140,7 @@ const addContact = async () => {
                 phone: newPhone.value.trim()
             }
         })
-        contacts.value.push(res.data)
+        contacts.value.push(res)
         newName.value = ''
         newPhone.value = ''
     } catch (err) {
