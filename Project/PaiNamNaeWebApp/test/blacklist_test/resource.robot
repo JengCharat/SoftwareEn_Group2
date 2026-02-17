@@ -79,3 +79,11 @@ Blacklist Success Should Be Visible
 Logout
     Delete All Cookies
     Go To    ${LOGIN_URL}
+
+
+
+Delete Blacklist By National ID
+    Wait Until Element Is Visible    xpath=//td[text()="1111111111111"]    10s
+    Click Button    xpath=//td[text()="1111111111111"]/parent::tr//button[contains(.,"ลบ")]
+    Handle Alert    ACCEPT
+    Wait Until Page Contains    สำเร็จ     10s
