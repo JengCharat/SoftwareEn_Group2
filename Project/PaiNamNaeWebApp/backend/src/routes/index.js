@@ -9,7 +9,7 @@ const notificationRoutes = require("./notification.routes");
 const mapRoutes = require("./maps.routes");
 const messageRoutes = require("./message.routes");
 const blacklistRoutes = require("./blacklist.routes");
-
+const emergencyContactRoutes = require("./emergencyContact.routes");
 const router = express.Router();
 
 router.use("/auth", authRoutes);
@@ -23,6 +23,5 @@ router.use("/bookings/:bookingId", messageRoutes);
 router.use("/notifications", notificationRoutes);
 router.use("/api/maps", mapRoutes);
 router.use("/blacklist", blacklistRoutes);
-
+router.use("/emergency-contacts", emergencyContactRoutes);
 module.exports = router;
-

@@ -88,6 +88,7 @@ model User {
     notification            Notification[]
     createdRoutes           Route[]             @relation("DriverRoutes")
     bookings                Booking[]           @relation("PassengerBookings")
+    emergencyContacts       EmergencyContact[]
     activityLogs            ActivityLog[]
     blacklists              Blacklist[]
 
@@ -95,6 +96,19 @@ model User {
     @@index([isActive])
     @@index([isVerified])
     @@index([createdAt])
+}
+
+model EmergencyContact {
+    id        String   @id @default(cuid())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    name      String
+    phone     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([userId])
+    @@map("emergency_contacts")
 }
 
 model DriverVerification {
