@@ -10,6 +10,9 @@ const {
   updateUserStatusSchema,
   listUsersQuerySchema,
 } = require("../validations/user.validation");
+const {
+  nationalIdNumberValidation,
+} = require("../validations/blacklist.validation");
 const { protect, requireAdmin } = require("../middlewares/auth");
 
 const router = express.Router();
@@ -111,10 +114,9 @@ router.put(
 // POST /api/users/blacklist
 router.post(
   "/blacklist",
-
   protect,
   requireAdmin,
-  // validate({ body: addBlacklistSchema }),
+  validate({ body: nationalIdNumberValidation }),
   userController.addBlacklist,
 );
 
