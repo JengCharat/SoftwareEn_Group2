@@ -147,3 +147,27 @@ Addblacklist Invalid NationalID Empty
     Sleep    3s
 
     Input Text    xpath://input[@type="date"]    ${expire}
+
+
+
+
+
+
+
+Input Blacklist Form without expiredate
+    ${expire}=    Evaluate    (__import__('datetime').datetime.now() + __import__('datetime').timedelta(days=2)).strftime("%d-%m-%Y")
+    Wait Until Element Is Visible    xpath=//input[@placeholder="1234567890123"]    10s
+    Input Text    xpath=//input[@placeholder="1234567890123"]    1111111111111
+    Sleep    3s
+
+    Wait Until Element Is Visible    xpath=//input[@placeholder="Fraud / Abuse"]    10s
+    Input Text    xpath=//input[@placeholder="Fraud / Abuse"]    add blacklist test
+    Sleep    3s
+
+    Input Text    xpath://input[@type="date"]    ${EMPTY}
+
+Blacklist noexpiredate Should Be Visible
+    Wait Until Page Contains    กรุณากรอก National ID และ Expire Date    10s
+
+
+
