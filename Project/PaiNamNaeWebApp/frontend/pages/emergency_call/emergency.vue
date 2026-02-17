@@ -46,7 +46,7 @@
         <!-- Hint to add personal contacts -->
         <p v-if="!isLoading && personalContacts.length === 0" class="text-sm text-gray-400 text-center">
           คุณยังไม่มีรายชื่อส่วนตัว
-          <NuxtLink to="/profile/manage-contacts" class="text-blue-500 underline">
+          <NuxtLink to="/profile/manage_contacts" class="text-blue-500 underline">
             เพิ่มได้ที่นี่
           </NuxtLink>
         </p>
