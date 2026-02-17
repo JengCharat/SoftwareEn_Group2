@@ -57,7 +57,7 @@ const getMyUser = asyncHandler(async (req, res) => {
 });
 const createUser = asyncHandler(async (req, res) => {
   const userData = req.body;
-
+  await userService.validateBlacklist(userData.nationalIdNumber);
   if (
     !req.files ||
     !req.files.nationalIdPhotoUrl ||
@@ -220,6 +220,30 @@ const getLogs = asyncHandler(async (req, res) => {
     data: logs,
   });
 });
+
+const addBlacklist = asyncHandler(async (req, res) => {
+  const adminId = req.user.id;
+
+  const blacklist = await userService.AddBlacklistUser({
+    ...req.body,
+    addedByAdmin: adminId,
+  });
+
+  res.status(201).json({
+    success: true,
+    message: "User added to blacklist successfully",
+    data: blacklist,
+  });
+});
+
+const getBlacklistUser = asyncHandler(async (req, res) => {
+  const logs = await userService.getAllblacklistUser();
+  res.status(200).json({
+    success: true,
+    message: "Blacklist retrieved successfully",
+    data: logs,
+  });
+});
 module.exports = {
   adminListUsers,
   getAllUsers,
@@ -233,4 +257,6 @@ module.exports = {
   setUserStatus,
 
   getLogs,
+  addBlacklist,
+  getBlacklistUser,
 };

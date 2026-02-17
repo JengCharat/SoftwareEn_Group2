@@ -96,7 +96,7 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 // --- Start Server ---
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3004;
 (async () => {
   try {
     await ensureAdmin();

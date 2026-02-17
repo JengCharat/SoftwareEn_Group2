@@ -274,7 +274,6 @@
                     </div>
                 </div>
                 </div>
-
                 <!-- ==================== Mobile Menu ==================== -->
                 <div v-show="isMobileMenuOpen" class="border-t border-gray-200 md:hidden">
                     <div class="px-2 pt-2 pb-3 space-y-1 bg-white">

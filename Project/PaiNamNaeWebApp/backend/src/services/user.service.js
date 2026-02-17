@@ -248,7 +248,73 @@ const deleteUser = async (id) => {
 //     const { password, ...safeUser } = updatedUser;
 //     return safeUser;
 // };
+const validateBlacklist = async (nationalIdNumber) => {
+  const blacklist = await prisma.blacklist.findFirst({
+    where: {
+      nationalIdNumber,
+      OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+    },
+  });
 
+  if (blacklist) {
+    throw new ApiError(
+      403,
+      "You are not allowed to register. Please contact support.",
+    );
+  }
+};
+
+const AddBlacklistUser = async (payload) => {
+  const { nationalIdNumber, userId, reason, addedByAdmin, expiresAt } = payload;
+  if (!nationalIdNumber) {
+    throw new ApiError(400, "nationalIdNumber is required");
+  }
+  const existing = await prisma.blacklist.findUnique({
+    where: {
+      nationalIdNumber,
+    },
+  });
+  if (existing) {
+    throw new ApiError(409, "This national ID is already blacklisted");
+  }
+  const blacklist = await prisma.blacklist.create({
+    data: {
+      nationalIdNumber,
+      userId: userId || null,
+      reason: reason || null,
+      addedByAdmin: addedByAdmin || null,
+      expiresAt: expiresAt ? new Date(expiresAt) : null,
+    },
+  });
+  await prisma.user.update({
+    where: {
+      nationalIdNumber: nationalIdNumber,
+    },
+    data: {
+      isActive: false,
+    },
+  });
+  return blacklist;
+};
+
+const getAllblacklistUser = async () => {
+  const blacklists = await prisma.blacklist.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          email: true,
+          username: true,
+        },
+      },
+    },
+  });
+
+  return blacklists;
+};
 module.exports = {
   searchUsers,
   getAllUsers,
@@ -261,4 +327,8 @@ module.exports = {
   deleteUser,
   updateUserProfile,
   getUserPublicById,
+
+  validateBlacklist,
+  AddBlacklistUser,
+  getAllblacklistUser,
 };
