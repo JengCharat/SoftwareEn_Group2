@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.12.3 on linux)" generated="2026-02-17T06:31:16.297941" rpa="false" schemaversion="5">
+<suite id="s1" name="Login" source="/home/jeng/SoftwareEn_Group2/Project/PaiNamNaeWebApp/test/blacklist_test/login.robot">
+<test id="s1-t1" name="Valid Login" line="6">
+<kw name="Open Browser To Login Page" owner="resource">
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-02-17T06:31:16.536025" level="INFO">${options} = &lt;selenium.webdriver.chrome.options.Options object at 0x7dffc14b2810&gt;</msg>
+<var>${options}</var>
+<arg>sys.modules['selenium.webdriver'].ChromeOptions()</arg>
+<arg>sys, selenium.webdriver</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-02-17T06:31:16.535061" elapsed="0.001067"/>
+</kw>
+<kw name="Call Method" owner="BuiltIn">
+<msg time="2026-02-17T06:31:16.536968" level="FAIL">Calling method 'add_argument' failed: TypeError: ArgOptions.add_argument() got an unexpected keyword argument '--headless'</msg>
+<arg>${options}</arg>
+<arg>add_argument</arg>
+<arg>--headless=new</arg>
+<doc>Calls the named method of the given object with the provided arguments.</doc>
+<status status="FAIL" start="2026-02-17T06:31:16.536388" elapsed="0.001099">Calling method 'add_argument' failed: TypeError: ArgOptions.add_argument() got an unexpected keyword argument '--headless'</status>
+</kw>
+<kw name="Call Method" owner="BuiltIn">
+<arg>${options}</arg>
+<arg>add_argument</arg>
+<arg>--no-sandbox</arg>
+<doc>Calls the named method of the given object with the provided arguments.</doc>
+<status status="NOT RUN" start="2026-02-17T06:31:16.537706" elapsed="0.000046"/>
+</kw>
+<kw name="Call Method" owner="BuiltIn">
+<arg>${options}</arg>
+<arg>add_argument</arg>
+<arg>--disable-dev-shm-usage</arg>
+<doc>Calls the named method of the given object with the provided arguments.</doc>
+<status status="NOT RUN" start="2026-02-17T06:31:16.537887" elapsed="0.000031"/>
+</kw>
+<kw name="Call Method" owner="BuiltIn">
+<arg>${options}</arg>
+<arg>add_argument</arg>
+<arg>--window-size=1920,1080</arg>
+<doc>Calls the named method of the given object with the provided arguments.</doc>
+<status status="NOT RUN" start="2026-02-17T06:31:16.538043" elapsed="0.000032"/>
+</kw>
+<kw name="Open Browser" owner="SeleniumLibrary">
+<arg>${LOGIN URL}</arg>
+<arg>Chrome</arg>
+<arg>options=${options}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="NOT RUN" start="2026-02-17T06:31:16.538242" elapsed="0.000035"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="NOT RUN" start="2026-02-17T06:31:16.538379" elapsed="0.000027"/>
+</kw>
+<status status="FAIL" start="2026-02-17T06:31:16.533920" elapsed="0.004645">Calling method 'add_argument' failed: TypeError: ArgOptions.add_argument() got an unexpected keyword argument '--headless'</status>
+</kw>
+<kw name="Input identifier">
+<arg>admin1</arg>
+<status status="NOT RUN" start="2026-02-17T06:31:16.538935" elapsed="0.000057"/>
+</kw>
+<kw name="Input Password" owner="SeleniumLibrary">
+<arg>12345678</arg>
+<doc>Types the given password into the text field identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-02-17T06:31:16.539252" elapsed="0.000045"/>
+</kw>
+<kw name="Submit Register" owner="resource">
+<status status="NOT RUN" start="2026-02-17T06:31:16.539591" elapsed="0.000043"/>
+</kw>
+<kw name="Success Page Should Be Open" owner="resource">
+<status status="NOT RUN" start="2026-02-17T06:31:16.539884" elapsed="0.000046"/>
+</kw>
+<kw name="Title Should Be" owner="SeleniumLibrary">
+<arg>Success</arg>
+<doc>Verifies that the current page title equals ``title``.</doc>
+<status status="NOT RUN" start="2026-02-17T06:31:16.540129" elapsed="0.000051"/>
+</kw>
+<kw name="Element Text Success Should Be" owner="resource">
+<arg>Thank you for registering with us.</arg>
+<status status="NOT RUN" start="2026-02-17T06:31:16.540431" elapsed="0.000039"/>
+</kw>
+<kw name="Element Text Thanks Should Be" owner="resource">
+<arg>We will send a confirmation to your email soon.</arg>
+<status status="NOT RUN" start="2026-02-17T06:31:16.540691" elapsed="0.000045"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary" type="TEARDOWN">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-02-17T06:31:16.541169" elapsed="0.000232"/>
+</kw>
+<status status="FAIL" start="2026-02-17T06:31:16.532628" elapsed="0.008985">Calling method 'add_argument' failed: TypeError: ArgOptions.add_argument() got an unexpected keyword argument '--headless'</status>
+</test>
+<doc>A test suite with a single test for valid login.</doc>
+<status status="FAIL" start="2026-02-17T06:31:16.299436" elapsed="0.242939"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Login" id="s1" pass="0" fail="1" skip="0">Login</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
