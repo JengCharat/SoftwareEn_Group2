@@ -4,8 +4,9 @@
             <div class="mb-8">
                 <h2 class="text-2xl font-bold text-gray-900">การเดินทางของฉัน</h2>
                 <p class="mt-2 text-gray-600">จัดการและติดตามการเดินทางทั้งหมดของคุณ</p>
+            
             </div>
-
+            
             <div class="p-6 mb-8 bg-white border border-gray-300 rounded-lg shadow-md">
                 <div class="flex flex-wrap gap-2">
                     <button v-for="tab in tabs" :key="tab.status" @click="activeTab = tab.status"
@@ -154,7 +155,7 @@
                                             class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50">
                                             ยกเลิกการจอง
                                         </button>
-                                        <button
+                                        <button @click.stop="openChat(trip.id)"
                                             class="px-4 py-2 text-sm text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700">
                                             แชทกับผู้ขับ
                                         </button>
@@ -224,6 +225,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
@@ -236,6 +238,7 @@ dayjs.extend(buddhistEra)
 
 const { $api } = useNuxtApp()
 const { toast } = useToast()
+const router = useRouter()
 
 // --- State Management ---
 const activeTab = ref('pending')
@@ -648,6 +651,11 @@ function openCancelModal(trip) {
 function closeCancelModal() {
     isCancelModalVisible.value = false
     tripToCancel.value = null
+}
+
+// เปิดห้องแชทกับคนขับ
+function openChat(bookingId) {
+    router.push(`/chat/${bookingId}`)
 }
 
 async function submitCancel() {
