@@ -9,7 +9,7 @@ Driver001 - Login As Driver Successfully
     Login As Driver
     Sleep    2s
     Location Should Contain    ${SERVER}
-    Title Should Be    คำขอจองเส้นทางของคุณ
+    Page Should Contain Element    xpath://*[contains(text(),'การเดินทางทั้งหมด')]
     [Teardown]    Close Browser Session
 
 Driver002 - Driver Can See My Trips Page With Notify Button
