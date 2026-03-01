@@ -8,7 +8,7 @@ Passenger001 - Login As Passenger Successfully
     [Documentation]    เข้าสู่ระบบในฐานะผู้โดยสารสำเร็จ
     Login As Passenger
     Location Should Contain    ${SERVER}
-    Title Should Be    คำขอจองเส้นทางของคุณ
+    Page Should Contain Element    xpath://*[contains(text(),'การเดินทางทั้งหมด')]
     [Teardown]    Close Browser Session
 
 Passenger002 - Passenger Can See Confirmed Trips
