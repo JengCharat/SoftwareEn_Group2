@@ -42,7 +42,8 @@ Passenger003 - Passenger Receives Popup Notification When Driver Is On The Way
     Wait Until Page Contains Element    xpath://button[contains(.,'รอ') and contains(.,'วิ')]    timeout=5s
 
     # ================= สลับกลับมาจอผู้โดยสาร =================
-    Switch Browser    3  
+    Switch Browser    passenger_browser  
+    Reload Page
     Sleep    2s 
     Click Button    xpath://button[contains(@class,'tab-button') and contains(.,'ยืนยันแล้ว')]
     Wait Until Page Contains    กำลังเดินทางมารับคุณ    timeout=10s

@@ -42,7 +42,10 @@ Login As Driver
     Sleep    2s
 
 Login As Passenger
-    Open Browser To Login Page
+    Open Browser    ${LOGIN URL}    ${BROWSER}    alias=passenger_browser
+    Maximize Browser Window
+    Set Selenium Speed    ${DELAY}
+    Title Should Be    ไปนำแหน่
     Input Username    ${PASSENGER USER}
     Input Password    ${PASSENGER PASS}
     Submit Login
