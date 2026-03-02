@@ -105,6 +105,15 @@ router.patch(
   bookingController.cancelBooking
 );
 
+// PATCH /bookings/:id/notify-pickup  (Driver แจ้ง Passenger ว่ากำลังไปรับ)
+router.patch(
+  '/:id/notify-pickup',
+  protect,
+  requireDriverVerified,
+  validate({ params: idParamSchema }),
+  bookingController.notifyPassengerDriverOnTheWay
+);
+
 // DELETE /bookings/:id
 router.delete(
   '/:id',

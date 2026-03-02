@@ -225,6 +225,7 @@ model Booking {
     cancelReason    CancelReason?
     pickupLocation  Json          @db.Json
     dropoffLocation Json          @db.Json
+    metadata        Json?         @db.Json
     createdAt       DateTime      @default(now())
     messages        Message[]     @relation("BookingMessages")
 }

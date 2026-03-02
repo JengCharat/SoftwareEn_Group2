@@ -1,24 +1,3 @@
-<<<<<<< HEAD
-<script setup>
-    const contacts = [
-    {name: "ตำรวจ (191)", phone:"191"},
-    {name: "รถพยาบาล (1669)", phone:"1669"},
-    {name: "สายด่วนจราจร (1197)", phone:"1197"},
-    {name: "Noaa", phone: "0894228587"}
-    ];
-
-    const selected = ref(null); // เก็บเบอร์ที่เลือก
-
-    //โทรออก
-    const makeCall = () => {
-    if (selected.value) {
-        window.location.href = `tel:${selected.value.phone}`;
-    }
-    };
-</script>
-
-=======
->>>>>>> 1d331f1e884295cdf56f46b6a506c2fea8932d15
 <template>
   <div class="p-6 max-w-4xl mx-auto">
     <h1 class="text-2xl font-bold text-red-600 mb-6 underline">SOS EMERGENCY</h1>

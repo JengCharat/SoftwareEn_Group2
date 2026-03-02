@@ -354,6 +354,22 @@
                                         แชทกับผู้โดยสาร
                                     </button>
 
+                                    <!-- ปุ่มแจ้งกำลังไปรับ (เฉพาะ confirmed) -->
+                                    <button v-if="trip.status === 'confirmed'"
+                                        @click.stop="notifyPickup(trip)"
+                                        :disabled="!!pickupCooldowns[trip.id]"
+                                        :class="[
+                                            'px-4 py-2 text-sm rounded-md transition duration-200',
+                                            pickupCooldowns[trip.id]
+                                                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                                : 'bg-orange-500 text-white hover:bg-orange-600'
+                                        ]">
+                                        <span v-if="pickupCooldowns[trip.id]">
+                                            รอ {{ pickupCooldowns[trip.id] }} วิ
+                                        </span>
+                                        <span v-else>แจ้งกำลังไปรับ</span>
+                                    </button>
+
                                     <button v-else-if="['rejected', 'cancelled'].includes(trip.status)"
                                         @click.stop="openConfirmModal(trip, 'delete')"
                                         class="px-4 py-2 text-sm text-gray-600 transition duration-200 border border-gray-300 rounded-md hover:bg-gray-50">
@@ -387,7 +403,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
@@ -409,6 +425,10 @@ const isLoading = ref(false)
 const mapContainer = ref(null)
 const allTrips = ref([])
 const myRoutes = ref([])
+
+// Cooldown ปุ่มแจ้งกำลังไปรับ: { [bookingId]: secondsRemaining }
+const pickupCooldowns = ref({})
+let cooldownTimers = {}
 
 // ---------- Google Maps states ----------
 let gmap = null
@@ -832,6 +852,53 @@ const copyEmail = async (email) => {
     }
 }
 
+// แจ้ง Passenger ว่าคนขับกำลังมารับ
+const notifyPickup = async (trip) => {
+    try {
+        await $api(`/bookings/${trip.id}/notify-pickup`, { method: 'PATCH' })
+        toast.success('แจ้งเตือนสำเร็จ', `ระบบแจ้ง ${trip.passenger.name} ว่าคุณกำลังเดินทางมารับแล้ว`)
+
+        // เริ่ม cooldown 180 วินาที
+        const COOLDOWN = 180
+        pickupCooldowns.value[trip.id] = COOLDOWN
+
+        if (cooldownTimers[trip.id]) clearInterval(cooldownTimers[trip.id])
+        cooldownTimers[trip.id] = setInterval(() => {
+            const remaining = (pickupCooldowns.value[trip.id] || 0) - 1
+            if (remaining <= 0) {
+                delete pickupCooldowns.value[trip.id]
+                clearInterval(cooldownTimers[trip.id])
+                delete cooldownTimers[trip.id]
+            } else {
+                pickupCooldowns.value[trip.id] = remaining
+            }
+        }, 1000)
+    } catch (err) {
+        console.error('notifyPickup error:', err)
+        // ถ้า backend ส่ง cooldown มาให้ตั้งค่าจาก error message
+        const msg = err?.data?.message || err?.message || ''
+        const match = msg.match(/wait (\d+) seconds/)
+        if (match) {
+            const secs = parseInt(match[1], 10)
+            pickupCooldowns.value[trip.id] = secs
+            if (cooldownTimers[trip.id]) clearInterval(cooldownTimers[trip.id])
+            cooldownTimers[trip.id] = setInterval(() => {
+                const remaining = (pickupCooldowns.value[trip.id] || 0) - 1
+                if (remaining <= 0) {
+                    delete pickupCooldowns.value[trip.id]
+                    clearInterval(cooldownTimers[trip.id])
+                    delete cooldownTimers[trip.id]
+                } else {
+                    pickupCooldowns.value[trip.id] = remaining
+                }
+            }, 1000)
+            toast.warning('ยังอยู่ใน Cooldown', `กรุณารอ ${secs} วินาที ก่อนส่งซ้ำ`)
+        } else {
+            toast.error('แจ้งเตือนไม่สำเร็จ', msg || 'ไม่สามารถส่งการแจ้งเตือนได้')
+        }
+    }
+}
+
 function formatDistance(input) {
     if (typeof input !== 'string') return input
     const parts = input.split('+')
@@ -929,6 +996,12 @@ watch(activeTab, () => {
     } else {
         if (filteredTrips.value.length > 0) updateMap(filteredTrips.value[0])
     }
+})
+
+onUnmounted(() => {
+    // clear all cooldown intervals when leaving the page
+    Object.values(cooldownTimers).forEach(t => clearInterval(t))
+    cooldownTimers = {}
 })
 </script>
 

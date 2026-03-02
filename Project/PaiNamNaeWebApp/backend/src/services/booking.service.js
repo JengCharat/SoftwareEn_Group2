@@ -2,6 +2,7 @@ const prisma = require('../utils/prisma');
 const ApiError = require('../utils/ApiError');
 const { RouteStatus, BookingStatus } = require('@prisma/client');
 const { checkAndApplyPassengerSuspension } = require('./penalty.service');
+const { sendEmail } = require('../utils/email');
 
 const ACTIVE_STATUSES = [BookingStatus.PENDING, BookingStatus.CONFIRMED];
 
@@ -490,6 +491,95 @@ const adminDeleteBooking = async (id) => {
   });
 };
 
+const notifyPassengerDriverOnTheWay = async (bookingId, driverId) => {
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+    include: {
+      passenger: { select: { id: true, email: true, firstName: true } },
+      route: {
+        include: {
+          driver: { select: { id: true, firstName: true, lastName: true } },
+        },
+      },
+    },
+  });
+
+  if (!booking) throw new ApiError(404, 'Booking not found');
+  if (booking.route.driverId !== driverId) throw new ApiError(403, 'Forbidden');
+  if (booking.status !== BookingStatus.CONFIRMED) {
+    throw new ApiError(400, 'Can only notify passenger for a CONFIRMED booking');
+  }
+
+  // Cooldown: ห้ามส่งซ้ำภายใน 3 นาที
+  const COOLDOWN_MS = 3 * 60 * 1000;
+  const lastNotified = booking.metadata?.lastPickupNotifiedAt;
+  if (lastNotified && Date.now() - new Date(lastNotified).getTime() < COOLDOWN_MS) {
+    const remainingSec = Math.ceil(
+      (COOLDOWN_MS - (Date.now() - new Date(lastNotified).getTime())) / 1000
+    );
+    throw new ApiError(429, `Please wait ${remainingSec} seconds before notifying again`);
+  }
+
+  const driver = booking.route.driver;
+  const driverName = [driver.firstName, driver.lastName].filter(Boolean).join(' ') || 'คนขับ';
+  const endLocation = booking.route.endLocation;
+  const destination = endLocation?.name || 'ปลายทาง';
+
+  const notifBody = `${driverName} กำลังเดินทางมารับคุณ (เส้นทางไป ${destination}, Booking: ${bookingId.slice(-6).toUpperCase()})`;
+
+  const [notification] = await prisma.$transaction([
+    prisma.notification.create({
+      data: {
+        userId: booking.passengerId,
+        type: 'BOOKING',
+        title: 'คนขับกำลังมารับคุณแล้ว',
+        body: notifBody,
+        metadata: {
+          kind: 'DRIVER_ON_THE_WAY',
+          bookingId,
+          routeId: booking.routeId,
+          driverId,
+        },
+      },
+    }),
+    prisma.booking.update({
+      where: { id: bookingId },
+      data: {
+        metadata: {
+          ...(booking.metadata || {}),
+          lastPickupNotifiedAt: new Date().toISOString(),
+        },
+      },
+    }),
+  ]);
+
+  // ส่งอีเมลแจ้งเตือนแบบ best-effort (ไม่ block response)
+  if (booking.passenger?.email) {
+    const passengerName = booking.passenger.firstName || 'ผู้โดยสาร';
+    sendEmail({
+      to: booking.passenger.email,
+      subject: `คนขับกำลังมารับคุณแล้ว — ไปนำแหน่`,
+      text: `สวัสดีคุณ ${passengerName},\n\n${notifBody}\n\nกรุณาเตรียมตัวให้พร้อม\n\n— ทีม ไปนำแหน่`,
+      html: `
+        <div style="font-family: 'Kanit', Arial, sans-serif; max-width: 520px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
+          <div style="background: #3b82f6; color: #fff; padding: 20px 24px;">
+            <h2 style="margin: 0; font-size: 20px;">คนขับกำลังมารับคุณแล้ว กรุณาเตรียมตัวให้พร้อม</h2>
+          </div>
+          <div style="padding: 24px;">
+            <p style="margin: 0 0 12px;">สวัสดีคุณ <strong>${passengerName}</strong>,</p>
+            <p style="margin: 0 0 12px;">${notifBody}</p>
+            <p style="margin: 0 0 12px;">กรุณาเตรียมตัวให้พร้อมที่จุดนัดพบ 🙂</p>
+            <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 16px 0;" />
+            <p style="margin: 0; font-size: 13px; color: #6b7280;">— ทีม ไปนำแหน่</p>
+          </div>
+        </div>
+      `,
+    }).catch(() => {}); // fire-and-forget
+  }
+
+  return notification;
+};
+
 module.exports = {
   searchBookingsAdmin,
   adminCreateBooking,
@@ -501,5 +591,6 @@ module.exports = {
   updateBookingStatus,
   cancelBooking,
   deleteBooking,
-  adminDeleteBooking
+  adminDeleteBooking,
+  notifyPassengerDriverOnTheWay,
 };

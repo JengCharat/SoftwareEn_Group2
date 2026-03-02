@@ -404,8 +404,10 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRuntimeConfig, useCookie } from '#app'
 import { useAuth } from '~/composables/useAuth'
+import { useToast } from '~/composables/useToast'
 
 const { token, user, logout } = useAuth()
+const { toast } = useToast()
 
 /* ====== เมนูบนสุดเดิม ====== */
 const isMobileMenuOpen = ref(false)
@@ -474,8 +476,11 @@ async function fetchUserNotifications() {
             title: it.title || '-',
             body: it.body || '',
             createdAt: it.createdAt || Date.now(),
-            readAt: it.readAt || null
+            readAt: it.readAt || null,
+            metadata: it.metadata || null,
         }))
+        // เพิ่ม ID ที่โหลดมาครั้งแรกเข้า seenNotifIds เพื่อไม่แสดง toast ซ้ำ
+        raw.forEach(it => seenNotifIds.add(it.id))
     } catch (e) {
         console.error(e)
         notifications.value = []
@@ -536,7 +541,71 @@ function onKey(e) {
         openMenuId.value = null
     }
 }
+/* ======== Polling: แจ้งเตือนแบบ Real-time (ทุก 30 วินาที) ======== */
+// เก็บ ID ของ notification ที่แสดง toast ไปแล้ว เพื่อไม่แสดงซ้ำ
+const seenNotifIds = new Set()
+// timestamp ที่ session นี้เริ่ม — แสดง toast เฉพาะ notification ที่สร้างหลังจากนี้
+const sessionStart = Date.now()
+let pollingInterval = null
 
+async function pollNotifications() {
+    if (!token.value) return
+    try {
+        const apiBase = useRuntimeConfig().public.apiBase || 'http://localhost:3000/api'
+        const tk = useCookie('token')?.value || (process.client ? localStorage.getItem('token') : '')
+
+        const res = await $fetch('/notifications', {
+            baseURL: apiBase,
+            headers: { Accept: 'application/json', ...(tk ? { Authorization: `Bearer ${tk}` } : {}) },
+            query: { page: 1, limit: 10, sortBy: 'createdAt', sortOrder: 'desc' }
+        })
+
+        const raw = Array.isArray(res?.data) ? res.data : []
+
+        // อัปเดต notifications list (merge)
+        for (const it of raw) {
+            const idx = notifications.value.findIndex(n => n.id === it.id)
+            const mapped = {
+                id: it.id,
+                title: it.title || '-',
+                body: it.body || '',
+                createdAt: it.createdAt || Date.now(),
+                readAt: it.readAt || null,
+                metadata: it.metadata || null,
+            }
+            if (idx === -1) {
+                notifications.value.unshift(mapped)
+            } else {
+                notifications.value[idx] = mapped
+            }
+
+            // แสดง Toast สำหรับ DRIVER_ON_THE_WAY ที่ยังไม่เคยเห็นและยังไม่ได้อ่าน
+            if (
+                !seenNotifIds.has(it.id) &&
+                !it.readAt &&
+                it.metadata?.kind === 'DRIVER_ON_THE_WAY' &&
+                new Date(it.createdAt).getTime() > sessionStart
+            ) {
+                seenNotifIds.add(it.id)
+                toast.warning('แจ้งเตือน', it.body || it.title, 8000)
+            }
+        }
+    } catch (e) {
+        // silently ignore polling errors
+    }
+}
+
+function startNotificationPolling() {
+    if (pollingInterval) return
+    pollingInterval = setInterval(pollNotifications, 30000)
+}
+
+function stopNotificationPolling() {
+    if (pollingInterval) {
+        clearInterval(pollingInterval)
+        pollingInterval = null
+    }
+}
 /* เวลาแบบย่อ */
 function timeAgo(ts) {
     const ms = Date.now() - new Date(ts).getTime()
@@ -554,13 +623,17 @@ onMounted(() => {
     window.addEventListener('resize', handleResize)
     document.addEventListener('click', onClickOutside)
     document.addEventListener('keydown', onKey)
-    if (token.value) fetchUserNotifications()
+    if (token.value) {
+        fetchUserNotifications()
+        startNotificationPolling()
+    }
 })
 
 onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
     document.removeEventListener('click', onClickOutside)
     document.removeEventListener('keydown', onKey)
+    stopNotificationPolling()
 })
 
 /* ใส่ฟอนต์ Kanit แบบเดิม */
