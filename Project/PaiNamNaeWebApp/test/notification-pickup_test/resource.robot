@@ -3,7 +3,7 @@ Documentation     A resource file with reusable keywords and variables for Paina
 Library           SeleniumLibrary
 
 *** Variables ***
-${SERVER}         10.198.200.88:3003
+${SERVER}         csse0269.cpkku.com
 ${BROWSER}        Chrome
 ${DELAY}          0.5
 ${DRIVER USER}    user12
