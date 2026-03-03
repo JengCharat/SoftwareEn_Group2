@@ -1,0 +1,13 @@
+{
+  "id": "1cf91614-55a9-4047-afc4-385ee9ff4ecd",
+  "name": "agile2",
+  "values": [
+    {
+      "key": "token",
+      "value": "",
+      "enabled": true,
+      "type": "any"
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

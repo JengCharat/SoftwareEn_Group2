@@ -1,0 +1,220 @@
+{
+	"id": "aaa7729f-2f95-4f78-a4be-f6fb11096679",
+	"name": "agile sprint2 nonitifaction",
+	"timestamp": "2026-03-03T16:20:28.849Z",
+	"collection_id": "42521469-d211e498-2d1e-4ebe-bac5-a531f10d6347",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 0,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2026-03-03T16:20:25.353Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "be2ac107-038f-4bad-a4ed-dbb2471be4ab",
+			"name": "1.login as driver",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/auth/login",
+			"time": 536,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				536
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "78645c36-4837-4cef-a4be-1c93ce2eede3",
+			"name": "2.Driver แจ้ง Passenger ว่ากำลังไปรับ",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmln7q0pd0058fzm3tmu8ic6i/notify-pickup",
+			"time": 136,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				136
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "e1381da8-621a-4736-97a0-875ba0b5dec3",
+			"name": "3.invalid id",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmln7q0pd0058fzm3tmu8ic6i/notify-pickup",
+			"time": 100,
+			"responseCode": {
+				"code": 429,
+				"name": "Too Many Requests"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				100
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "4fed2c59-a106-4937-a782-eef598ba0500",
+			"name": "4.login as another driver",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/auth/login",
+			"time": 208,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				208
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "e8fed0af-83b0-464d-8521-d898d1da059a",
+			"name": "5.Driver ไม่ใช่เจ้าของ route",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmln7q0pd0058fzm3tmu8ic6i/notify-pickup",
+			"time": 97,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				97
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "332c8679-168c-4f1a-b1ef-3cfdb8bc8935",
+			"name": "6.login as driver Copy",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/auth/login",
+			"time": 208,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				208
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "84d28107-1141-4eb9-87c9-d26401d567aa",
+			"name": "7.Booking ไม่ใช่ CONFIRMED",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmlqpt3u300ak3ughdidqh6md/notify-pickup",
+			"time": 98,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				98
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "f455953d-d7d5-4106-b9f0-44046d4e5cc5",
+			"name": "8.login as passenger",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/auth/login",
+			"time": 206,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				206
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "1bddbded-da7a-4377-b4b8-97c0bc3c7ae8",
+			"name": "9.passenger แจ้ง Passenger ว่ากำลังไปรับ Copy",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmln7q0pd0058fzm3tmu8ic6i/notify-pickup",
+			"time": 109,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				109
+			],
+			"allTests": [
+				{}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 1698,
+	"collection": {
+		"requests": [
+			{
+				"id": "be2ac107-038f-4bad-a4ed-dbb2471be4ab",
+				"method": "POST"
+			},
+			{
+				"id": "78645c36-4837-4cef-a4be-1c93ce2eede3",
+				"method": "PATCH"
+			},
+			{
+				"id": "e1381da8-621a-4736-97a0-875ba0b5dec3",
+				"method": "PATCH"
+			},
+			{
+				"id": "4fed2c59-a106-4937-a782-eef598ba0500",
+				"method": "POST"
+			},
+			{
+				"id": "e8fed0af-83b0-464d-8521-d898d1da059a",
+				"method": "PATCH"
+			},
+			{
+				"id": "332c8679-168c-4f1a-b1ef-3cfdb8bc8935",
+				"method": "POST"
+			},
+			{
+				"id": "84d28107-1141-4eb9-87c9-d26401d567aa",
+				"method": "PATCH"
+			},
+			{
+				"id": "f455953d-d7d5-4106-b9f0-44046d4e5cc5",
+				"method": "POST"
+			},
+			{
+				"id": "1bddbded-da7a-4377-b4b8-97c0bc3c7ae8",
+				"method": "PATCH"
+			}
+		]
+	}
+}
