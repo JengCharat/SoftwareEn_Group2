@@ -111,6 +111,17 @@
 
             <!-- Messages List -->
             <div v-else class="space-y-1">
+                <!-- Personal Info Safety Reminder Banner (คล้าย Lazada) -->
+                <div class="mx-2 my-3 px-4 py-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+                    <div class="flex items-start gap-2">
+                        <span class="text-yellow-500 text-base mt-0.5">⚠️</span>
+                        <p class="text-xs text-yellow-800 leading-relaxed">
+                            <strong>แจ้งเตือนจาก PaiNamNae</strong> — ข้อความทั้งหมดต้องเป็นไปตามนโยบายชุมชนของเรา 
+                            ผู้ใช้ไม่ควรแชร์ข้อมูลส่วนตัว เช่น เบอร์โทรศัพท์ ที่อยู่ อีเมล บัญชีโซเชียลมีเดีย 
+                            หรือเลขบัตรประชาชนในแชท เพื่อปกป้องตัวคุณจากการหลอกลวง
+                        </p>
+                    </div>
+                </div>
                 <!-- Date Separator -->
                 <template v-for="(group, dateKey) in groupedMessages" :key="dateKey">
                     <div class="flex items-center justify-center my-4">

@@ -42,7 +42,11 @@ export function useChat() {
      * ดึงรายการข้อความทั้งหมด
      */
     const fetchMessages = async (bookingId, opts = {}) => {
-        isLoading.value = true
+        // ตั้ง isLoading เฉพาะตอนโหลดครั้งแรก (ไม่ใช่ตอน polling)
+        const isInitialLoad = messages.value.length === 0
+        if (isInitialLoad) {
+            isLoading.value = true
+        }
         error.value = null
         try {
             const params = new URLSearchParams({
@@ -50,30 +54,27 @@ export function useChat() {
                 limit: opts.limit || 50,
                 sortOrder: opts.sortOrder || 'asc'
             })
+            
             const response = await $api(`/bookings/${bookingId}/messages?${params}`)
             
-            // Response ถูก transform แล้วจาก plugin เป็น data array
-            // แต่เราต้องการ pagination ด้วย ต้องเรียกแบบ raw
-            const rawResponse = await $api.raw(`/bookings/${bookingId}/messages?${params}`)
-            const body = rawResponse._data
-            
-            if (Array.isArray(body)) {
-                messages.value = body
-            } else if (body?.data) {
-                messages.value = body.data
-                if (body.pagination) {
-                    pagination.value = body.pagination
-                }
+            // onResponse plugin จะ extract .data ออกมาเป็น array แล้ว
+            if (Array.isArray(response)) {
+                messages.value = response
             } else {
                 messages.value = response || []
             }
             
             return messages.value
         } catch (e) {
-            error.value = e.statusMessage || 'ไม่สามารถโหลดข้อความได้'
+            // ถ้าเป็นการ polling แล้ว error ไม่ต้อง set (ให้ข้อความเดิมคงอยู่)
+            if (isInitialLoad) {
+                error.value = e.statusMessage || 'ไม่สามารถโหลดข้อความได้'
+            }
             throw e
         } finally {
-            isLoading.value = false
+            if (isInitialLoad) {
+                isLoading.value = false
+            }
         }
     }
 
@@ -170,14 +171,40 @@ export function useChat() {
     }
 
     /**
-     * Refresh ข้อความ (polling)
+     * Refresh ข้อความ (polling) - ดึงเฉพาะข้อความใหม่ที่ยังไม่มี
      */
     const refreshMessages = async (bookingId) => {
         try {
-            await fetchMessages(bookingId)
+            const params = new URLSearchParams({
+                page: 1,
+                limit: 50,
+                sortOrder: 'asc'
+            })
+            
+            const response = await $api(`/bookings/${bookingId}/messages?${params}`)
+            const freshMessages = Array.isArray(response) ? response : (response || [])
+            
+            // Merge: เก็บข้อความเดิมที่มีอยู่ และเพิ่มข้อความใหม่
+            const existingIds = new Set(messages.value.map(m => m.id))
+            const newMessages = freshMessages.filter(m => !existingIds.has(m.id))
+            
+            if (newMessages.length > 0) {
+                messages.value = [...messages.value, ...newMessages]
+            }
+            
+            // อัพเดท readAt สำหรับข้อความที่ถูก mark as read แล้ว
+            const freshMap = new Map(freshMessages.map(m => [m.id, m]))
+            messages.value = messages.value.map(m => {
+                const fresh = freshMap.get(m.id)
+                if (fresh && fresh.readAt && !m.readAt) {
+                    return { ...m, readAt: fresh.readAt }
+                }
+                return m
+            })
+            
             await fetchUnreadCount(bookingId)
         } catch (e) {
-            // Silently fail for polling
+            // Silently fail for polling — ข้อความเดิมยังคงแสดงอยู่
         }
     }
 

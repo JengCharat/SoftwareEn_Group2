@@ -90,3 +90,87 @@
 - Implemented: 2026-03-10
 - Sprint: Sprint 3
 - AI Declare (Claude Opus 4.6) : ใช้ในการออกแบบ Web Push architecture, สร้าง Service Worker, webpush utility, push subscription API และ composable
+
+---
+
+## Story Card #10 (Enhancement) — Personal Info Protection ในระบบแชท
+
+**User Story:**
+> As a driver, I want to send a message to a passenger without revealing too much personal information so that I can communicate with them in a safer manner.
+
+**เป้าหมาย:** เพิ่มระบบตรวจจับและแจ้งเตือนเมื่อผู้ใช้พยายามส่งข้อมูลส่วนตัว (เบอร์โทร, ที่อยู่, อีเมล, บัญชีโซเชียลมีเดีย ฯลฯ) ผ่านระบบแชท เพื่อป้องกันการหลอกลวงและรักษาความเป็นส่วนตัว (คล้ายระบบ Community Policy ของ Lazada)
+
+---
+
+### Acceptance Criteria
+
+| # | เงื่อนไข | หมายเหตุ |
+|---|---------|---------|
+| AC-1 | เมื่อผู้ใช้กำลังพิมพ์ข้อความที่มีข้อมูลส่วนตัว จะแสดง **warning สีเหลือง** แบบ real-time ใต้ช่องพิมพ์ | ตรวจจับขณะพิมพ์โดยใช้ computed property |
+| AC-2 | เมื่อผู้ใช้กดส่งข้อความที่มีข้อมูลส่วนตัว จะแสดง **Confirmation Modal** ให้เลือก "แก้ไขข้อความ" หรือ "ส่งต่อไป" | ป้องกันการส่งโดยไม่ตั้งใจ |
+| AC-3 | มี **แบนเนอร์แจ้งเตือนถาวร** ด้านบนรายการข้อความในห้องแชท (คล้าย Lazada Community Policy) | แจ้งเตือนตลอดว่าไม่ควรแชร์ข้อมูลส่วนตัว |
+| AC-4 | ระบบตรวจจับครอบคลุมทั้ง **ภาษาไทยและอังกฤษ** รวมถึงเทคนิคหลบเลี่ยง | รองรับ zero-width chars, เลขไทย, เขียนเป็นคำ, ใส่ตัวคั่น ฯลฯ |
+| AC-5 | Backend ตรวจจับข้อมูลส่วนตัวและแนบ **warning flag** ใน response กลับมา | เป็น defense-in-depth ไม่ block การส่ง |
+| AC-6 | แก้ไข bug ข้อความหายตอน polling refresh ทุก 5 วินาที | `isLoading` ไม่ถูก set ตอน polling, ใช้ merge strategy แทน replace |
+
+---
+
+### การเปลี่ยนแปลงที่ implement
+
+#### Frontend
+
+**`frontend/utils/personalInfoDetector.js`** *(สร้างใหม่)*
+- ฟังก์ชัน `detectPersonalInfo(text)` — ตรวจจับข้อมูลส่วนตัว 15+ หมวด
+- ฟังก์ชัน `normalizeText(text)` — ลบ zero-width characters เพื่อป้องกันการหลบ regex
+- ใช้ `Set` สำหรับ deduplicate ชื่อหมวดที่ตรวจพบ
+
+**ข้อมูลที่ตรวจจับได้:**
+
+| หมวด | ตัวอย่างที่ตรวจจับ (ไทย + อังกฤษ) |
+|---|---|
+| เบอร์โทรศัพท์ | `08x-xxx-xxxx`, `+66`, เลขไทย `๐๘๑...`, เขียนเป็นคำ, keyword `โทร/tel/call me` |
+| อีเมล | `xxx@xxx.com`, `xxx แอท gmail`, fullwidth `＠` |
+| LINE ID | `ไลน์/แอดไลน์/ทักไลน์/line id`, `line.me/xxx`, `เพิ่มเพื่อน/ทักมา` |
+| เลขบัตรประชาชน | 13 หลักแยกด้วยตัวคั่นใดก็ได้, keyword `เลขบัตร/national id` |
+| Facebook | `เฟส/fb/เฟสบุ๊ค`, `facebook.com/xxx`, `messenger/inbox เฟส` |
+| Instagram | `ไอจี/ig/อินสตาแกรม`, `instagram.com/xxx` |
+| Twitter/X | `ทวิตเตอร์/twitter`, `x.com/xxx` |
+| TikTok | `ติ๊กต๊อก/tiktok`, `tiktok.com/@xxx` |
+| Telegram | `เทเลแกรม/telegram`, `t.me/xxx` |
+| Discord | `ดิสคอร์ด/discord` |
+| WeChat | `วีแชท/wechat` |
+| เลขบัญชีธนาคาร | ชื่อธนาคาร (กสิกร, SCB, KBank ฯลฯ), `บัญชี/account`, `พร้อมเพย์/promptpay`, `โอนเงิน` |
+| ที่อยู่ (ไทย) | ตำบล, อำเภอ, จังหวัด, ซอย, ถนน, หมู่, อาคาร, คอนโด, รหัสไปรษณีย์ 5 หลัก, ชื่อจังหวัด |
+| ที่อยู่ (EN) | `address/send to/deliver to`, `street/road/building/soi/district` |
+| ลิงก์/URL | `https://...`, `www.xxx.com` |
+| เลขพาสปอร์ต | `พาสปอร์ต/passport` |
+| เลขใบขับขี่ | `ใบขับขี่/driver's license` |
+
+**`frontend/components/chat/ChatInput.vue`** *(แก้ไข)*
+- เพิ่ม real-time warning ขณะพิมพ์ (แถบสีเหลืองแสดงหมวดข้อมูลที่ตรวจพบ)
+- เพิ่ม Confirmation Modal ก่อนส่งข้อความที่มีข้อมูลส่วนตัว (เลือก "แก้ไขข้อความ" หรือ "ส่งต่อไป")
+- แยก `handleSubmit()` (ตรวจจับ) กับ `doSend()` (ส่งจริง) ออกจากกัน
+
+**`frontend/components/chat/ChatRoom.vue`** *(แก้ไข)*
+- เพิ่มแบนเนอร์ "⚠️ แจ้งเตือนจาก PaiNamNae" ด้านบนรายการข้อความ (คล้าย Lazada Community Policy warning)
+
+**`frontend/composables/useChat.js`** *(แก้ไข)*
+- แก้ bug `isLoading = true` ตอน polling ที่ทำให้ข้อความหายทุก 5 วินาที → ตั้ง `isLoading` เฉพาะตอนโหลดครั้งแรก
+- ลบ double API call (`$api()` + `$api.raw()` ที่ซ้ำซ้อน)
+- เปลี่ยน `refreshMessages()` เป็น **merge strategy** — รวมข้อความใหม่เข้ากับเดิมแทนที่จะเขียนทับ + อัพเดท `readAt`
+
+#### Backend
+
+**`backend/src/utils/personalInfoDetector.js`** *(สร้างใหม่)*
+- เหมือน frontend version (CommonJS module) — ใช้ตรวจจับฝั่ง server เป็น defense-in-depth
+
+**`backend/src/services/message.service.js`** *(แก้ไข)*
+- Import `detectPersonalInfo` จาก utils
+- เมื่อส่งข้อความที่มีข้อมูลส่วนตัว → แนบ `personalInfoWarning` ใน response (detected: true, types, warning message)
+
+---
+
+### วันที่
+- Implemented: 2026-03-11
+- Sprint: Sprint 3
+- AI Declare (Claude Opus 4.6) : ใช้ในการออกแบบระบบตรวจจับข้อมูลส่วนตัว, สร้าง regex patterns (ไทย+อังกฤษ), UI warning/confirmation modal, แก้ bug polling, และ backend PII detection
