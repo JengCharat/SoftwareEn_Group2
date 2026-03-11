@@ -410,8 +410,10 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRuntimeConfig, useCookie } from '#app'
 import { useAuth } from '~/composables/useAuth'
+import { usePushNotification } from '~/composables/usePushNotification'
 
 const { token, user, logout } = useAuth()
+const { subscribePush, checkExistingSubscription } = usePushNotification()
 
 /* ====== เมนูบนสุดเดิม ====== */
 const isMobileMenuOpen = ref(false)
@@ -560,7 +562,12 @@ onMounted(() => {
     window.addEventListener('resize', handleResize)
     document.addEventListener('click', onClickOutside)
     document.addEventListener('keydown', onKey)
-    if (token.value) fetchUserNotifications()
+    if (token.value) {
+        fetchUserNotifications()
+        checkExistingSubscription().then((exists) => {
+            if (!exists) subscribePush()
+        })
+    }
 })
 
 onUnmounted(() => {

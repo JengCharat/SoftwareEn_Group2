@@ -3,6 +3,7 @@ const ApiError = require('../utils/ApiError');
 const { RouteStatus, BookingStatus } = require('@prisma/client');
 const { checkAndApplyPassengerSuspension } = require('./penalty.service');
 const { sendEmail } = require('../utils/email');
+const { sendPushToUser } = require('../utils/webpush');
 
 const ACTIVE_STATUSES = [BookingStatus.PENDING, BookingStatus.CONFIRMED];
 
@@ -553,7 +554,15 @@ const notifyPassengerDriverOnTheWay = async (bookingId, driverId) => {
     }),
   ]);
 
-  // ส่งอีเมลแจ้งเตือนแบบ best-effort (ไม่ block response)
+  // ส่ง Web Push แบบ best-effort (ไม่ block response)
+  sendPushToUser(booking.passengerId, {
+    title: 'คนขับกำลังมารับคุณแล้ว',
+    body: notifBody,
+    url: `/myTrip`,
+    icon: '/favicon.ico',
+  }).catch(() => {});
+
+  // ส่งอีเมลแจ้งเตือนแบบ best-effort (fallback)
   if (booking.passenger?.email) {
     const passengerName = booking.passenger.firstName || 'ผู้โดยสาร';
     sendEmail({

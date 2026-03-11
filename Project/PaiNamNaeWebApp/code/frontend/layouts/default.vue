@@ -405,9 +405,11 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRuntimeConfig, useCookie } from '#app'
 import { useAuth } from '~/composables/useAuth'
 import { useToast } from '~/composables/useToast'
+import { usePushNotification } from '~/composables/usePushNotification'
 
 const { token, user, logout } = useAuth()
 const { toast } = useToast()
+const { subscribePush, checkExistingSubscription, pushSubscribed } = usePushNotification()
 
 /* ====== เมนูบนสุดเดิม ====== */
 const isMobileMenuOpen = ref(false)
@@ -626,6 +628,10 @@ onMounted(() => {
     if (token.value) {
         fetchUserNotifications()
         startNotificationPolling()
+        // ลงทะเบียน Web Push — ถ้ายังไม่เคย subscribe จะขอ permission
+        checkExistingSubscription().then((exists) => {
+            if (!exists) subscribePush()
+        })
     }
 })
 
