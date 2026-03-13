@@ -32,6 +32,7 @@ enum BookingStatus {
     CONFIRMED
     REJECTED
     CANCELLED
+    COMPLETED // SC#15 — การเดินทางเสร็จสิ้นแล้ว
 }
 
 enum CancelReason {
@@ -95,6 +96,8 @@ model User {
     reportsCreated          DriverReport[]     @relation("ReportsCreated")
     reportsReceived         DriverReport[]     @relation("ReportsReceived")
     locationShares          LocationShare[]    @relation("PassengerLocationShares")
+    reviewsGiven            Review[]           @relation("ReviewsGiven")
+    reviewsReceived         Review[]           @relation("ReviewsReceived")
 
     @@index([role])
     @@index([isActive])
@@ -234,6 +237,7 @@ model Booking {
     messages        Message[]     @relation("BookingMessages")
     driverReports   DriverReport[]
     locationShares  LocationShare[]
+    review          Review?
 }
 
 // ระบบข้อความแบบปลอดภัย - สื่อสารผ่าน booking โดยไม่เปิดเผยข้อมูลส่วนตัว
@@ -345,6 +349,25 @@ model DriverReport {
     @@index([reporterId])
     @@index([status])
     @@index([createdAt])
+}
+
+// SC#15 — ระบบรีวิวการเดินทาง
+model Review {
+    id          String   @id @default(cuid())
+    bookingId   String   @unique
+    booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+    passengerId String
+    passenger   User     @relation("ReviewsGiven", fields: [passengerId], references: [id], onDelete: Cascade)
+    driverId    String
+    driver      User     @relation("ReviewsReceived", fields: [driverId], references: [id], onDelete: Cascade)
+    rating      Int      // 1–5 ดาว
+    comment     String?  // ความคิดเห็น (ไม่บังคับ)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@index([driverId])
+    @@index([passengerId])
+    @@map("reviews")
 }
 
 // SC#14 — ระบบแชร์โลเคชันให้ Emergency Contacts

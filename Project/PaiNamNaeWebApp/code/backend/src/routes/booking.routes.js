@@ -114,6 +114,15 @@ router.patch(
   bookingController.notifyPassengerDriverOnTheWay
 );
 
+// PATCH /bookings/:id/complete  (Driver กดเสร็จสิ้นการเดินทาง)
+router.patch(
+  '/:id/complete',
+  protect,
+  requireDriverVerified,
+  validate({ params: idParamSchema }),
+  bookingController.completeBooking
+);
+
 // DELETE /bookings/:id
 router.delete(
   '/:id',

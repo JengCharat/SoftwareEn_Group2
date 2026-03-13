@@ -308,8 +308,15 @@ const getMyBookings = async (passengerId) => {
             }
           }
         }
+      },
+      review: {
+        select: {
+          id: true,
+          rating: true,
+          comment: true,
+          createdAt: true,
+        }
       }
-
     },
     orderBy: { createdAt: 'desc' },
   });
@@ -589,6 +596,20 @@ const notifyPassengerDriverOnTheWay = async (bookingId, driverId) => {
   return notification;
 };
 
+const completeBooking = async (bookingId, driverId) => {
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+    include: { route: { select: { driverId: true } } },
+  });
+  if (!booking) throw new ApiError(404, 'ไม่พบการจองนี้');
+  if (booking.route.driverId !== driverId) throw new ApiError(403, 'คุณไม่ใช่คนขับของการจองนี้');
+  if (booking.status !== 'CONFIRMED') throw new ApiError(400, 'สามารถเสร็จสิ้นได้เฉพาะการจองที่ยืนยันแล้วเท่านั้น');
+  return prisma.booking.update({
+    where: { id: bookingId },
+    data: { status: 'COMPLETED' },
+  });
+};
+
 module.exports = {
   searchBookingsAdmin,
   adminCreateBooking,
@@ -602,4 +623,5 @@ module.exports = {
   deleteBooking,
   adminDeleteBooking,
   notifyPassengerDriverOnTheWay,
+  completeBooking,
 };

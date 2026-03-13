@@ -49,6 +49,8 @@
                                                 class="status-badge status-rejected">ปฏิเสธ</span>
                                             <span v-else-if="trip.status === 'cancelled'"
                                                 class="status-badge status-cancelled">ยกเลิก</span>
+                                            <span v-else-if="trip.status === 'completed'"
+                                                class="status-badge status-completed">เสร็จสิ้น</span>
                                         </div>
                                         <p class="mt-1 text-sm text-gray-600">จุดนัดพบ: {{ trip.pickupPoint }}</p>
                                         <p class="text-sm text-gray-600">
@@ -64,21 +66,27 @@
                                 </div>
 
                                 <div class="flex items-center mb-4 space-x-4">
-                                    <img :src="trip.driver.image" :alt="trip.driver.name"
-                                        class="object-cover w-12 h-12 rounded-full" />
-                                    <div class="flex-1">
-                                        <h5 class="font-medium text-gray-900">{{ trip.driver.name }}</h5>
-                                        <div class="flex items-center">
-                                            <div class="flex text-sm text-yellow-400">
-                                                <span>
-                                                    {{ '★'.repeat(Math.round(trip.driver.rating)) }}{{ '☆'.repeat(5 -
-                                                        Math.round(trip.driver.rating)) }}
-                                                </span>
+                                    <button @click.stop="openDriverReviews(trip)"
+                                        class="flex items-center gap-3 flex-1 min-w-0 text-left hover:bg-gray-50 rounded-lg transition-colors -mx-1 px-1 py-1">
+                                        <img :src="trip.driver.image" :alt="trip.driver.name"
+                                            class="object-cover w-12 h-12 rounded-full flex-shrink-0" />
+                                        <div class="flex-1 min-w-0">
+                                            <h5 class="font-medium text-gray-900 flex items-center gap-1">
+                                                {{ trip.driver.name }}
+                                                <span class="text-xs text-blue-500 font-normal">(ดูรีวิว)</span>
+                                            </h5>
+                                            <div class="flex items-center">
+                                                <div class="flex text-sm text-yellow-400">
+                                                    <span>
+                                                        {{ '★'.repeat(Math.round(trip.driver.rating)) }}{{ '☆'.repeat(5 -
+                                                            Math.round(trip.driver.rating)) }}
+                                                    </span>
+                                                </div>
+                                                <span class="ml-2 text-sm text-gray-600">{{ trip.driver.rating }} ({{
+                                                    trip.driver.reviews }} รีวิว)</span>
                                             </div>
-                                            <span class="ml-2 text-sm text-gray-600">{{ trip.driver.rating }} ({{
-                                                trip.driver.reviews }} รีวิว)</span>
                                         </div>
-                                    </div>
+                                    </button>
                                     <div class="text-right">
                                         <div class="text-lg font-bold text-blue-600">{{ trip.price }} บาท</div>
                                         <div class="text-sm text-gray-600">จำนวน {{ trip.seats }} ที่นั่ง</div>
@@ -149,13 +157,13 @@
                                         ยกเลิกการจอง
                                     </button>
 
-                                    <!-- CONFIRMED: เพิ่มปุ่มยกเลิก + คงปุ่มแชท -->
+                                    <!-- CONFIRMED: ปุ่มยกเลิก + แชท + รายงาน (รีวิวได้เฉพาะ COMPLETED) -->
                                     <template v-else-if="trip.status === 'confirmed'">
                                         <button @click.stop="openCancelModal(trip)"
                                             class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50">
                                             ยกเลิกการจอง
                                         </button>
-                                        <NuxtLink :to="`/report/create?driverId=${trip.route?.driverId || ''}&bookingId=${trip.id}`"
+                                        <NuxtLink :to="`/report/create?driverId=${trip.driverId || ''}&bookingId=${trip.id}`"
                                             @click.stop
                                             class="px-4 py-2 text-sm text-orange-600 transition duration-200 border border-orange-300 rounded-md hover:bg-orange-50">
                                             รายงานคนขับ
@@ -163,6 +171,22 @@
                                         <button @click.stop="openChat(trip.id)"
                                             class="px-4 py-2 text-sm text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700">
                                             แชทกับผู้ขับ
+                                        </button>
+                                    </template>
+
+                                    <!-- COMPLETED: รีวิวและลบได้ -->
+                                    <template v-else-if="trip.status === 'completed'">
+                                        <button v-if="!trip.hasReview" @click.stop="openReviewModal(trip)"
+                                            class="px-4 py-2 text-sm text-yellow-700 transition duration-200 border border-yellow-400 rounded-md hover:bg-yellow-50">
+                                            ⭐ ให้คะแนน
+                                        </button>
+                                        <span v-else
+                                            class="px-4 py-2 text-sm text-green-600 border border-green-300 rounded-md bg-green-50">
+                                            ✓ รีวิวแล้ว ({{ trip.reviewData?.rating }}★)
+                                        </span>
+                                        <button @click.stop="openConfirmModal(trip, 'delete')"
+                                            class="px-4 py-2 text-sm text-gray-600 transition duration-200 border border-gray-300 rounded-md hover:bg-gray-50">
+                                            ลบรายการ
                                         </button>
                                     </template>
 
@@ -225,6 +249,15 @@
         <ConfirmModal :show="isModalVisible" :title="modalContent.title" :message="modalContent.message"
             :confirmText="modalContent.confirmText" :variant="modalContent.variant" @confirm="handleConfirmAction"
             @cancel="closeConfirmModal" />
+
+        <!-- ReviewModal -->
+        <ReviewModal :show="isReviewModalOpen" :trip="reviewTargetTrip" @close="isReviewModalOpen = false"
+            @submitted="onReviewSubmitted" />
+
+        <!-- DriverReviewsModal -->
+        <DriverReviewsModal :show="isDriverReviewsOpen" :driver-id="driverReviewTarget?.id"
+            :driver-name="driverReviewTarget?.name" :driver-image="driverReviewTarget?.image"
+            @close="isDriverReviewsOpen = false" />
     </div>
 </template>
 
@@ -235,6 +268,8 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
 import ConfirmModal from '~/components/ConfirmModal.vue'
+import ReviewModal from '~/components/ReviewModal.vue'
+import DriverReviewsModal from '~/components/DriverReviewsModal.vue'
 import { useToast } from '~/composables/useToast'
 
 // Setup dayjs for Thai locale
@@ -269,6 +304,7 @@ const GMAPS_CB = '__gmapsReady__'
 const tabs = [
     { status: 'pending', label: 'รอดำเนินการ' },
     { status: 'confirmed', label: 'ยืนยันแล้ว' },
+    { status: 'completed', label: 'เสร็จสิ้น' },
     { status: 'rejected', label: 'ปฏิเสธ' },
     { status: 'cancelled', label: 'ยกเลิก' },
     { status: 'all', label: 'ทั้งหมด' }
@@ -293,6 +329,13 @@ const isSubmittingCancel = ref(false)
 const selectedCancelReason = ref('')
 const cancelReasonError = ref('')
 const tripToCancel = ref(null)
+
+// --- Review Modal State ---
+const isReviewModalOpen = ref(false)
+const reviewTargetTrip = ref(null)
+
+const isDriverReviewsOpen = ref(false)
+const driverReviewTarget = ref(null)
 
 // --- Computed Properties ---
 const filteredTrips = computed(() => {
@@ -327,7 +370,6 @@ async function fetchMyTrips() {
                 rating: 4.5,
                 reviews: Math.floor(Math.random() * 50) + 5
             }
-
             const carDetails = []
             if (b.route.vehicle) {
                 carDetails.push(`${b.route.vehicle.vehicleModel} (${b.route.vehicle.vehicleType})`)
@@ -371,6 +413,10 @@ async function fetchMyTrips() {
             return {
                 id: b.id,
                 status: String(b.status || '').toLowerCase(),
+                driverId: b.route.driverId,
+                departureTimeRaw: b.route.departureTime,
+                hasReview: !!b.review,
+                reviewData: b.review || null,
                 origin: start?.name || `(${Number(start.lat).toFixed(2)}, ${Number(start.lng).toFixed(2)})`,
                 destination: end?.name || `(${Number(end.lat).toFixed(2)}, ${Number(end.lng).toFixed(2)})`,
                 originAddress: start?.address ? cleanAddr(start.address) : null,
@@ -663,6 +709,30 @@ function openChat(bookingId) {
     router.push(`/chat/${bookingId}`)
 }
 
+// --- Review Logic ---
+function canReview(trip) {
+    return trip.status === 'completed' && !trip.hasReview
+}
+
+function openReviewModal(trip) {
+    reviewTargetTrip.value = trip
+    isReviewModalOpen.value = true
+}
+
+function openDriverReviews(trip) {
+    driverReviewTarget.value = { id: trip.driverId, name: trip.driver.name, image: trip.driver.image }
+    isDriverReviewsOpen.value = true
+}
+
+function onReviewSubmitted({ bookingId, rating, comment }) {
+    const idx = allTrips.value.findIndex((t) => t.id === bookingId)
+    if (idx !== -1) {
+        allTrips.value[idx].hasReview = true
+        allTrips.value[idx].reviewData = { rating, comment }
+    }
+    toast.success('ส่งรีวิวสำเร็จ', `ขอบคุณสำหรับรีวิว ${rating} ดาว!`)
+}
+
 async function submitCancel() {
     if (!selectedCancelReason.value) {
         cancelReasonError.value = 'กรุณาเลือกเหตุผล'
@@ -846,6 +916,11 @@ function initializeMap() {
 .status-cancelled {
     background-color: #f3f4f6;
     color: #6b7280;
+}
+
+.status-completed {
+    background-color: #d1fae5;
+    color: #065f46;
 }
 
 @keyframes slide-in-from-top {

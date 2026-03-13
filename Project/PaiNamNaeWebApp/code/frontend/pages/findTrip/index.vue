@@ -95,13 +95,16 @@
                                         route.destinationName }}
                                 </h1>
                                 <div class="flex items-start space-x-4">
-                                    <img :src="route.driver.image" :alt="route.driver.name"
-                                        class="object-cover w-12 h-12 rounded-full">
-                                    <div class="flex-1">
-                                        <div class="flex items-start justify-between">
-                                            <div>
-                                                <div class="flex items-center">
-                                                    <h4 class="font-semibold text-gray-900">{{ route.driver.name }}</h4>
+                                    <button @click.stop="openDriverReviews(route)"
+                                        class="flex items-start gap-3 flex-1 min-w-0 text-left hover:bg-gray-50 rounded-lg transition-colors -mx-1 px-1 py-1">
+                                        <img :src="route.driver.image" :alt="route.driver.name"
+                                            class="object-cover w-12 h-12 rounded-full flex-shrink-0">
+                                        <div class="min-w-0">
+                                            <div class="flex items-center">
+                                                <h4 class="font-semibold text-gray-900 flex items-center gap-1">
+                                                    {{ route.driver.name }}
+                                                    <span class="text-xs text-blue-500 font-normal">(ดูรีวิว)</span>
+                                                </h4>
 
                                                     <div v-if="route.driver.isVerified"
                                                         class="relative group ml-1.5 flex items-center">
@@ -116,46 +119,45 @@
                                                             ผู้ขับขี่ยืนยันตัวตนแล้ว
                                                         </span>
                                                     </div>
+                                            </div>
+                                            <div class="flex items-center mt-1">
+                                                <div class="flex text-yellow-400">
+                                                    <span v-for="star in 5" :key="star">{{ star <=
+                                                        route.driver.rating ? '★' : '☆' }}</span>
                                                 </div>
-                                                <div class="flex items-center mt-1">
-                                                    <div class="flex text-yellow-400">
-                                                        <span v-for="star in 5" :key="star">{{ star <=
-                                                            route.driver.rating ? '★' : '☆' }}</span>
-                                                    </div>
-                                                    <span class="ml-2 text-sm text-gray-600">
-                                                        {{ route.driver.rating }} ({{ route.driver.reviews }} รีวิว)
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="text-right">
-                                                <div class="text-lg font-bold text-blue-600">{{ route.price }} บาท</div>
-                                                <div class="text-sm text-gray-600">ต่อที่นั่ง</div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-3">
-                                            <div class="flex flex-wrap items-center text-sm text-gray-600">
-                                                <span class="font-medium">{{ route.date }}</span>
-                                                <span class="mx-2 text-gray-300">|</span>
-                                                <span class="font-medium">เวลาออก:</span>
-                                                <span class="ml-1">{{ route.departureTime }}</span>
-                                                <span class="mx-2 text-gray-300">|</span>
-                                                <span class="font-medium">ระยะเวลา:</span>
-                                                <span class="ml-1">{{ route.durationText }}</span>
-                                                <span class="mx-2 text-gray-300">|</span>
-                                                <span class="font-medium">ระยะทาง:</span>
-                                                <span class="ml-1">{{ route.distanceText }}</span>
-                                            </div>
-
-                                            <div class="flex items-center mt-2 text-sm text-gray-600">
-                                                <span :class="[
-                                                    'px-2 py-1 rounded-full text-xs font-medium',
-                                                    route.availableSeats > 2 ? 'bg-green-100 text-green-800' : route.availableSeats > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
-                                                ]">
-                                                    {{ route.availableSeats > 0 ? `เหลือ ${route.availableSeats}
-                                                    ที่นั่ง` : 'เต็มแล้ว' }}
+                                                <span class="ml-2 text-sm text-gray-600">
+                                                    {{ route.driver.rating }} ({{ route.driver.reviews }} รีวิว)
                                                 </span>
                                             </div>
                                         </div>
+                                    </button>
+                                    <div class="text-right flex-shrink-0">
+                                        <div class="text-lg font-bold text-blue-600">{{ route.price }} บาท</div>
+                                        <div class="text-sm text-gray-600">ต่อที่นั่ง</div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="flex flex-wrap items-center text-sm text-gray-600">
+                                        <span class="font-medium">{{ route.date }}</span>
+                                        <span class="mx-2 text-gray-300">|</span>
+                                        <span class="font-medium">เวลาออก:</span>
+                                        <span class="ml-1">{{ route.departureTime }}</span>
+                                        <span class="mx-2 text-gray-300">|</span>
+                                        <span class="font-medium">ระยะเวลา:</span>
+                                        <span class="ml-1">{{ route.durationText }}</span>
+                                        <span class="mx-2 text-gray-300">|</span>
+                                        <span class="font-medium">ระยะทาง:</span>
+                                        <span class="ml-1">{{ route.distanceText }}</span>
+                                    </div>
+
+                                    <div class="flex items-center mt-2 text-sm text-gray-600">
+                                        <span :class="[
+                                            'px-2 py-1 rounded-full text-xs font-medium',
+                                            route.availableSeats > 2 ? 'bg-green-100 text-green-800' : route.availableSeats > 0 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'
+                                        ]">
+                                            {{ route.availableSeats > 0 ? `เหลือ ${route.availableSeats}
+                                            ที่นั่ง` : 'เต็มแล้ว' }}
+                                        </span>
                                     </div>
                                 </div>
 
@@ -462,11 +464,17 @@
             </div>
         </transition>
     </div>
+
+    <!-- DriverReviewsModal -->
+    <DriverReviewsModal :show="isDriverReviewsOpen" :driver-id="driverReviewTarget?.id"
+        :driver-name="driverReviewTarget?.name" :driver-image="driverReviewTarget?.image"
+        @close="isDriverReviewsOpen = false" />
 </template>
 
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
+import DriverReviewsModal from '~/components/DriverReviewsModal.vue'
 import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 import buddhistEra from 'dayjs/plugin/buddhistEra'
@@ -478,6 +486,14 @@ dayjs.locale('th')
 dayjs.extend(buddhistEra)
 
 const { $api } = useNuxtApp()
+
+const isDriverReviewsOpen = ref(false)
+const driverReviewTarget = ref(null)
+
+function openDriverReviews(route) {
+    driverReviewTarget.value = { id: route.driver.id, name: route.driver.name, image: route.driver.image }
+    isDriverReviewsOpen.value = true
+}
 const { toast } = useToast();
 const { token } = useAuth();
 const config = useRuntimeConfig()
@@ -677,6 +693,7 @@ async function handleSearch() {
                 originAddress: route.startLocation?.address ? cleanAddr(route.startLocation.address) : null,
                 destinationAddress: route.endLocation?.address ? cleanAddr(route.endLocation.address) : null,
                 driver: {
+                    id: route.driverId,
                     name: `${route.driver?.firstName || ''} ${route.driver?.lastName || ''}`.trim() || 'ไม่ระบุชื่อ',
                     image: route.driver?.profilePicture || `https://ui-avatars.com/api/?name=${encodeURIComponent(route.driver?.firstName || 'U')}&background=random&size=64`,
                     rating: 4.5,

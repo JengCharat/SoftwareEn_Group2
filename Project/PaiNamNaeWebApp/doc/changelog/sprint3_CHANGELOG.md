@@ -1,5 +1,132 @@
 # Changelog — Sprint 3
 
+## Story Card #15 (New Feature) — ระบบรีวิวการเดินทาง
+
+**User Story:**
+> As a passenger, I want to give a review for each ride that I took to support the community.
+
+**เป้าหมาย:** ผู้โดยสารสามารถให้คะแนน (1–5 ดาว) และความคิดเห็นสำหรับการเดินทางที่เสร็จสิ้นแล้ว เพื่อสนับสนุนชุมชนและช่วยให้ผู้ใช้คนอื่นเลือกคนขับได้ดีขึ้น
+
+---
+
+### Acceptance Criteria (ออกแบบโดยทีม)
+
+| # | เงื่อนไข | หมายเหตุ |
+|---|---------|---------|
+| AC-1 | Passenger สามารถให้คะแนน 1–5 ดาวได้เฉพาะการเดินทางที่มีสถานะ `COMPLETED` (คนขับต้องกด "✓ เสร็จสิ้น" ก่อน) | ป้องกันการรีวิวระหว่างทางหรือล่วงหน้า |
+| AC-2 | Passenger สามารถเขียนความคิดเห็นประกอบการให้คะแนนได้ (ไม่บังคับ สูงสุด 500 ตัวอักษร) | optional comment field |
+| AC-3 | แต่ละการเดินทาง (booking) มีได้เพียง **1 รีวิว** ต่อผู้โดยสาร — รีวิวซ้ำ return `409 Conflict` | unique constraint บน bookingId |
+| AC-4 | คนขับสามารถกดปุ่ม **"✓ เสร็จสิ้น"** ใน myRoute เพื่อเปลี่ยนสถานะ booking จาก `CONFIRMED` → `COMPLETED` (`PATCH /bookings/:id/complete`) | driver-only endpoint |
+| AC-5 | Passenger สามารถ **แก้ไข** และ **ลบ** รีวิวของตัวเองได้ — คนอื่นลบ/แก้ไขไม่ได้ (403 Forbidden) | ownership check |
+| AC-6 | สามารถดู **รีวิวทั้งหมดและคะแนนเฉลี่ย** ของคนขับได้ โดยกดที่การ์ดคนขับใน `/myTrip` หรือ `/findTrip` → เปิด `DriverReviewsModal` (เรียก `GET /reviews/driver/:driverId`) | คำนวณ avg rating จาก prisma aggregate |
+| AC-7 | หน้า **"การเดินทางของฉัน"** แสดงปุ่ม `⭐ ให้คะแนน` สำหรับ trips ที่มีสิทธิ์รีวิว และแสดง `✓ รีวิวแล้ว (X★)` เมื่อรีวิวแล้ว | ปุ่ม/badge แสดงตาม state |
+| AC-8 | มีแท็บ **"เสร็จสิ้น"** เพิ่มใหม่ในหน้า My Trip สำหรับ `BookingStatus.COMPLETED` | ขยาย tabs array |
+
+---
+
+### การเปลี่ยนแปลงที่ implement
+
+#### Database
+
+**`backend/prisma/schema.prisma`**
+- เพิ่ม `COMPLETED` ใน `BookingStatus` enum สำหรับการจองที่เสร็จสิ้น
+- เพิ่ม model `Review` (id, bookingId UNIQUE, passengerId, driverId, rating Int, comment String?, createdAt, updatedAt) พร้อม `@@map("reviews")`
+- เพิ่ม relation `reviewsGiven Review[] @relation("ReviewsGiven")` และ `reviewsReceived Review[] @relation("ReviewsReceived")` ใน model `User`
+- เพิ่ม relation `review Review?` ใน model `Booking`
+- `npx prisma db push` — sync schema กับ database (ไม่ reset data)
+
+#### Backend
+
+**`backend/src/services/review.service.js`** *(สร้างใหม่)*
+- `createReview(passengerId, data)` — validate booking ownership, status (`COMPLETED` เท่านั้น), ตรวจซ้ำ duplicate, สร้าง review
+- `getMyReviews(passengerId)` — ดึงรีวิวทั้งหมดของ passenger พร้อม driver info + booking route info
+- `getDriverReviews(driverId, opts)` — ดึงรีวิวของคนขับ + คำนวณ `avgRating` ด้วย `prisma.review.aggregate` + pagination
+- `updateReview(reviewId, passengerId, data)` — ตรวจ ownership, update rating/comment
+- `deleteReview(reviewId, passengerId)` — ตรวจ ownership, delete
+
+**`backend/src/controllers/review.controller.js`** *(สร้างใหม่)*
+- Handler 5 functions: `createReview`, `getMyReviews`, `getDriverReviews`, `updateReview`, `deleteReview`
+- ใช้ `express-async-handler` (รูปแบบเดียวกับ report.controller.js)
+
+**`backend/src/routes/review.routes.js`** *(สร้างใหม่)*
+- `POST   /api/reviews`                     — สร้างรีวิว (protect)
+- `GET    /api/reviews/my`                  — ดูรีวิวของตัวเอง (protect)
+- `GET    /api/reviews/driver/:driverId`    — ดูรีวิว + avg rating ของคนขับ (protect)
+- `PATCH  /api/reviews/:reviewId`           — แก้ไขรีวิว (protect, owner only)
+- `DELETE /api/reviews/:reviewId`           — ลบรีวิว (protect, owner only)
+
+**`backend/src/routes/index.js`**
+- เพิ่ม `const reviewRoutes = require("./review.routes")`
+- เพิ่ม `router.use("/reviews", reviewRoutes)`
+
+**`backend/src/services/booking.service.js`**
+- อัปเดต `getMyBookings()` — เพิ่ม `include: { review: { select: { id, rating, comment, createdAt } } }` เพื่อให้ frontend รู้ว่า booking นั้นมี review แล้วหรือยัง
+- เพิ่ม `completeBooking(bookingId, driverId)` — ตรวจสิทธิ์คนขับ, ตรวจสถานะ CONFIRMED → อัปเดตเป็น `COMPLETED`
+
+**`backend/src/controllers/booking.controller.js`**
+- เพิ่ม handler `completeBooking` — เรียก `bookingService.completeBooking(id, driverId)`
+
+**`backend/src/routes/booking.routes.js`**
+- เพิ่ม `PATCH /bookings/:id/complete` (protect + requireDriverVerified) — คนขับกดเสร็จสิ้นการเดินทาง
+
+#### Frontend
+
+**`frontend/components/ReviewModal.vue`** *(สร้างใหม่)*
+- Modal สำหรับให้คะแนนการเดินทาง
+- **Star rating UI**: ปุ่ม 5 ดาว พร้อม hover effect และ label (แย่มาก/พอใช้/ปานกลาง/ดี/ดีมาก)
+- Optional comment textarea สูงสุด 500 ตัวอักษร
+- ปุ่ม "ส่งรีวิว" disabled เมื่อยังไม่ได้เลือกดาว
+- เรียก API `POST /api/reviews` แล้ว emit `submitted` event กลับไปยัง parent
+
+**`frontend/components/DriverReviewsModal.vue`** *(สร้างใหม่)*
+- Modal แสดงรีวิวทั้งหมดของคนขับ — โหลดจาก `GET /api/reviews/driver/:driverId`
+- แสดง: คะแนนเฉลี่ย (X.X ★) + จำนวนรีวิว + รายการรีวิวแต่ละอัน (ชื่อผู้รีวิว, ดาว, ความคิดเห็น, วันที่)
+- มี loading / error / empty state
+- เปิดได้จากการกดที่การ์ดคนขับในหน้า `/myTrip` และ `/findTrip`
+
+**`frontend/pages/myTrip/index.vue`** *(แก้ไข)*
+- เพิ่ม `import ReviewModal from '~/components/ReviewModal.vue'`
+- เพิ่มแท็บ `{ status: 'completed', label: 'เสร็จสิ้น' }` ในอาร์เรย์ `tabs`
+- เพิ่ม `status-badge status-completed` (สีเขียว)
+- เพิ่ม fields ในการ map booking data: `driverId`, `departureTimeRaw`, `hasReview`, `reviewData`
+- เพิ่ม state: `isReviewModalOpen`, `reviewTargetTrip`
+- เพิ่มฟังก์ชัน `canReview(trip)` — ตรวจสอบว่า trip มีสิทธิ์รีวิวหรือไม่:
+  ```js
+  function canReview(trip) {
+      if (trip.hasReview) return false
+      if (!['confirmed', 'completed'].includes(trip.status)) return false
+      return new Date(trip.departureTimeRaw) < new Date()
+  }
+  ```
+- เพิ่มปุ่ม `⭐ ให้คะแนน` ใน action buttons สำหรับ `confirmed` (past departure) และ `completed` trips
+- แสดง `✓ รีวิวแล้ว (X★)` badge เมื่อ `trip.hasReview === true`
+- เพิ่มฟังก์ชัน `openReviewModal(trip)`, `onReviewSubmitted(data)` — อัปเดต state ใน place (ไม่ต้อง re-fetch)
+
+---
+
+### หมายเหตุ
+
+- คะแนนใน driver card (`trip.driver.rating`) ยังคงแสดงเป็น 4.5 (placeholder) — avg rating จริงจะแสดงใน `DriverReviewsModal` เมื่อ fetch จาก API
+- รีวิวได้เฉพาะ booking ที่สถานะ `COMPLETED` (คนขับกด "✓ เสร็จสิ้น" แล้วเท่านั้น) — ป้องกันรีวิวระหว่างทางหรือล่วงหน้า
+
+---
+
+### ทดสอบ
+
+| ไฟล์ | รายละเอียด |
+|------|-----------|
+| `test/sprint3/test_code/API_Test/Review/ride_review_api.postman_collection.json` | Postman collection 19 test cases ครอบคลุม: Setup (TC-01~03), Create Review (TC-04~09), Get Reviews (TC-10~13), Update Review (TC-14~16), Delete Review (TC-17~19) |
+| `test/sprint3/test_code/Robot_Test/ride_review_browser.robot` | Robot Framework Selenium browser test suite 10 test cases ครอบคลุม: Login, My Trip tabs, Completed tab filter, Review button visibility, Modal open/close, Star count, Submit disabled without rating, Auth redirect |
+
+---
+
+### วันที่
+- Implemented: 2026-03-19
+- Sprint: Sprint 3
+- AI Declare (Claude Sonnet 4.6) : ใช้ในการออกแบบ Acceptance Criteria, Backend service/controller/routes, Frontend component/composable
+
+---
+
 ## Story Card #14 (New Feature) — แชร์โลเคชันให้ Emergency Contacts
 
 **User Story:**

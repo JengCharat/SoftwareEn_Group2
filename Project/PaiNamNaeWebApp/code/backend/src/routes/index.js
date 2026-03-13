@@ -13,6 +13,7 @@ const emergencyContactRoutes = require("./emergencyContact.routes");
 const pushRoutes = require("./push.routes");
 const reportRoutes = require("./report.routes");
 const locationShareRoutes = require("./locationShare.routes");
+const reviewRoutes = require("./review.routes");
 const router = express.Router();
 
 router.use("/auth", authRoutes);
@@ -30,4 +31,5 @@ router.use("/emergency-contacts", emergencyContactRoutes);
 router.use("/push", pushRoutes);
 router.use("/reports", reportRoutes);
 router.use("/location-sharing", locationShareRoutes);
+router.use("/reviews", reviewRoutes);
 module.exports = router;

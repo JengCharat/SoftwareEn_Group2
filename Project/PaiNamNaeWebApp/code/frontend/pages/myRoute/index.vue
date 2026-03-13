@@ -370,6 +370,19 @@
                                         <span v-else>แจ้งกำลังไปรับ</span>
                                     </button>
 
+                                    <!-- ปุ่มเสร็จสิ้น (เฉพาะ confirmed) -->
+                                    <button v-if="trip.status === 'confirmed'"
+                                        @click.stop="completeTrip(trip)"
+                                        :disabled="!!isCompleting[trip.id]"
+                                        :class="[
+                                            'px-4 py-2 text-sm rounded-md transition duration-200',
+                                            isCompleting[trip.id]
+                                                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                                : 'bg-green-600 text-white hover:bg-green-700'
+                                        ]">
+                                        {{ isCompleting[trip.id] ? 'กำลังบันทึก...' : '✓ เสร็จสิ้น' }}
+                                    </button>
+
                                     <button v-else-if="['rejected', 'cancelled'].includes(trip.status)"
                                         @click.stop="openConfirmModal(trip, 'delete')"
                                         class="px-4 py-2 text-sm text-gray-600 transition duration-200 border border-gray-300 rounded-md hover:bg-gray-50">
@@ -428,6 +441,8 @@ const myRoutes = ref([])
 
 // Cooldown ปุ่มแจ้งกำลังไปรับ: { [bookingId]: secondsRemaining }
 const pickupCooldowns = ref({})
+// สถานะกำลังบันทึกเสร็จสิ้น: { [bookingId]: true }
+const isCompleting = ref({})
 let cooldownTimers = {}
 
 // ---------- Google Maps states ----------
@@ -445,6 +460,7 @@ let stopMarkers = []
 const tabs = [
     { status: 'pending', label: 'รอดำเนินการ' },
     { status: 'confirmed', label: 'ยืนยันแล้ว' },
+    { status: 'completed', label: 'เสร็จสิ้น' },
     { status: 'rejected', label: 'ปฏิเสธ' },
     { status: 'cancelled', label: 'ยกเลิก' },
     { status: 'all', label: 'ทั้งหมด' },
@@ -896,6 +912,22 @@ const notifyPickup = async (trip) => {
         } else {
             toast.error('แจ้งเตือนไม่สำเร็จ', msg || 'ไม่สามารถส่งการแจ้งเตือนได้')
         }
+    }
+}
+
+const completeTrip = async (trip) => {
+    if (isCompleting.value[trip.id]) return
+    isCompleting.value[trip.id] = true
+    try {
+        await $api(`/bookings/${trip.id}/complete`, { method: 'PATCH' })
+        toast.success('เสร็จสิ้น', `การเดินทางของ ${trip.passenger?.name || 'ผู้โดยสาร'} ถูกบันทึกเป็นเสร็จสิ้นแล้ว`)
+        await fetchAllData()
+    } catch (err) {
+        console.error('completeTrip error:', err)
+        const msg = err?.data?.message || err?.message || ''
+        toast.error('ไม่สำเร็จ', msg || 'ไม่สามารถบันทึกการเสร็จสิ้นได้')
+    } finally {
+        delete isCompleting.value[trip.id]
     }
 }
 
