@@ -86,6 +86,14 @@
 
 ---
 
+#### ทดสอบ
+
+| ไฟล์ | รายละเอียด |
+|------|----------|
+| `test/sprint3/test_code/API_Test/PushNotification/push_notification_api.postman_collection.json` | Postman collection 21 test cases ครอบคลุม: Setup (login 2 roles + get booking), VAPID Key (public key, no private key leak, base64url length), Subscribe (happy path, idempotent, 401, invalid endpoint 400, missing keys 400), Unsubscribe (happy path, idempotent, 401), Notify Pickup (creates in-app notification, passenger sees in inbox, 429 cooldown, 403 passenger, 401 no auth, 404 non-existent, metadata validation) |
+
+---
+
 ### วันที่
 - Implemented: 2026-03-10
 - Sprint: Sprint 3
@@ -170,6 +178,14 @@
 
 ---
 
+#### ทดสอบ
+
+| ไฟล์ | รายละเอียด |
+|------|----------|
+| `test/sprint3/test_code/API_Test/Chat/chat_api.postman_collection.json` | Postman collection 31 test cases ครอบคลุม: Setup (login 2 roles + get bookingId), Chat Room (get info, unauthorized 401), Send Message (driver/passenger 201, no token 401, empty 400, over 1000 chars 400, third party 403), PII Detection (เบอร์โทร, อีเมล, LINE ID, ที่อยู่, เลขบัตรประชาชน, Facebook, เลขบัญชีธนาคาร, URL, เบอร์ obfuscated, รหัสไปรษณีย์), Get Messages (list, pagination, 401), Unread Count & Mark Read (get count, mark all, verify zero, mark single, own message 400, 401, non-existent booking 404) |
+
+---
+
 ### วันที่
 - Implemented: 2026-03-11
 - Sprint: Sprint 3
@@ -251,6 +267,8 @@
 | ไฟล์ | รายละเอียด |
 |------|-----------|
 | `test/sprint3/test_code/API_Test/Report/driver_report.postman_collection.json` | Postman collection 25+ test cases ครอบคลุม: Setup (login 3 roles), Create Report (happy + validations), Get My Reports, Get by ID, Admin List (filter), Admin Update Status, Notification verification |
+| `test/sprint3/test_code/Robot_Test/driver_report_api.robot` | Robot Framework API test suite 27 test cases ครอบคลุม: Create Report (valid, HARASSMENT, validations), Get My Reports (list, filter), Get by ID (own/cross-user), Admin List/Filter, Admin Update Status (REVIEWING/RESOLVED/DISMISSED), Passenger Notification |
+| `test/sprint3/test_code/Robot_Test/driver_report_browser.robot` | Robot Framework Selenium browser test suite 16 test cases ครอบคลุม: Login (happy/negative), Navigate to Create Report, Form fields validation, Character count, Submit report, Report list (heading, button, badges), Report detail (navigation, status badge), Unauthenticated redirect, MyTrip report button |
 
 ---
 
