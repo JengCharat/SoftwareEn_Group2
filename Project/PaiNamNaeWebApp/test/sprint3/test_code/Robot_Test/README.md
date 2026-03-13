@@ -1,9 +1,10 @@
-# Robot Framework Test — Sprint 3 (Story Card #13 Browser Tests)
+# Robot Framework Test — Sprint 3 (Story Card #13 & #14 Browser Tests)
 
-> **หมายเหตุ**: API tests ของ SC#10 และ SC#12 ย้ายไปเป็น Postman collection แล้ว  
+> **หมายเหตุ**: API tests ย้ายไปเป็น Postman collection แล้วทั้งหมด  
 > - SC#10 Chat API → `../API_Test/Chat/chat_api.postman_collection.json` (31 cases)  
 > - SC#12 Push Notification API → `../API_Test/PushNotification/push_notification_api.postman_collection.json` (21 cases)  
 > - SC#13 Driver Report API → `../API_Test/Report/driver_report.postman_collection.json`  
+> - SC#14 Location Sharing API → `../API_Test/LocationSharing/location_sharing_api.postman_collection.json` (18 cases)  
 >
 > ไฟล์ Robot Framework ในโฟลเดอร์นี้ใช้สำหรับ **Browser (Selenium) tests เท่านั้น**
 
@@ -11,11 +12,12 @@
 
 ```
 Robot_Test/
-├── driver_report_api.robot      ← SC#13 API Test Suite — Robot (27 test cases)
-├── driver_report_browser.robot  ← SC#13 Browser (Selenium) Test Suite (16 test cases)
+├── driver_report_api.robot          ← SC#13 API Test Suite — Robot (27 test cases)
+├── driver_report_browser.robot      ← SC#13 Browser (Selenium) Test Suite (16 test cases)
+├── location_sharing_browser.robot   ← SC#14 Browser (Selenium) Test Suite (10 test cases)
 ├── resources/
-│   └── common.resource          ← Shared keywords & variables
-└── README.md                    ← ไฟล์นี้
+│   └── common.resource              ← Shared keywords & variables
+└── README.md                        ← ไฟล์นี้
 ```
 
 ## ติดตั้ง Dependencies

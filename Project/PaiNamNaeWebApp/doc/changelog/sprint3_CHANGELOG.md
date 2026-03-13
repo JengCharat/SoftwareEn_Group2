@@ -1,5 +1,124 @@
 # Changelog — Sprint 3
 
+## Story Card #14 (New Feature) — แชร์โลเคชันให้ Emergency Contacts
+
+**User Story:**
+> As a passenger, I want people in my emergency contact to check on my location from time to time so that they know I am whereabout.
+
+**เป้าหมาย:** ผู้โดยสารสามารถแชร์โลเคชัน real-time ระหว่างการเดินทางให้คนที่ไว้ใจดูได้ผ่านลิงก์สาธารณะ (ไม่ต้อง login) โดยอาศัย Geolocation API ของเบราว์เซอร์และ Leaflet map
+
+---
+
+### Acceptance Criteria
+
+| # | เงื่อนไข | หมายเหตุ |
+|---|---------|---------|
+| AC-1 | Passenger เปิด/ปิด "แชร์โลเคชัน" ได้จากหน้า SOS Emergency (`/emergency_call/emergency`) | toggle ON/OFF พร้อม status indicator |
+| AC-2 | เมื่อแชร์เริ่ม ระบบสร้าง **unique public link** ที่ไม่ต้อง login เพื่อดูโลเคชัน | token สุ่มจาก `crypto.randomBytes(24)` |
+| AC-3 | Passenger **copy link** แล้วส่งให้ emergency contacts ผ่าน LINE / SMS ได้ทันที | ปุ่ม "📋 คัดลอก" + ปุ่ม "💬 ส่งผ่าน LINE" |
+| AC-4 | หน้าสาธารณะแสดง **ชื่อผู้โดยสาร + Leaflet map** พร้อม marker โลเคชันปัจจุบัน + เวลาล่าสุดที่อัปเดต | `/location-sharing/[token]` — no login required |
+| AC-5 | Frontend อัปเดตพิกัด GPS ไป backend **ต่อเนื่องผ่าน `watchPosition`** ตลอดที่แชร์อยู่ | Geolocation API — `enableHighAccuracy: true` |
+| AC-6 | Link หมดอายุอัตโนมัติหลัง **24 ชั่วโมง** หรือเมื่อ passenger ปิดแชร์เอง | `isActive: false` + `expiresAt` check |
+| AC-7 | หน้า SOS แสดง **สถานะการแชร์** พร้อมเวลาล่าสุดที่อัปเดตโลเคชัน | `animate-pulse` indicator เมื่อกำลังแชร์ |
+| AC-8 | ถ้า passenger แชร์อยู่แล้ว (reload page) → ระบบดึงสถานะเดิมกลับมาแสดงอัตโนมัติ | `fetchStatus()` ใน `onMounted` |
+
+---
+
+### การเปลี่ยนแปลงที่ implement
+
+#### Database
+
+**`backend/prisma/schema.prisma`**
+- เพิ่ม model `LocationShare` (id, passengerId, bookingId?, shareToken UNIQUE, isActive, lastLat?, lastLng?, lastUpdatedAt?, expiresAt, createdAt, updatedAt)
+- เพิ่ม relation `locationShares` ใน model `User` (`@relation("PassengerLocationShares")`)
+- เพิ่ม relation `locationShares` ใน model `Booking`
+- `npx prisma db push` — sync schema กับ database (ไม่ reset data)
+
+#### Backend
+
+**`backend/src/services/locationShare.service.js`** *(สร้างใหม่)*
+- `startSharing(passengerId, bookingId?)` — สร้าง LocationShare + shareToken ด้วย `crypto.randomBytes(24)`, expire 24h, ถ้ามี active share อยู่แล้วคืนค่าเดิม
+- `stopSharing(passengerId)` — set `isActive: false`
+- `updateLocation(passengerId, lat, lng)` — อัปเดต lastLat/lastLng/lastUpdatedAt
+- `getStatus(passengerId)` — ดึง active share + shareUrl สำหรับ passenger
+- `getPublicView(shareToken)` — PUBLIC: ดึง share info + ชื่อผู้โดยสาร (ไม่ต้อง auth)
+
+**`backend/src/controllers/locationShare.controller.js`** *(สร้างใหม่)*
+- ตรวจสอบ role ใน `start` (DRIVER/ADMIN ไม่สามารถแชร์ได้)
+- Validate lat/lng ด้วย Zod (min/max)
+
+**`backend/src/routes/locationShare.routes.js`** *(สร้างใหม่)*
+- `GET  /api/location-sharing/public/:token` — **no auth** — public location viewer
+- `GET  /api/location-sharing/status` — passenger only
+- `POST /api/location-sharing/start` — passenger only
+- `DELETE /api/location-sharing/stop` — passenger only
+- `PATCH /api/location-sharing/update-location` — passenger only, body: `{lat, lng}`
+
+**`backend/src/routes/index.js`**
+- เพิ่ม `router.use("/location-sharing", locationShareRoutes)`
+
+#### Frontend
+
+**`frontend/composables/useLocationSharing.js`** *(สร้างใหม่)*
+- `startSharing(bookingId?)` — call API start + เริ่ม `watchPosition`
+- `stopSharing()` — call API stop + `clearWatch`
+- `fetchStatus()` — ดึงสถานะ sharing ปัจจุบัน (ใช้ใน `onMounted`)
+- `copyShareLink()` — copy link ไป clipboard
+- Expose: `isSharing`, `shareUrl`, `expiresAt`, `lastUpdatedAt`, `geoError`, `isGeoSupported`
+
+**`frontend/pages/location-sharing/[token].vue`** *(สร้างใหม่)*
+- Public page (ไม่ต้อง login) — `definePageMeta({ layout: false })`
+- แสดง ชื่อผู้โดยสาร + Leaflet map พร้อม custom red dot marker
+- ปุ่ม "เปิดใน Google Maps" พร้อมพิกัด lat/lng
+- Auto-refresh ทุก 30 วินาที ด้วย `setInterval`
+- ถ้า link หมดอายุ/ถูกปิด → แสดงหน้า "ลิงก์นี้ไม่สามารถใช้งานได้อีกต่อไป"
+
+**`frontend/pages/emergency_call/emergency.vue`** *(แก้ไข)*
+- เพิ่ม column ที่สองในหน้า SOS สำหรับ **"แชร์โลเคชันให้คนที่ไว้ใจ"**
+- แสดง status indicator (green pulse เมื่อกำลังแชร์)
+- ปุ่ม "📋 คัดลอก" + "💬 ส่งผ่าน LINE" → deep link `line.me/R/msg/text/?...`
+- ปุ่ม "⏹ หยุดแชร์โลเคชัน"
+- แสดง expiry time + last updated time
+- ดึงสถานะ sharing เดิมอัตโนมัติเมื่อ load หน้า (`fetchStatus()` ใน `onMounted`)
+
+---
+
+### หมายเหตุด้านความปลอดภัย
+- Share token สุ่มด้วย `crypto.randomBytes(24)` (48 hex chars) — ยากต่อการ brute-force
+- Public endpoint คืนเฉพาะ first name + last name ไม่เปิดเผยข้อมูลอื่น
+- Link หมดอายุอัตโนมัติ 24 ชั่วโมงหรือเมื่อ passenger หยุดแชร์
+
+### ข้อจำกัด Geolocation API (สำคัญสำหรับ Deploy)
+
+Browser ปฏิเสธการเข้าถึง Geolocation โดยอัตโนมัติเมื่อเว็บไม่ได้อยู่บน **Secure Origin** ผู้ใช้จะเห็น error `Only secure origins are allowed` และปุ่มแชร์จะไม่สามารถส่งพิกัดได้
+
+| สภาพแวดล้อม | รองรับ Geolocation? |
+|---|---|
+| `https://yourdomain.com` (Production) | ✅ ใช้ได้ปกติ |
+| `http://localhost:xxxx` (Dev local) | ✅ ใช้ได้ (browser ยกเว้น localhost) |
+| `http://10.x.x.x:xxxx` (Dev ผ่าน IP) | ❌ ไม่ได้ — browser บล็อกทุกกรณี |
+
+**สำหรับ production:** ต้องมี HTTPS certificate (เช่น Let's Encrypt) — feature นี้จะทำงานได้อย่างสมบูรณ์โดยอัตโนมัติ  
+**สำหรับ dev local:** ใช้ `http://localhost:3002` แทน IP address เพื่อทดสอบได้
+
+---
+
+### ทดสอบ
+
+| ไฟล์ | รายละเอียด |
+|------|-----------|
+| `test/sprint3/test_code/API_Test/LocationSharing/location_sharing_api.postman_collection.json` | Postman collection 18 test cases ครอบคลุม: Setup, Start Sharing, Update Location, Get Status, Public View, Stop Sharing, Negative Cases |
+| `test/sprint3/test_code/Robot_Test/location_sharing_browser.robot` | Robot Framework Selenium browser test suite 10 test cases ครอบคลุม: Share button visible, Start sharing, Copy link, LINE share link, Status indicator, Stop sharing, Public page load, Auto-refresh, Expired link |
+
+---
+
+### วันที่
+- Implemented: 2026-03-13
+- Sprint: Sprint 3
+- AI Declare (Claude Sonnet 4.6) : ใช้ในการออกแบบ Acceptance Criteria, Database schema, Backend service/controller/routes, Frontend composable, Public location viewer page, UI ใน emergency.vue และ Test cases
+
+---
+
 ## Story Card #12 (Enhancement) — Web Push Notification แทนอีเมล
 
 **User Story:**

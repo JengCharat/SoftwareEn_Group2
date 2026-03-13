@@ -12,6 +12,7 @@ const blacklistRoutes = require("./blacklist.routes");
 const emergencyContactRoutes = require("./emergencyContact.routes");
 const pushRoutes = require("./push.routes");
 const reportRoutes = require("./report.routes");
+const locationShareRoutes = require("./locationShare.routes");
 const router = express.Router();
 
 router.use("/auth", authRoutes);
@@ -28,4 +29,5 @@ router.use("/blacklist", blacklistRoutes);
 router.use("/emergency-contacts", emergencyContactRoutes);
 router.use("/push", pushRoutes);
 router.use("/reports", reportRoutes);
+router.use("/location-sharing", locationShareRoutes);
 module.exports = router;

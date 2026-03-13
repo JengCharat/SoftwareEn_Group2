@@ -94,6 +94,7 @@ model User {
     pushSubscriptions       PushSubscription[]
     reportsCreated          DriverReport[]     @relation("ReportsCreated")
     reportsReceived         DriverReport[]     @relation("ReportsReceived")
+    locationShares          LocationShare[]    @relation("PassengerLocationShares")
 
     @@index([role])
     @@index([isActive])
@@ -232,6 +233,7 @@ model Booking {
     createdAt       DateTime      @default(now())
     messages        Message[]     @relation("BookingMessages")
     driverReports   DriverReport[]
+    locationShares  LocationShare[]
 }
 
 // ระบบข้อความแบบปลอดภัย - สื่อสารผ่าน booking โดยไม่เปิดเผยข้อมูลส่วนตัว
@@ -343,4 +345,25 @@ model DriverReport {
     @@index([reporterId])
     @@index([status])
     @@index([createdAt])
+}
+
+// SC#14 — ระบบแชร์โลเคชันให้ Emergency Contacts
+model LocationShare {
+    id            String   @id @default(cuid())
+    passengerId   String
+    passenger     User     @relation("PassengerLocationShares", fields: [passengerId], references: [id], onDelete: Cascade)
+    bookingId     String?
+    booking       Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+    shareToken    String   @unique
+    isActive      Boolean  @default(true)
+    lastLat       Float?
+    lastLng       Float?
+    lastUpdatedAt DateTime?
+    expiresAt     DateTime
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    @@index([passengerId, isActive])
+    @@index([shareToken])
+    @@map("location_shares")
 }
