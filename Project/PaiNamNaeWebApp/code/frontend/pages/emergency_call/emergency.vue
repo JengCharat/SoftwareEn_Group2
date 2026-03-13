@@ -56,7 +56,7 @@
       <!-- ======= SC#14: Location Sharing Panel ======= -->
       <div class="flex flex-col gap-4">
         <h2 class="text-lg font-bold text-gray-700 flex items-center gap-2">
-          📍 แชร์โลเคชันให้คนที่ไว้ใจ
+          แชร์โลเคชันให้คนที่ไว้ใจ
         </h2>
 
         <!-- Currently sharing -->
@@ -79,14 +79,14 @@
               <button
                 @click="handleCopy"
                 class="flex-1 py-2 text-sm bg-blue-600 text-white rounded-lg font-medium active:bg-blue-800">
-                {{ copied ? '✓ คัดลอกแล้ว' : '📋 คัดลอก' }}
+                {{ copied ? '✓ คัดลอกแล้ว' : 'คัดลอก' }}
               </button>
               <a
                 :href="`https://line.me/R/msg/text/?${encodeURIComponent('📍 ไปนำแหน่: ติดตามโลเคชันของฉันได้ที่ ' + shareUrl)}`"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex-1 py-2 text-sm bg-green-500 text-white rounded-lg font-medium text-center active:bg-green-700">
-                💬 ส่งผ่าน LINE
+                ส่งผ่าน LINE
               </a>
             </div>
           </div>
@@ -101,7 +101,7 @@
             @click="handleStop"
             :disabled="locLoading"
             class="w-full py-2.5 text-sm font-semibold text-red-600 border border-red-300 rounded-xl hover:bg-red-50 disabled:opacity-50">
-            {{ locLoading ? 'กำลังหยุด...' : '⏹ หยุดแชร์โลเคชัน' }}
+            {{ locLoading ? 'กำลังหยุด...' : 'หยุดแชร์โลเคชัน' }}
           </button>
         </div>
 
@@ -109,7 +109,7 @@
         <div v-else class="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col gap-3">
           <p class="text-sm text-gray-600 leading-relaxed">
             เปิดแชร์โลเคชันเพื่อให้คนที่คุณไว้ใจ ติดตามตำแหน่งของคุณได้แบบ real-time
-            ผ่านลิงก์ที่แชร์ไปทาง LINE/SMS (ไม่ต้องมีบัญชี ไปนำแหน่)
+            ผ่านลิงก์ที่แชร์ไปทาง LINE/SMS (ไม่ต้องมีบัญชี)
           </p>
           <p class="text-xs text-gray-400">ลิงก์มีอายุ 24 ชั่วโมง — สามารถหยุดได้ทุกเวมา</p>
 
@@ -119,7 +119,7 @@
             @click="handleStart"
             :disabled="locLoading || !isGeoSupported"
             class="w-full py-3 text-sm font-bold bg-red-600 text-white rounded-xl shadow active:bg-red-800 disabled:opacity-50">
-            {{ locLoading ? 'กำลังเริ่ม...' : '📍 เริ่มแชร์โลเคชัน' }}
+            {{ locLoading ? 'กำลังเริ่ม...' : 'เริ่มแชร์โลเคชัน' }}
           </button>
 
           <p v-if="!isGeoSupported" class="text-xs text-orange-500 text-center">
