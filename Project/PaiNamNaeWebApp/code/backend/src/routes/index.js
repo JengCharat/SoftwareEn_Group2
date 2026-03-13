@@ -11,6 +11,7 @@ const messageRoutes = require("./message.routes");
 const blacklistRoutes = require("./blacklist.routes");
 const emergencyContactRoutes = require("./emergencyContact.routes");
 const pushRoutes = require("./push.routes");
+const reportRoutes = require("./report.routes");
 const router = express.Router();
 
 router.use("/auth", authRoutes);
@@ -26,4 +27,5 @@ router.use("/api/maps", mapRoutes);
 router.use("/blacklist", blacklistRoutes);
 router.use("/emergency-contacts", emergencyContactRoutes);
 router.use("/push", pushRoutes);
+router.use("/reports", reportRoutes);
 module.exports = router;

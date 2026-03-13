@@ -174,3 +174,87 @@
 - Implemented: 2026-03-11
 - Sprint: Sprint 3
 - AI Declare (Claude Opus 4.6) : ใช้ในการออกแบบระบบตรวจจับข้อมูลส่วนตัว, สร้าง regex patterns (ไทย+อังกฤษ), UI warning/confirmation modal, แก้ bug polling, และ backend PII detection
+
+---
+
+## Story Card #13 (New Feature) — ระบบรายงานพฤติกรรมคนขับ (Driver Report)
+
+**User Story:**
+> As a passenger, I want to report the driver behavior to the admin and get the update on the filed case.
+
+**เป้าหมาย:** ผู้โดยสารสามารถรายงานพฤติกรรมคนขับ พร้อมแนบหลักฐาน (รูปภาพ/วิดีโอ) และติดตามสถานะรายงานได้ แอดมินสามารถจัดการรายงานและอัพเดทสถานะได้
+
+---
+
+### Acceptance Criteria
+
+| # | เงื่อนไข | หมายเหตุ |
+|---|---------|---------|
+| AC-1 | Passenger สร้างรายงานได้ โดยเลือกคนขับ, เหตุผล (8 ประเภท), รายละเอียด | ผ่านหน้า `/report/create` |
+| AC-2 | รองรับอัพโหลดหลักฐาน JPEG/JPG/PNG/MP4/MP3 สูงสุด 5 ไฟล์ ขนาดไม่เกิน 20MB ต่อไฟล์ | ผ่าน Multer → Cloudinary |
+| AC-3 | Passenger ดูรายงานของตัวเองได้ พร้อม pagination | หน้า `/report` |
+| AC-4 | Passenger ดูรายละเอียดรายงานพร้อมหลักฐานและ timeline สถานะ | หน้า `/report/[id]` |
+| AC-5 | Admin เห็นรายงานทั้งหมด กรองตามสถานะได้ | หน้า `/admin/reports` |
+| AC-6 | Admin อัพเดทสถานะ (PENDING → REVIEWING → RESOLVED/DISMISSED) พร้อมหมายเหตุได้ | หน้า `/admin/reports/[id]` |
+| AC-7 | ระบบแจ้งเตือน Admin เมื่อมีรายงานใหม่ | ผ่าน Notification model |
+| AC-8 | ระบบแจ้งเตือน Passenger เมื่อสถานะเปลี่ยน | ผ่าน Notification model |
+
+---
+
+### การเปลี่ยนแปลงที่ implement
+
+#### Database
+
+**`backend/prisma/schema.prisma`**
+- เพิ่ม enum `ReportStatus` (PENDING, REVIEWING, RESOLVED, DISMISSED)
+- เพิ่ม enum `ReportReason` (RECKLESS_DRIVING, HARASSMENT, FRAUD, NO_SHOW, VEHICLE_CONDITION, ROUTE_DEVIATION, INAPPROPRIATE_BEHAVIOR, OTHER)
+- เพิ่ม model `DriverReport` มี relations ไปยัง User (reporter, reportedDriver, admin) และ Booking
+- เพิ่ม field `evidence` (JSON) สำหรับเก็บข้อมูลไฟล์หลักฐาน
+- เพิ่ม relation ใน User model: `ReportsCreated`, `ReportsReceived`
+- เพิ่ม relation ใน Booking model: `DriverReport`
+
+#### Backend — ไฟล์ใหม่
+
+| ไฟล์ | รายละเอียด |
+|------|-----------|
+| `src/services/report.service.js` | Business logic: createReport, getMyReports, getReportById, getAllReports, updateReportStatus พร้อม Cloudinary upload และ Notification |
+| `src/controllers/report.controller.js` | Express controller ใช้ asyncHandler |
+| `src/routes/report.routes.js` | Routes: POST /, GET /my, GET /:reportId, GET /admin, PATCH /:reportId/status |
+| `src/validations/report.validation.js` | Zod schemas: createReportSchema, updateReportStatusSchema, getReportParamsSchema, listReportsQuerySchema |
+| `src/middlewares/reportUpload.middleware.js` | Multer config: 20MB limit, JPEG/JPG/PNG/MP4/MP3 |
+
+#### Backend — ไฟล์ที่แก้ไข
+
+| ไฟล์ | รายละเอียด |
+|------|-----------|
+| `src/routes/index.js` | เพิ่ม `router.use("/reports", reportRoutes)` |
+
+#### Frontend — ไฟล์ใหม่
+
+| ไฟล์ | รายละเอียด |
+|------|-----------|
+| `pages/report/create.vue` | หน้าสร้างรายงาน: เลือกคนขับจาก booking, เหตุผล, รายละเอียด, อัพโหลดหลักฐาน (preview รูป/วิดีโอ) |
+| `pages/report/index.vue` | หน้ารายการรายงานของ Passenger พร้อม pagination |
+| `pages/report/[id].vue` | หน้าดูรายละเอียดรายงาน พร้อม timeline สถานะ และ admin notes |
+| `pages/admin/reports/index.vue` | หน้า Admin ดูรายงานทั้งหมด กรองตามสถานะ ในรูป table |
+| `pages/admin/reports/[id].vue` | หน้า Admin ดูรายละเอียดและอัพเดทสถานะ พร้อมหมายเหตุ |
+
+#### Frontend — ไฟล์ที่แก้ไข
+
+| ไฟล์ | รายละเอียด |
+|------|-----------|
+| `layouts/default.vue` | เพิ่มลิงก์ "รายงานคนขับ" สำหรับ Passenger ในเมนู navigation |
+| `components/admin/AdminSidebar.vue` | เพิ่มลิงก์ "Report Management" ใน Admin sidebar |
+
+#### ทดสอบ
+
+| ไฟล์ | รายละเอียด |
+|------|-----------|
+| `test/sprint3/test_code/API_Test/Report/driver_report.postman_collection.json` | Postman collection 25+ test cases ครอบคลุม: Setup (login 3 roles), Create Report (happy + validations), Get My Reports, Get by ID, Admin List (filter), Admin Update Status, Notification verification |
+
+---
+
+### วันที่
+- Implemented: 2026-03-11
+- Sprint: Sprint 3
+- AI Declare (Claude Opus 4.6) : ใช้ในการออกแบบ Database schema, Backend API (service/controller/routes/validation/middleware), Frontend pages (Passenger report + Admin management), Postman test collection, และ Changelog

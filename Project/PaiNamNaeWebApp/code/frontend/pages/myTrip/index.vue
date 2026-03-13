@@ -155,6 +155,11 @@
                                             class="px-4 py-2 text-sm text-red-600 transition duration-200 border border-red-300 rounded-md hover:bg-red-50">
                                             ยกเลิกการจอง
                                         </button>
+                                        <NuxtLink :to="`/report/create?driverId=${trip.route?.driverId || ''}&bookingId=${trip.id}`"
+                                            @click.stop
+                                            class="px-4 py-2 text-sm text-orange-600 transition duration-200 border border-orange-300 rounded-md hover:bg-orange-50">
+                                            รายงานคนขับ
+                                        </NuxtLink>
                                         <button @click.stop="openChat(trip.id)"
                                             class="px-4 py-2 text-sm text-white transition duration-200 bg-blue-600 rounded-md hover:bg-blue-700">
                                             แชทกับผู้ขับ

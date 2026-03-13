@@ -92,6 +92,8 @@ model User {
     activityLogs            ActivityLog[]
     blacklists              Blacklist[]
     pushSubscriptions       PushSubscription[]
+    reportsCreated          DriverReport[]     @relation("ReportsCreated")
+    reportsReceived         DriverReport[]     @relation("ReportsReceived")
 
     @@index([role])
     @@index([isActive])
@@ -229,6 +231,7 @@ model Booking {
     metadata        Json?         @db.Json
     createdAt       DateTime      @default(now())
     messages        Message[]     @relation("BookingMessages")
+    driverReports   DriverReport[]
 }
 
 // ระบบข้อความแบบปลอดภัย - สื่อสารผ่าน booking โดยไม่เปิดเผยข้อมูลส่วนตัว
@@ -295,4 +298,49 @@ model Blacklist {
     createdAt    DateTime  @default(now())
 
     @@index([userId])
+}
+
+enum ReportStatus {
+    PENDING
+    REVIEWING
+    RESOLVED
+    DISMISSED
+}
+
+enum ReportReason {
+    UNSAFE_DRIVING       // ขับรถไม่ปลอดภัย
+    HARASSMENT           // คุกคาม/ก้าวร้าว
+    VEHICLE_CONDITION    // สภาพรถไม่ดี
+    LATE_OR_NO_SHOW      // มาสาย/ไม่มารับ
+    ROUTE_DEVIATION      // เปลี่ยนเส้นทาง
+    OVERCHARGING         // เก็บเงินเกิน
+    SUBSTANCE_USE        // ดื่มเหล้า/ใช้สารเสพติด
+    OTHER                // อื่นๆ
+}
+
+model DriverReport {
+    id               String       @id @default(cuid())
+    reporterId       String
+    reporter         User         @relation("ReportsCreated", fields: [reporterId], references: [id], onDelete: Cascade)
+    reportedDriverId String
+    reportedDriver   User         @relation("ReportsReceived", fields: [reportedDriverId], references: [id], onDelete: Cascade)
+    bookingId        String?
+    booking          Booking?     @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+    reason           ReportReason
+    description      String
+    evidence         Json?        @db.Json // [{ url, type, publicId }]
+
+    status           ReportStatus @default(PENDING)
+    adminId          String?
+    adminNotes       String?
+    resolvedAt       DateTime?
+
+    createdAt        DateTime     @default(now())
+    updatedAt        DateTime     @updatedAt
+
+    @@index([reportedDriverId, status])
+    @@index([reporterId])
+    @@index([status])
+    @@index([createdAt])
 }

@@ -39,34 +39,42 @@ export function useChat() {
     }
 
     /**
-     * ดึงรายการข้อความทั้งหมด
+     * ดึงรายการข้อความทั้งหมด (โหลดทุกหน้า)
      */
     const fetchMessages = async (bookingId, opts = {}) => {
-        // ตั้ง isLoading เฉพาะตอนโหลดครั้งแรก (ไม่ใช่ตอน polling)
         const isInitialLoad = messages.value.length === 0
         if (isInitialLoad) {
             isLoading.value = true
         }
         error.value = null
         try {
-            const params = new URLSearchParams({
-                page: opts.page || 1,
-                limit: opts.limit || 50,
-                sortOrder: opts.sortOrder || 'asc'
-            })
-            
-            const response = await $api(`/bookings/${bookingId}/messages?${params}`)
-            
-            // onResponse plugin จะ extract .data ออกมาเป็น array แล้ว
-            if (Array.isArray(response)) {
-                messages.value = response
-            } else {
-                messages.value = response || []
+            const limit = opts.limit || 50
+            let allMessages = []
+            let page = 1
+            let hasMore = true
+
+            // ดึงทุกหน้าจนกว่าจะหมด
+            while (hasMore) {
+                const params = new URLSearchParams({
+                    page,
+                    limit,
+                    sortOrder: opts.sortOrder || 'asc'
+                })
+                const response = await $api(`/bookings/${bookingId}/messages?${params}`)
+                const batch = Array.isArray(response) ? response : (response || [])
+                allMessages = allMessages.concat(batch)
+
+                // ถ้าได้น้อยกว่า limit แสดงว่าหมดแล้ว
+                if (batch.length < limit) {
+                    hasMore = false
+                } else {
+                    page++
+                }
             }
-            
+
+            messages.value = allMessages
             return messages.value
         } catch (e) {
-            // ถ้าเป็นการ polling แล้ว error ไม่ต้อง set (ให้ข้อความเดิมคงอยู่)
             if (isInitialLoad) {
                 error.value = e.statusMessage || 'ไม่สามารถโหลดข้อความได้'
             }
@@ -171,29 +179,38 @@ export function useChat() {
     }
 
     /**
-     * Refresh ข้อความ (polling) - ดึงเฉพาะข้อความใหม่ที่ยังไม่มี
+     * Refresh ข้อความ (polling) - ดึงข้อความล่าสุดและ merge กับข้อความเดิม
      */
     const refreshMessages = async (bookingId) => {
         try {
-            const params = new URLSearchParams({
-                page: 1,
-                limit: 50,
-                sortOrder: 'asc'
-            })
-            
-            const response = await $api(`/bookings/${bookingId}/messages?${params}`)
-            const freshMessages = Array.isArray(response) ? response : (response || [])
-            
+            // ดึงทุกหน้าเหมือน fetchMessages แต่ไม่ set isLoading
+            const limit = 50
+            let allFresh = []
+            let page = 1
+            let hasMore = true
+
+            while (hasMore) {
+                const params = new URLSearchParams({ page, limit, sortOrder: 'asc' })
+                const response = await $api(`/bookings/${bookingId}/messages?${params}`)
+                const batch = Array.isArray(response) ? response : (response || [])
+                allFresh = allFresh.concat(batch)
+                if (batch.length < limit) {
+                    hasMore = false
+                } else {
+                    page++
+                }
+            }
+
             // Merge: เก็บข้อความเดิมที่มีอยู่ และเพิ่มข้อความใหม่
             const existingIds = new Set(messages.value.map(m => m.id))
-            const newMessages = freshMessages.filter(m => !existingIds.has(m.id))
+            const newMessages = allFresh.filter(m => !existingIds.has(m.id))
             
             if (newMessages.length > 0) {
                 messages.value = [...messages.value, ...newMessages]
             }
             
             // อัพเดท readAt สำหรับข้อความที่ถูก mark as read แล้ว
-            const freshMap = new Map(freshMessages.map(m => [m.id, m]))
+            const freshMap = new Map(allFresh.map(m => [m.id, m]))
             messages.value = messages.value.map(m => {
                 const fresh = freshMap.get(m.id)
                 if (fresh && fresh.readAt && !m.readAt) {
