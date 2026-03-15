@@ -45,13 +45,13 @@
                     <select v-model="form.reason" required
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="" disabled>-- เลือกเหตุผล --</option>
-                        <option value="RECKLESS_DRIVING">ขับรถประมาท</option>
-                        <option value="HARASSMENT">คุกคาม / ไม่เหมาะสม</option>
-                        <option value="FRAUD">ฉ้อโกง / เก็บเงินเกิน</option>
-                        <option value="NO_SHOW">ไม่มาตามนัด</option>
+                        <option value="UNSAFE_DRIVING">ขับรถไม่ปลอดภัย / ประมาท</option>
+                        <option value="HARASSMENT">คุกคาม / ก้าวร้าว</option>
+                        <option value="OVERCHARGING">ฉ้อโกง / เก็บเงินเกิน</option>
+                        <option value="LATE_OR_NO_SHOW">มาสาย / ไม่มาตามนัด</option>
                         <option value="VEHICLE_CONDITION">สภาพรถไม่ดี</option>
-                        <option value="ROUTE_DEVIATION">แวะเปลี่ยนเส้นทาง</option>
-                        <option value="INAPPROPRIATE_BEHAVIOR">พฤติกรรมไม่เหมาะสม</option>
+                        <option value="ROUTE_DEVIATION">เปลี่ยนเส้นทาง</option>
+                        <option value="SUBSTANCE_USE">ดื่มเหล้า / ใช้สารเสพติด</option>
                         <option value="OTHER">อื่นๆ</option>
                     </select>
                 </div>

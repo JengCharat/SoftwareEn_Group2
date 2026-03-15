@@ -31,23 +31,23 @@ router.get(
     reportController.getMyReports,
 );
 
-// GET /reports/:reportId - ดูรายละเอียดรายงาน
-router.get(
-    '/:reportId',
-    protect,
-    validate({ params: getReportParamsSchema }),
-    reportController.getReportById,
-);
-
 // --- Admin Routes ---
 
-// GET /reports/admin - ดูรายงานทั้งหมด (Admin)
+// GET /reports/admin - ดูรายงานทั้งหมด (Admin)  ← ต้องอยู่ก่อน /:reportId
 router.get(
     '/admin',
     protect,
     requireAdmin,
     validate({ query: listReportsQuerySchema }),
     reportController.getAllReports,
+);
+
+// GET /reports/:reportId - ดูรายละเอียดรายงาน
+router.get(
+    '/:reportId',
+    protect,
+    validate({ params: getReportParamsSchema }),
+    reportController.getReportById,
 );
 
 // PATCH /reports/:reportId/status - อัพเดทสถานะรายงาน (Admin)

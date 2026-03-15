@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <button @click="$emit('close')"
-                    class="text-white/70 hover:text-white text-2xl leading-none w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
+                    class="text-white/80 hover:text-white text-2xl leading-none w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/10 transition-colors"
                     aria-label="ปิด">
                     ×
                 </button>

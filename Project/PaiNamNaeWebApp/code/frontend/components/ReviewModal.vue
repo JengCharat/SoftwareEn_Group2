@@ -3,9 +3,9 @@
         @click.self="$emit('close')">
         <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-yellow-400 to-orange-400 px-6 py-4">
+            <div class="bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-4">
                 <h2 class="text-lg font-bold text-white">⭐ ให้คะแนนการเดินทาง</h2>
-                <p class="text-sm text-yellow-50 mt-0.5 truncate">
+                <p class="text-sm text-blue-100 mt-0.5 truncate">
                     {{ trip?.origin }} → {{ trip?.destination }}
                 </p>
             </div>
@@ -47,7 +47,7 @@
                     </label>
                     <textarea v-model="comment" rows="3" maxlength="500"
                         placeholder="บอกเล่าประสบการณ์การเดินทางของคุณ..."
-                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent" />
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
                     <p class="text-right text-xs text-gray-400 mt-0.5">{{ comment.length }}/500</p>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                     ยกเลิก
                 </button>
                 <button type="button" @click="submitReview" :disabled="isSubmitting || rating === 0"
-                    class="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-yellow-400 to-orange-400 rounded-xl hover:from-yellow-500 hover:to-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                    class="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-700 rounded-xl hover:from-blue-600 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all">
                     {{ isSubmitting ? 'กำลังส่ง...' : 'ส่งรีวิว' }}
                 </button>
             </div>

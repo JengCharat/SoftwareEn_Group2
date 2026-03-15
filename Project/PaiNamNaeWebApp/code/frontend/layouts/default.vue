@@ -308,8 +308,17 @@
                             การเดินทางของฉัน
                         </NuxtLink>
 
+                        <NuxtLink
+                            v-if="user && (user.role === 'PASSENGER' || user.role === 'DRIVER')"
+                            to="/report"
+                            class="block px-3 py-2 transition-colors duration-200 rounded-md"
+                            :class="$route.path.startsWith('/report') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'"
+                            @click="closeMobileMenu">
+                            รายงานคนขับ
+                        </NuxtLink>
+
                         <!-- คนขับ: เมนูย่อย 2 รายการ -->
-                        <div v-else-if="user && (user.role === 'DRIVER' || user.role === 'ADMIN')" class="relative">
+                        <div v-if="user && (user.role === 'DRIVER' || user.role === 'ADMIN')" class="relative">
                             <button @click="toggleMobileTripMenu"
                                 class="flex items-center justify-between w-full px-3 py-2 text-left text-gray-600 transition-colors duration-200 rounded-md hover:text-blue-600 hover:bg-blue-50">
                                 การเดินทางทั้งหมด
