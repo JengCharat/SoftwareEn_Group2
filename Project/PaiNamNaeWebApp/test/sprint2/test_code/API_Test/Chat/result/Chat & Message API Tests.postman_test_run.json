@@ -1,0 +1,1142 @@
+{
+	"id": "d1993589-3d98-4fe9-bb18-6933c73209b1",
+	"name": "Chat & Message API Tests",
+	"timestamp": "2026-03-03T14:29:48.275Z",
+	"collection_id": "42521469-7e2e01a9-b299-406c-a83b-d81d8c6e2f91",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 58,
+	"delay": 0,
+	"persist": true,
+	"status": "error",
+	"startedAt": "2026-03-03T14:29:42.149Z",
+	"totalFail": 3,
+	"results": [
+		{
+			"id": "8ef7c3cd-f29f-456e-b6c6-408ff50c27ca",
+			"name": "[Setup] Login as Passenger",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/auth/login",
+			"time": 303,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 - Login success": true,
+				"Response has token": true
+			},
+			"testPassFailCounts": {
+				"Status 200 - Login success": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				303
+			],
+			"allTests": [
+				{
+					"Status 200 - Login success": true,
+					"Response has token": true
+				}
+			]
+		},
+		{
+			"id": "0ccaa257-561c-4cd8-b58d-b04d6626609b",
+			"name": "[Setup] Login as Driver",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/auth/login",
+			"time": 206,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 - Login success": true,
+				"Response has token": true
+			},
+			"testPassFailCounts": {
+				"Status 200 - Login success": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				206
+			],
+			"allTests": [
+				{
+					"Status 200 - Login success": true,
+					"Response has token": true
+				}
+			]
+		},
+		{
+			"id": "f3d23716-744f-44c6-befd-fd58a19e7240",
+			"name": "[GET /chat] Happy path - ดึงข้อมูลห้องแชท",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/chat",
+			"time": 103,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true,
+				"success = true": true,
+				"data has required fields": true,
+				"myRole is DRIVER or PASSENGER": true,
+				"chatPartner does NOT expose sensitive user data": true,
+				"status is valid enum": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"success = true": {
+					"pass": 1,
+					"fail": 0
+				},
+				"data has required fields": {
+					"pass": 1,
+					"fail": 0
+				},
+				"myRole is DRIVER or PASSENGER": {
+					"pass": 1,
+					"fail": 0
+				},
+				"chatPartner does NOT expose sensitive user data": {
+					"pass": 1,
+					"fail": 0
+				},
+				"status is valid enum": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				103
+			],
+			"allTests": [
+				{
+					"Status 200": true,
+					"success = true": true,
+					"data has required fields": true,
+					"myRole is DRIVER or PASSENGER": true,
+					"chatPartner does NOT expose sensitive user data": true,
+					"status is valid enum": true
+				}
+			]
+		},
+		{
+			"id": "05d2fb7c-a026-4ef9-afcd-ca20a7932a29",
+			"name": "[GET /chat] Unauthorized - ไม่มี Token",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/chat",
+			"time": 80,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status 401 - Unauthorized": true
+			},
+			"testPassFailCounts": {
+				"Status 401 - Unauthorized": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				80
+			],
+			"allTests": [
+				{
+					"Status 401 - Unauthorized": true
+				}
+			]
+		},
+		{
+			"id": "6172abbf-1627-4079-9cbb-1ce9f64c3893",
+			"name": "[GET /chat] Invalid bookingId format",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/not-a-valid-cuid/chat",
+			"time": 81,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status 400 - Invalid CUID format": true
+			},
+			"testPassFailCounts": {
+				"Status 400 - Invalid CUID format": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				81
+			],
+			"allTests": [
+				{
+					"Status 400 - Invalid CUID format": true
+				}
+			]
+		},
+		{
+			"id": "ceb378b4-0a91-40bf-8777-dc471dc38018",
+			"name": "[GET /chat] Booking not found (valid CUID but not exist)",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/clzzzzzzzzzzzzzzzzzzzzzzzz/chat",
+			"time": 85,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"Status 404 - Booking not found": true,
+				"Error message present": true
+			},
+			"testPassFailCounts": {
+				"Status 404 - Booking not found": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Error message present": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				85
+			],
+			"allTests": [
+				{
+					"Status 404 - Booking not found": true,
+					"Error message present": true
+				}
+			]
+		},
+		{
+			"id": "4e51b3a0-2fde-41b5-bfc1-084b6acfa013",
+			"name": "[GET /chat] Forbidden - ไม่ใช่ Driver หรือ Passenger ของ booking",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/chat",
+			"time": 81,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status 403 - Forbidden": false
+			},
+			"testPassFailCounts": {
+				"Status 403 - Forbidden": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				81
+			],
+			"allTests": [
+				{
+					"Status 403 - Forbidden": false
+				}
+			]
+		},
+		{
+			"id": "00f275b6-3c03-4e69-9684-0789f0d52a71",
+			"name": "[GET /messages] Happy path - ดึงข้อความทั้งหมด",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages",
+			"time": 93,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true,
+				"success = true": true,
+				"data is array": true,
+				"pagination object present": true,
+				"messages do NOT expose senderId": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"success = true": {
+					"pass": 1,
+					"fail": 0
+				},
+				"data is array": {
+					"pass": 1,
+					"fail": 0
+				},
+				"pagination object present": {
+					"pass": 1,
+					"fail": 0
+				},
+				"messages do NOT expose senderId": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				93
+			],
+			"allTests": [
+				{
+					"Status 200": true,
+					"success = true": true,
+					"data is array": true,
+					"pagination object present": true,
+					"messages do NOT expose senderId": true
+				}
+			]
+		},
+		{
+			"id": "8ceaf92f-9049-4ef9-8d30-48c99b6f1388",
+			"name": "[GET /messages] Pagination - page=1&limit=10",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages?page=1&limit=10",
+			"time": 94,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true,
+				"pagination.page = 1": true,
+				"pagination.limit = 10": true,
+				"data length <= 10": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"pagination.page = 1": {
+					"pass": 1,
+					"fail": 0
+				},
+				"pagination.limit = 10": {
+					"pass": 1,
+					"fail": 0
+				},
+				"data length <= 10": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				94
+			],
+			"allTests": [
+				{
+					"Status 200": true,
+					"pagination.page = 1": true,
+					"pagination.limit = 10": true,
+					"data length <= 10": true
+				}
+			]
+		},
+		{
+			"id": "15e24401-a7d3-490d-9af1-6653c6620d88",
+			"name": "[GET /messages] sortOrder=desc (เรียงจากใหม่ไปเก่า)",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages?sortOrder=desc",
+			"time": 95,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true,
+				"Messages sorted desc (newest first)": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Messages sorted desc (newest first)": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				95
+			],
+			"allTests": [
+				{
+					"Status 200": true,
+					"Messages sorted desc (newest first)": true
+				}
+			]
+		},
+		{
+			"id": "7d6f8b66-19f3-4dbb-8a1e-110b7579cb90",
+			"name": "[GET /messages] Invalid query - limit=0 (ต่ำกว่า min)",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages?limit=0",
+			"time": 83,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status 400 - Invalid limit value": true
+			},
+			"testPassFailCounts": {
+				"Status 400 - Invalid limit value": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				83
+			],
+			"allTests": [
+				{
+					"Status 400 - Invalid limit value": true
+				}
+			]
+		},
+		{
+			"id": "05bf9dfb-cd38-4993-b72f-37e05a51e8ab",
+			"name": "[GET /messages] Invalid query - limit=200 (เกิน max 100)",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages?limit=200",
+			"time": 81,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status 400 - Limit exceeds max": true
+			},
+			"testPassFailCounts": {
+				"Status 400 - Limit exceeds max": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				81
+			],
+			"allTests": [
+				{
+					"Status 400 - Limit exceeds max": true
+				}
+			]
+		},
+		{
+			"id": "71ab79ae-4f15-4b6f-bb87-920479e7b878",
+			"name": "[GET /messages] Unauthorized - ไม่มี Token",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages",
+			"time": 80,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status 401 - Unauthorized": true
+			},
+			"testPassFailCounts": {
+				"Status 401 - Unauthorized": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				80
+			],
+			"allTests": [
+				{
+					"Status 401 - Unauthorized": true
+				}
+			]
+		},
+		{
+			"id": "f0e5dfa3-62d6-46dc-b1a9-153c2e9ade32",
+			"name": "[POST /messages] Happy path - ส่งข้อความสำเร็จ",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages",
+			"time": 120,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Status 201 - Created": true,
+				"success = true": true,
+				"data has message fields": true,
+				"senderId is NOT exposed": true,
+				"readAt is null initially": true
+			},
+			"testPassFailCounts": {
+				"Status 201 - Created": {
+					"pass": 1,
+					"fail": 0
+				},
+				"success = true": {
+					"pass": 1,
+					"fail": 0
+				},
+				"data has message fields": {
+					"pass": 1,
+					"fail": 0
+				},
+				"senderId is NOT exposed": {
+					"pass": 1,
+					"fail": 0
+				},
+				"readAt is null initially": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				120
+			],
+			"allTests": [
+				{
+					"Status 201 - Created": true,
+					"success = true": true,
+					"data has message fields": true,
+					"senderId is NOT exposed": true,
+					"readAt is null initially": true
+				}
+			]
+		},
+		{
+			"id": "c17fd01d-a1bd-4c92-abdd-80ce19c44695",
+			"name": "[POST /messages] Trim whitespace - content มีแต่ space",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages",
+			"time": 110,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Status 400 - Content empty after trim": false
+			},
+			"testPassFailCounts": {
+				"Status 400 - Content empty after trim": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				110
+			],
+			"allTests": [
+				{
+					"Status 400 - Content empty after trim": false
+				}
+			]
+		},
+		{
+			"id": "8594ea4c-d023-45cc-b347-5e9ad9086a5a",
+			"name": "[POST /messages] content = empty string",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages",
+			"time": 82,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status 400 - Empty content": true
+			},
+			"testPassFailCounts": {
+				"Status 400 - Empty content": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				82
+			],
+			"allTests": [
+				{
+					"Status 400 - Empty content": true
+				}
+			]
+		},
+		{
+			"id": "514d4cd5-7213-4820-9e1f-88df7239a9d5",
+			"name": "[POST /messages] content เกิน 1000 ตัวอักษร",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages",
+			"time": 82,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status 400 - Content too long": true
+			},
+			"testPassFailCounts": {
+				"Status 400 - Content too long": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				82
+			],
+			"allTests": [
+				{
+					"Status 400 - Content too long": true
+				}
+			]
+		},
+		{
+			"id": "db5e133b-ae53-4c7d-8ed0-87d13c549f86",
+			"name": "[POST /messages] Missing content field",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages",
+			"time": 80,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status 400 - Missing required field": true
+			},
+			"testPassFailCounts": {
+				"Status 400 - Missing required field": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				80
+			],
+			"allTests": [
+				{
+					"Status 400 - Missing required field": true
+				}
+			]
+		},
+		{
+			"id": "18f0fcc6-b23e-4fd8-a28b-71190b83135c",
+			"name": "[POST /messages] Booking ถูกยกเลิก (CANCELLED) - ส่งไม่ได้",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/{{cancelledBookingId}}/messages",
+			"time": 79,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status 400 - Cannot message in cancelled booking": true,
+				"Error message mentions cancelled/rejected": false
+			},
+			"testPassFailCounts": {
+				"Status 400 - Cannot message in cancelled booking": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Error message mentions cancelled/rejected": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				79
+			],
+			"allTests": [
+				{
+					"Status 400 - Cannot message in cancelled booking": true,
+					"Error message mentions cancelled/rejected": false
+				}
+			]
+		},
+		{
+			"id": "179147ae-fa08-4d90-b489-127786faf3aa",
+			"name": "[POST /messages] Unauthorized - ไม่มี Token",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages",
+			"time": 82,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status 401 - Unauthorized": true
+			},
+			"testPassFailCounts": {
+				"Status 401 - Unauthorized": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				82
+			],
+			"allTests": [
+				{
+					"Status 401 - Unauthorized": true
+				}
+			]
+		},
+		{
+			"id": "4582d3bb-15b7-489d-9a36-27bb5a233aba",
+			"name": "[GET /messages/unread-count] Happy path",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages/unread-count",
+			"time": 90,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true,
+				"success = true": true,
+				"data.unreadCount is non-negative integer": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"success = true": {
+					"pass": 1,
+					"fail": 0
+				},
+				"data.unreadCount is non-negative integer": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				90
+			],
+			"allTests": [
+				{
+					"Status 200": true,
+					"success = true": true,
+					"data.unreadCount is non-negative integer": true
+				}
+			]
+		},
+		{
+			"id": "9511fcc1-6f90-4840-9c46-8a27477d5341",
+			"name": "[GET /messages/unread-count] Unauthorized - ไม่มี Token",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages/unread-count",
+			"time": 81,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status 401 - Unauthorized": true
+			},
+			"testPassFailCounts": {
+				"Status 401 - Unauthorized": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				81
+			],
+			"allTests": [
+				{
+					"Status 401 - Unauthorized": true
+				}
+			]
+		},
+		{
+			"id": "2197d84b-6035-40b0-b211-130dddb87b67",
+			"name": "[PATCH /messages/read-all] Happy path - Mark ทั้งหมดว่าอ่านแล้ว",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages/read-all",
+			"time": 100,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true,
+				"success = true": true,
+				"data.count is non-negative integer": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"success = true": {
+					"pass": 1,
+					"fail": 0
+				},
+				"data.count is non-negative integer": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				100
+			],
+			"allTests": [
+				{
+					"Status 200": true,
+					"success = true": true,
+					"data.count is non-negative integer": true
+				}
+			]
+		},
+		{
+			"id": "6be99709-96f6-4b3f-9c7e-79fe45888fa5",
+			"name": "[PATCH /messages/read-all] Idempotent - Mark ซ้ำครั้งที่ 2 ต้อง count = 0",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages/read-all",
+			"time": 91,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true,
+				"count = 0 (already read)": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"count = 0 (already read)": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				91
+			],
+			"allTests": [
+				{
+					"Status 200": true,
+					"count = 0 (already read)": true
+				}
+			]
+		},
+		{
+			"id": "9d60fdac-29e3-43bd-8401-ce9559f614ff",
+			"name": "[PATCH /messages/read-all] Unauthorized - ไม่มี Token",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages/read-all",
+			"time": 80,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"Status 401 - Unauthorized": true
+			},
+			"testPassFailCounts": {
+				"Status 401 - Unauthorized": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				80
+			],
+			"allTests": [
+				{
+					"Status 401 - Unauthorized": true
+				}
+			]
+		},
+		{
+			"id": "c4483b26-0231-4d59-80f2-ead37cd1cb2e",
+			"name": "[PATCH /messages/:messageId/read] Happy path - Mark ข้อความเดี่ยวว่าอ่านแล้ว",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages/cmmapff8x03nofzx71roa0e8h/read",
+			"time": 105,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200": true,
+				"success = true": true,
+				"data.readAt is not null after mark read": true,
+				"data has message fields": true
+			},
+			"testPassFailCounts": {
+				"Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"success = true": {
+					"pass": 1,
+					"fail": 0
+				},
+				"data.readAt is not null after mark read": {
+					"pass": 1,
+					"fail": 0
+				},
+				"data has message fields": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				105
+			],
+			"allTests": [
+				{
+					"Status 200": true,
+					"success = true": true,
+					"data.readAt is not null after mark read": true,
+					"data has message fields": true
+				}
+			]
+		},
+		{
+			"id": "4d6fc525-a189-4760-bbae-8ec6141b1849",
+			"name": "[PATCH /messages/:messageId/read] Idempotent - Mark ซ้ำ readAt ต้องไม่เปลี่ยน",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages/cmmapff8x03nofzx71roa0e8h/read",
+			"time": 91,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 - Idempotent": true,
+				"readAt still set": true
+			},
+			"testPassFailCounts": {
+				"Status 200 - Idempotent": {
+					"pass": 1,
+					"fail": 0
+				},
+				"readAt still set": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				91
+			],
+			"allTests": [
+				{
+					"Status 200 - Idempotent": true,
+					"readAt still set": true
+				}
+			]
+		},
+		{
+			"id": "c49f2eb6-7f4e-4592-bc93-20bcfc729f2a",
+			"name": "[PATCH /messages/:messageId/read] Error - Mark ข้อความที่ตัวเองส่ง",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages/cmmapff8x03nofzx71roa0e8h/read",
+			"time": 91,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status 400 - Cannot mark own message as read": true,
+				"Error message mentions own message": true
+			},
+			"testPassFailCounts": {
+				"Status 400 - Cannot mark own message as read": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Error message mentions own message": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				91
+			],
+			"allTests": [
+				{
+					"Status 400 - Cannot mark own message as read": true,
+					"Error message mentions own message": true
+				}
+			]
+		},
+		{
+			"id": "f101c315-aabe-4e48-8a4c-879642a9ea38",
+			"name": "[PATCH /messages/:messageId/read] Not found - messageId ไม่มีในระบบ",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages/clzzzzzzzzzzzzzzzzzzzzzzzz/read",
+			"time": 91,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"Status 404 - Message not found": true
+			},
+			"testPassFailCounts": {
+				"Status 404 - Message not found": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				91
+			],
+			"allTests": [
+				{
+					"Status 404 - Message not found": true
+				}
+			]
+		},
+		{
+			"id": "c2e8016a-ef91-41d9-bb82-73668c53b7b4",
+			"name": "[PATCH /messages/:messageId/read] Invalid messageId format",
+			"url": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmllrfr8e0002srkctyiklcp5/messages/not-valid-id/read",
+			"time": 80,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status 400 - Invalid CUID format": true
+			},
+			"testPassFailCounts": {
+				"Status 400 - Invalid CUID format": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				80
+			],
+			"allTests": [
+				{
+					"Status 400 - Invalid CUID format": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 3000,
+	"collection": {
+		"requests": [
+			{
+				"id": "8ef7c3cd-f29f-456e-b6c6-408ff50c27ca",
+				"method": "POST"
+			},
+			{
+				"id": "0ccaa257-561c-4cd8-b58d-b04d6626609b",
+				"method": "POST"
+			},
+			{
+				"id": "f3d23716-744f-44c6-befd-fd58a19e7240",
+				"method": "GET"
+			},
+			{
+				"id": "05d2fb7c-a026-4ef9-afcd-ca20a7932a29",
+				"method": "GET"
+			},
+			{
+				"id": "6172abbf-1627-4079-9cbb-1ce9f64c3893",
+				"method": "GET"
+			},
+			{
+				"id": "ceb378b4-0a91-40bf-8777-dc471dc38018",
+				"method": "GET"
+			},
+			{
+				"id": "4e51b3a0-2fde-41b5-bfc1-084b6acfa013",
+				"method": "GET"
+			},
+			{
+				"id": "00f275b6-3c03-4e69-9684-0789f0d52a71",
+				"method": "GET"
+			},
+			{
+				"id": "8ceaf92f-9049-4ef9-8d30-48c99b6f1388",
+				"method": "GET"
+			},
+			{
+				"id": "15e24401-a7d3-490d-9af1-6653c6620d88",
+				"method": "GET"
+			},
+			{
+				"id": "7d6f8b66-19f3-4dbb-8a1e-110b7579cb90",
+				"method": "GET"
+			},
+			{
+				"id": "05bf9dfb-cd38-4993-b72f-37e05a51e8ab",
+				"method": "GET"
+			},
+			{
+				"id": "71ab79ae-4f15-4b6f-bb87-920479e7b878",
+				"method": "GET"
+			},
+			{
+				"id": "f0e5dfa3-62d6-46dc-b1a9-153c2e9ade32",
+				"method": "POST"
+			},
+			{
+				"id": "c17fd01d-a1bd-4c92-abdd-80ce19c44695",
+				"method": "POST"
+			},
+			{
+				"id": "8594ea4c-d023-45cc-b347-5e9ad9086a5a",
+				"method": "POST"
+			},
+			{
+				"id": "514d4cd5-7213-4820-9e1f-88df7239a9d5",
+				"method": "POST"
+			},
+			{
+				"id": "db5e133b-ae53-4c7d-8ed0-87d13c549f86",
+				"method": "POST"
+			},
+			{
+				"id": "18f0fcc6-b23e-4fd8-a28b-71190b83135c",
+				"method": "POST"
+			},
+			{
+				"id": "179147ae-fa08-4d90-b489-127786faf3aa",
+				"method": "POST"
+			},
+			{
+				"id": "4582d3bb-15b7-489d-9a36-27bb5a233aba",
+				"method": "GET"
+			},
+			{
+				"id": "9511fcc1-6f90-4840-9c46-8a27477d5341",
+				"method": "GET"
+			},
+			{
+				"id": "2197d84b-6035-40b0-b211-130dddb87b67",
+				"method": "PATCH"
+			},
+			{
+				"id": "6be99709-96f6-4b3f-9c7e-79fe45888fa5",
+				"method": "PATCH"
+			},
+			{
+				"id": "9d60fdac-29e3-43bd-8401-ce9559f614ff",
+				"method": "PATCH"
+			},
+			{
+				"id": "c4483b26-0231-4d59-80f2-ead37cd1cb2e",
+				"method": "PATCH"
+			},
+			{
+				"id": "4d6fc525-a189-4760-bbae-8ec6141b1849",
+				"method": "PATCH"
+			},
+			{
+				"id": "c49f2eb6-7f4e-4592-bc93-20bcfc729f2a",
+				"method": "PATCH"
+			},
+			{
+				"id": "f101c315-aabe-4e48-8a4c-879642a9ea38",
+				"method": "PATCH"
+			},
+			{
+				"id": "c2e8016a-ef91-41d9-bb82-73668c53b7b4",
+				"method": "PATCH"
+			},
+			{
+				"id": "0dc1fb2a-5c7b-4891-a2cc-6843db2441c3",
+				"method": "GET"
+			}
+		]
+	}
+}

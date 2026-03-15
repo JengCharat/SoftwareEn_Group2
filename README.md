@@ -8,21 +8,15 @@
 
 ![hippo](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmZuazR0bHVmNjNiMXJldjNwM3ExbGh5Y2kyZXR3emMwbXkyM3FxciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/cF7QqO5DYdft6/giphy.gif)
 
-
-- **ชื่อ-นามสกุล:** นายจักรพันธ์ แสงพรม
-  - **รหัสนักศึกษา:** 643020037-5
-- **ชื่อ-นามสกุล:** นายนราวิชญ์ คำปุทา [naravich176](https://github.com/naravich176)
-  - **รหัสนักศึกษา:** 663380017-6
-- **ชื่อ-นามสกุล:** นายศิวภาส ภูศรีอ่อน [PunKunGG](https://github.com/PunKunGG)
-  - **รหัสนักศึกษา:** 663380026-5
-- **ชื่อ-นามสกุล:** นายแก้วเพ็ชรัตน์ สีสันต์ [JengCharat](https://github.com/JengCharat)
-  - **รหัสนักศึกษา:** 663380029-9
-- **ชื่อ-นามสกุล:** นายภคพล อยู่ยืน [KKU-Tung](https://github.com/KKU-Tung)
-  - **รหัสนักศึกษา:** 663380226-7
-- **ชื่อ-นามสกุล:** นายศจิษฐา ศีลธรรมดี [sjthak](https://github.com/sjthak)
-  - **รหัสนักศึกษา:** 663380236-4
-- **ชื่อ-นามสกุล:** นางสาวณัฐรภา ศรีวิชา [FriendBipbipp](https://github.com/FriendBipbipp)
-  - **รหัสนักศึกษา:** 663380504-5
+| รหัสนักศึกษา  | ชื่อ-นามสกุล                | username                                                   |
+| :------------ | :-------------------------- | :--------------------------------------------------------- |
+| `643020037-5` | `นายจักรพันธ์ แสงพรม`        | Dead or Alive |
+| `663380017-6` | `นายนราวิชญ์ คำปุทา`           | [naravich176](https://github.com/naravich176)          |
+| `663380026-5` | `นายศิวภาส ภูศรีอ่อน`  | [PunKunGG](https://github.com/PunKunGG)             |
+| `663380029-9` | `นายแก้วเพ็ชรัตน์ สีสันต์`       | [JengCharat](https://github.com/JengCharat)          |
+| `663380226-7` | `นายภคพล อยู่ยืน`   | [KKU-Tung](https://github.com/KKU-Tung)   |
+| `663380236-4` | `นายศจิษฐา ศีลธรรมดี `    | [sjthak](https://github.com/sjthak)             |
+| `663380504-5` | `นางสาวณัฐรภา ศรีวิชา `        | [FriendBipbipp](https://github.com/FriendBipbipp)              |
 
 ---
 

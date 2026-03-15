@@ -1,0 +1,1322 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Chat & Message API Tests",
+    "description": "Postman collection สำหรับทดสอบ Chat/Message API ระหว่างผู้โดยสาร (Passenger) และคนขับ (Driver)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "bookingId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "messageId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Setup",
+      "item": [
+        {
+          "name": "[Setup] Login as Passenger",
+          "id": "11111111-0001-0001-0001-000000000001",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 - Login success', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('Response has token', function () {",
+                  "    pm.expect(body.data).to.have.property('token');",
+                  "});",
+                  "",
+                  "pm.environment.set('token', body.data.token);",
+                  "pm.environment.set('passengerToken', body.data.token);",
+                  "console.log('Passenger token saved:', body.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"test_passenger\",\n    \"password\": \"12345678\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[Setup] Login as Driver",
+          "id": "11111111-0001-0001-0001-000000000002",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 - Login success', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('Response has token', function () {",
+                  "    pm.expect(body.data).to.have.property('token');",
+                  "});",
+                  "",
+                  "pm.environment.set('driverToken', body.data.token);",
+                  "console.log('Driver token saved:', body.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"test_driver\",\n    \"password\": \"12345678\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat Room",
+      "item": [
+        {
+          "name": "[GET /chat] Happy path - ดึงข้อมูลห้องแชท",
+          "id": "22222222-0001-0001-0001-000000000001",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('success = true', function () {",
+                  "    pm.expect(body.success).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test('data has required fields', function () {",
+                  "    pm.expect(body.data).to.have.property('bookingId');",
+                  "    pm.expect(body.data).to.have.property('status');",
+                  "    pm.expect(body.data).to.have.property('myRole');",
+                  "    pm.expect(body.data).to.have.property('chatPartner');",
+                  "    pm.expect(body.data).to.have.property('route');",
+                  "    pm.expect(body.data).to.have.property('vehicle');",
+                  "    pm.expect(body.data).to.have.property('unreadCount');",
+                  "});",
+                  "",
+                  "pm.test('myRole is DRIVER or PASSENGER', function () {",
+                  "    pm.expect(['DRIVER', 'PASSENGER']).to.include(body.data.myRole);",
+                  "});",
+                  "",
+                  "pm.test('chatPartner does NOT expose sensitive user data', function () {",
+                  "    pm.expect(body.data.chatPartner).to.not.have.property('email');",
+                  "    pm.expect(body.data.chatPartner).to.not.have.property('phone');",
+                  "    pm.expect(body.data.chatPartner).to.not.have.property('nationalId');",
+                  "});",
+                  "",
+                  "pm.test('status is valid enum', function () {",
+                  "    pm.expect(['PENDING','CONFIRMED','REJECTED','CANCELLED']).to.include(body.data.status);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "chat"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[GET /chat] Unauthorized - ไม่มี Token",
+          "id": "22222222-0001-0001-0001-000000000002",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - Unauthorized', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "chat"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[GET /chat] Invalid bookingId format",
+          "id": "22222222-0001-0001-0001-000000000003",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - Invalid CUID format', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/not-a-valid-cuid/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "not-a-valid-cuid", "chat"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[GET /chat] Booking not found (valid CUID but not exist)",
+          "id": "22222222-0001-0001-0001-000000000004",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404 - Booking not found', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('Error message present', function () {",
+                  "    pm.expect(body).to.have.property('message');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/clzzzzzzzzzzzzzzzzzzzzzzzz/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "clzzzzzzzzzzzzzzzzzzzzzzzz", "chat"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[GET /chat] Forbidden - ไม่ใช่ Driver หรือ Passenger ของ booking",
+          "id": "22222222-0001-0001-0001-000000000005",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 403 - Forbidden', function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{otherUserToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "chat"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Messages - GET",
+      "item": [
+        {
+          "name": "[GET /messages] Happy path - ดึงข้อความทั้งหมด",
+          "id": "33333333-0001-0001-0001-000000000001",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('success = true', function () {",
+                  "    pm.expect(body.success).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test('data is array', function () {",
+                  "    pm.expect(body.data).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('pagination object present', function () {",
+                  "    pm.expect(body.pagination).to.have.property('page');",
+                  "    pm.expect(body.pagination).to.have.property('limit');",
+                  "    pm.expect(body.pagination).to.have.property('total');",
+                  "    pm.expect(body.pagination).to.have.property('totalPages');",
+                  "});",
+                  "",
+                  "pm.test('messages do NOT expose senderId', function () {",
+                  "    body.data.forEach(function (msg) {",
+                  "        pm.expect(msg).to.not.have.property('senderId');",
+                  "        pm.expect(msg).to.have.property('senderRole');",
+                  "        pm.expect(['DRIVER','PASSENGER']).to.include(msg.senderRole);",
+                  "    });",
+                  "});",
+                  "",
+                  "// Save first messageId for later tests",
+                  "if (body.data.length > 0) {",
+                  "    pm.environment.set('messageId', body.data[0].id);",
+                  "    console.log('messageId saved:', body.data[0].id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[GET /messages] Pagination - page=1&limit=10",
+          "id": "33333333-0001-0001-0001-000000000002",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('pagination.page = 1', function () {",
+                  "    pm.expect(body.pagination.page).to.equal(1);",
+                  "});",
+                  "",
+                  "pm.test('pagination.limit = 10', function () {",
+                  "    pm.expect(body.pagination.limit).to.equal(10);",
+                  "});",
+                  "",
+                  "pm.test('data length <= 10', function () {",
+                  "    pm.expect(body.data.length).to.be.at.most(10);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[GET /messages] sortOrder=desc (เรียงจากใหม่ไปเก่า)",
+          "id": "33333333-0001-0001-0001-000000000003",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('Messages sorted desc (newest first)', function () {",
+                  "    let msgs = body.data;",
+                  "    for (let i = 0; i < msgs.length - 1; i++) {",
+                  "        let curr = new Date(msgs[i].createdAt).getTime();",
+                  "        let next = new Date(msgs[i+1].createdAt).getTime();",
+                  "        pm.expect(curr).to.be.at.least(next);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages?sortOrder=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"],
+              "query": [
+                { "key": "sortOrder", "value": "desc" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[GET /messages] Invalid query - limit=0 (ต่ำกว่า min)",
+          "id": "33333333-0001-0001-0001-000000000004",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - Invalid limit value', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages?limit=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"],
+              "query": [
+                { "key": "limit", "value": "0" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[GET /messages] Invalid query - limit=200 (เกิน max 100)",
+          "id": "33333333-0001-0001-0001-000000000005",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - Limit exceeds max', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages?limit=200",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"],
+              "query": [
+                { "key": "limit", "value": "200" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[GET /messages] Unauthorized - ไม่มี Token",
+          "id": "33333333-0001-0001-0001-000000000006",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - Unauthorized', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Messages - POST (Send)",
+      "item": [
+        {
+          "name": "[POST /messages] Happy path - ส่งข้อความสำเร็จ",
+          "id": "44444444-0001-0001-0001-000000000001",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201 - Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('success = true', function () {",
+                  "    pm.expect(body.success).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test('data has message fields', function () {",
+                  "    pm.expect(body.data).to.have.property('id');",
+                  "    pm.expect(body.data).to.have.property('bookingId');",
+                  "    pm.expect(body.data).to.have.property('senderRole');",
+                  "    pm.expect(body.data).to.have.property('content');",
+                  "    pm.expect(body.data).to.have.property('readAt');",
+                  "    pm.expect(body.data).to.have.property('createdAt');",
+                  "});",
+                  "",
+                  "pm.test('senderId is NOT exposed', function () {",
+                  "    pm.expect(body.data).to.not.have.property('senderId');",
+                  "});",
+                  "",
+                  "pm.test('readAt is null initially', function () {",
+                  "    pm.expect(body.data.readAt).to.be.null;",
+                  "});",
+                  "",
+                  "// Save messageId for mark-read tests",
+                  "pm.environment.set('messageId', body.data.id);",
+                  "console.log('New messageId saved:', body.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"content\": \"สวัสดีครับ กรุณารอ ณ จุดรับที่นัดหมายตามเวลานะครับ\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[POST /messages] Trim whitespace - content มีแต่ space",
+          "id": "44444444-0001-0001-0001-000000000002",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - Content empty after trim', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"content\": \"   \"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[POST /messages] content = empty string",
+          "id": "44444444-0001-0001-0001-000000000003",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - Empty content', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"content\": \"\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[POST /messages] content เกิน 1000 ตัวอักษร",
+          "id": "44444444-0001-0001-0001-000000000004",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - Content too long', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"content\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[POST /messages] Missing content field",
+          "id": "44444444-0001-0001-0001-000000000005",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - Missing required field', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[POST /messages] Booking ถูกยกเลิก (CANCELLED) - ส่งไม่ได้",
+          "id": "44444444-0001-0001-0001-000000000006",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - Cannot message in cancelled booking', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('Error message mentions cancelled/rejected', function () {",
+                  "    pm.expect(body.message).to.include('ยกเลิก');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"content\": \"ทดสอบส่งข้อความในการจองที่ถูกยกเลิก\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{cancelledBookingId}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{cancelledBookingId}}", "messages"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[POST /messages] Unauthorized - ไม่มี Token",
+          "id": "44444444-0001-0001-0001-000000000007",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - Unauthorized', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"content\": \"ทดสอบ\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Messages - Unread Count",
+      "item": [
+        {
+          "name": "[GET /messages/unread-count] Happy path",
+          "id": "55555555-0001-0001-0001-000000000001",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('success = true', function () {",
+                  "    pm.expect(body.success).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test('data.unreadCount is non-negative integer', function () {",
+                  "    pm.expect(body.data.unreadCount).to.be.a('number');",
+                  "    pm.expect(body.data.unreadCount).to.be.at.least(0);",
+                  "    pm.expect(Number.isInteger(body.data.unreadCount)).to.be.true;",
+                  "});",
+                  "",
+                  "console.log('Unread count:', body.data.unreadCount);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/unread-count",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages", "unread-count"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[GET /messages/unread-count] Unauthorized - ไม่มี Token",
+          "id": "55555555-0001-0001-0001-000000000002",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - Unauthorized', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/unread-count",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages", "unread-count"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Messages - Mark as Read",
+      "item": [
+        {
+          "name": "[PATCH /messages/read-all] Happy path - Mark ทั้งหมดว่าอ่านแล้ว",
+          "id": "66666666-0001-0001-0001-000000000001",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('success = true', function () {",
+                  "    pm.expect(body.success).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test('data.count is non-negative integer', function () {",
+                  "    pm.expect(body.data.count).to.be.a('number');",
+                  "    pm.expect(body.data.count).to.be.at.least(0);",
+                  "});",
+                  "",
+                  "console.log('Messages marked read:', body.data.count);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/read-all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages", "read-all"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[PATCH /messages/read-all] Idempotent - Mark ซ้ำครั้งที่ 2 ต้อง count = 0",
+          "id": "66666666-0001-0001-0001-000000000002",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('count = 0 (already read)', function () {",
+                  "    pm.expect(body.data.count).to.equal(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/read-all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages", "read-all"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[PATCH /messages/read-all] Unauthorized - ไม่มี Token",
+          "id": "66666666-0001-0001-0001-000000000003",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 401 - Unauthorized', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/read-all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages", "read-all"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[PATCH /messages/:messageId/read] Happy path - Mark ข้อความเดี่ยวว่าอ่านแล้ว",
+          "id": "66666666-0001-0001-0001-000000000004",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// ต้องใช้ token ของฝ่ายตรงข้ามกับผู้ส่ง (ถ้าผู้ส่งเป็น PASSENGER ต้อง mark ด้วย token ของ DRIVER)",
+                  "// ปรับ token ตาม test data ของคุณ"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('success = true', function () {",
+                  "    pm.expect(body.success).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test('data.readAt is not null after mark read', function () {",
+                  "    pm.expect(body.data.readAt).to.not.be.null;",
+                  "});",
+                  "",
+                  "pm.test('data has message fields', function () {",
+                  "    pm.expect(body.data).to.have.property('id');",
+                  "    pm.expect(body.data).to.have.property('bookingId');",
+                  "    pm.expect(body.data).to.have.property('senderRole');",
+                  "    pm.expect(body.data).to.have.property('content');",
+                  "    pm.expect(body.data).to.have.property('createdAt');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/{{messageId}}/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages", "{{messageId}}", "read"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[PATCH /messages/:messageId/read] Idempotent - Mark ซ้ำ readAt ต้องไม่เปลี่ยน",
+          "id": "66666666-0001-0001-0001-000000000005",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 - Idempotent', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('readAt still set', function () {",
+                  "    pm.expect(body.data.readAt).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{driverToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/{{messageId}}/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages", "{{messageId}}", "read"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[PATCH /messages/:messageId/read] Error - Mark ข้อความที่ตัวเองส่ง",
+          "id": "66666666-0001-0001-0001-000000000006",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - Cannot mark own message as read', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "let body = pm.response.json();",
+                  "pm.test('Error message mentions own message', function () {",
+                  "    pm.expect(body.message).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/{{messageId}}/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages", "{{messageId}}", "read"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[PATCH /messages/:messageId/read] Not found - messageId ไม่มีในระบบ",
+          "id": "66666666-0001-0001-0001-000000000007",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404 - Message not found', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/clzzzzzzzzzzzzzzzzzzzzzzzz/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages", "clzzzzzzzzzzzzzzzzzzzzzzzz", "read"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "[PATCH /messages/:messageId/read] Invalid messageId format",
+          "id": "66666666-0001-0001-0001-000000000008",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 - Invalid CUID format', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/not-valid-id/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bookings", "{{bookingId}}", "messages", "not-valid-id", "read"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

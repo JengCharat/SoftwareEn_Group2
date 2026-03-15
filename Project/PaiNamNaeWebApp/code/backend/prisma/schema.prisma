@@ -1,0 +1,392 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+enum Role {
+    PASSENGER
+    DRIVER
+    ADMIN
+}
+
+enum VerificationStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+enum RouteStatus {
+    AVAILABLE
+    FULL
+    COMPLETED
+    CANCELLED
+    IN_TRANSIT
+}
+
+enum BookingStatus {
+    PENDING
+    CONFIRMED
+    REJECTED
+    CANCELLED
+    COMPLETED // SC#15 — การเดินทางเสร็จสิ้นแล้ว
+}
+
+enum CancelReason {
+    CHANGE_OF_PLAN // เปลี่ยนแผน/มีธุระกะทันหัน
+    FOUND_ALTERNATIVE // พบวิธีเดินทางอื่นแล้ว
+    DRIVER_DELAY // คนขับล่าช้าหรือเลื่อนเวลา
+    PRICE_ISSUE // ราคาหรือค่าใช้จ่ายไม่เหมาะสม
+    WRONG_LOCATION // เลือกจุดรับ–ส่งผิด
+    DUPLICATE_OR_WRONG_DATE // จองซ้ำหรือจองผิดวัน
+    SAFETY_CONCERN // กังวลด้านความปลอดภัย
+    WEATHER_OR_FORCE_MAJEURE // สภาพอากาศ/เหตุสุดวิสัย
+    COMMUNICATION_ISSUE // สื่อสารไม่สะดวก/ติดต่อไม่ได้
+}
+
+enum LicenseType {
+    PRIVATE_CAR_TEMPORARY // รถยนต์ส่วนบุคคลชั่วคราว (2 ปี)
+    PRIVATE_CAR // รถยนต์ส่วนบุคคล (5 ปี)
+    PUBLIC_CAR // รถยนต์สาธารณะ
+    LIFETIME // ตลอดชีพ
+}
+
+enum NotificationType {
+    SYSTEM
+    VERIFICATION
+    BOOKING
+    ROUTE
+}
+
+model User {
+    id                      String              @id @default(cuid())
+    username                String              @unique
+    email                   String              @unique
+    password                String
+    firstName               String?
+    lastName                String?
+    gender                  String?
+    phoneNumber             String?
+    profilePicture          String?
+    nationalIdNumber        String?             @unique
+    nationalIdPhotoUrl      String?             @unique
+    nationalIdExpiryDate    DateTime?
+    selfiePhotoUrl          String?
+    role                    Role                @default(PASSENGER)
+    isVerified              Boolean             @default(false)
+    isActive                Boolean             @default(true)
+    otpCode                 String?
+    lastLogin               DateTime?
+    createdAt               DateTime            @default(now())
+    updatedAt               DateTime            @updatedAt
+    passengerSuspendedUntil DateTime?
+    driverSuspendedUntil    DateTime?
+    driverVerification      DriverVerification?
+    vehicles                Vehicle[]
+    notification            Notification[]
+    createdRoutes           Route[]             @relation("DriverRoutes")
+    bookings                Booking[]           @relation("PassengerBookings")
+    emergencyContacts       EmergencyContact[]
+    activityLogs            ActivityLog[]
+    blacklists              Blacklist[]
+    pushSubscriptions       PushSubscription[]
+    reportsCreated          DriverReport[]     @relation("ReportsCreated")
+    reportsReceived         DriverReport[]     @relation("ReportsReceived")
+    locationShares          LocationShare[]    @relation("PassengerLocationShares")
+    reviewsGiven            Review[]           @relation("ReviewsGiven")
+    reviewsReceived         Review[]           @relation("ReviewsReceived")
+
+    @@index([role])
+    @@index([isActive])
+    @@index([isVerified])
+    @@index([createdAt])
+}
+
+model EmergencyContact {
+    id        String   @id @default(cuid())
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    name      String
+    phone     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([userId])
+    @@map("emergency_contacts")
+}
+
+model DriverVerification {
+    id                 String             @id @default(cuid())
+    userId             String             @unique
+    user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+    licenseNumber      String             @unique
+    firstNameOnLicense String
+    lastNameOnLicense  String
+    licenseIssueDate   DateTime
+    licenseExpiryDate  DateTime
+    licensePhotoUrl    String
+    selfiePhotoUrl     String
+    typeOnLicense      LicenseType
+    status             VerificationStatus @default(PENDING)
+    createdAt          DateTime           @default(now())
+    updatedAt          DateTime           @updatedAt
+
+    @@index([status])
+    @@index([createdAt])
+    @@index([licenseIssueDate])
+    @@index([licenseExpiryDate])
+}
+
+model Notification {
+    id     String @id @default(cuid())
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    type     NotificationType @default(SYSTEM)
+    title    String
+    body     String
+    link     String?
+    metadata Json?            @db.Json
+
+    readAt          DateTime?
+    createdAt       DateTime  @default(now())
+    adminReviewedAt DateTime?
+
+    @@index([userId, createdAt])
+    @@index([userId, readAt])
+    @@index([adminReviewedAt])
+}
+
+model Vehicle {
+    id           String   @id @default(cuid())
+    userId       String
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    vehicleModel String
+    licensePlate String   @unique
+    vehicleType  String
+    color        String
+    seatCapacity Int
+    amenities    String[]
+    photos       Json?    @db.Json
+    isDefault    Boolean  @default(false)
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+
+    routes Route[]
+
+    @@index([userId])
+    @@index([createdAt])
+    @@index([vehicleType])
+    @@index([seatCapacity])
+}
+
+model Route {
+    id              String      @id @default(cuid())
+    driverId        String
+    driver          User        @relation("DriverRoutes", fields: [driverId], references: [id], onDelete: Cascade)
+    vehicleId       String
+    vehicle         Vehicle     @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+    startLocation   Json        @db.Json
+    endLocation     Json        @db.Json
+    departureTime   DateTime
+    availableSeats  Int
+    pricePerSeat    Float
+    conditions      String?
+    status          RouteStatus @default(AVAILABLE)
+    cancelledAt     DateTime?
+    cancelledBy     String? // 'DRIVER' | 'ADMIN'
+    routePolyline   String?
+    distanceMeters  Int?
+    durationSeconds Int?
+    routeSummary    String?
+    distance        String?
+    duration        String?
+    waypoints       Json?       @db.Json
+    landmarks       Json?       @db.Json
+    steps           Json?       @db.Json
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime    @updatedAt
+
+    bookings Booking[]
+
+    @@index([driverId])
+    @@index([vehicleId])
+    @@index([status])
+    @@index([createdAt])
+    @@index([departureTime])
+}
+
+model Booking {
+    id              String        @id @default(cuid())
+    routeId         String
+    route           Route         @relation(fields: [routeId], references: [id], onDelete: Cascade)
+    passengerId     String
+    passenger       User          @relation("PassengerBookings", fields: [passengerId], references: [id], onDelete: Cascade)
+    numberOfSeats   Int
+    status          BookingStatus @default(PENDING)
+    cancelledAt     DateTime?
+    cancelledBy     String? // 'PASSENGER' | 'DRIVER' | 'ADMIN'
+    cancelReason    CancelReason?
+    pickupLocation  Json          @db.Json
+    dropoffLocation Json          @db.Json
+    metadata        Json?         @db.Json
+    createdAt       DateTime      @default(now())
+    messages        Message[]     @relation("BookingMessages")
+    driverReports   DriverReport[]
+    locationShares  LocationShare[]
+    review          Review?
+}
+
+// ระบบข้อความแบบปลอดภัย - สื่อสารผ่าน booking โดยไม่เปิดเผยข้อมูลส่วนตัว
+model Message {
+    id         String    @id @default(cuid())
+    bookingId  String
+    booking    Booking   @relation("BookingMessages", fields: [bookingId], references: [id], onDelete: Cascade)
+    senderId   String // user id ของคนส่ง (driver หรือ passenger)
+    senderRole String // 'DRIVER' หรือ 'PASSENGER' - ระบุบทบาทของคนส่ง
+    content    String // เนื้อหาข้อความ
+    readAt     DateTime? // เวลาที่อ่านข้อความ
+    createdAt  DateTime  @default(now())
+
+    @@index([bookingId, createdAt])
+    @@index([senderId])
+}
+
+model ActivityLog {
+    id String @id @default(cuid())
+
+    userId String?
+    user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+    method     String
+    endpoint   String
+    statusCode Int?
+
+    ipAddress String?
+    userAgent String?
+
+    createdAt DateTime @default(now())
+
+    @@index([userId])
+    @@index([createdAt])
+    @@index([endpoint])
+}
+
+model PushSubscription {
+    id       String @id @default(cuid())
+    userId   String
+    user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    endpoint String
+    p256dh   String
+    auth     String
+
+    createdAt DateTime @default(now())
+
+    @@unique([userId, endpoint])
+    @@index([userId])
+}
+
+model Blacklist {
+    id String @id @default(cuid())
+
+    nationalIdNumber String  @unique
+    userId           String?
+
+    user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+    reason       String?
+    addedByAdmin String?
+    expiresAt    DateTime?
+    createdAt    DateTime  @default(now())
+
+    @@index([userId])
+}
+
+enum ReportStatus {
+    PENDING
+    REVIEWING
+    RESOLVED
+    DISMISSED
+}
+
+enum ReportReason {
+    UNSAFE_DRIVING       // ขับรถไม่ปลอดภัย
+    HARASSMENT           // คุกคาม/ก้าวร้าว
+    VEHICLE_CONDITION    // สภาพรถไม่ดี
+    LATE_OR_NO_SHOW      // มาสาย/ไม่มารับ
+    ROUTE_DEVIATION      // เปลี่ยนเส้นทาง
+    OVERCHARGING         // เก็บเงินเกิน
+    SUBSTANCE_USE        // ดื่มเหล้า/ใช้สารเสพติด
+    OTHER                // อื่นๆ
+}
+
+model DriverReport {
+    id               String       @id @default(cuid())
+    reporterId       String
+    reporter         User         @relation("ReportsCreated", fields: [reporterId], references: [id], onDelete: Cascade)
+    reportedDriverId String
+    reportedDriver   User         @relation("ReportsReceived", fields: [reportedDriverId], references: [id], onDelete: Cascade)
+    bookingId        String?
+    booking          Booking?     @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+    reason           ReportReason
+    description      String
+    evidence         Json?        @db.Json // [{ url, type, publicId }]
+
+    status           ReportStatus @default(PENDING)
+    adminId          String?
+    adminNotes       String?
+    resolvedAt       DateTime?
+
+    createdAt        DateTime     @default(now())
+    updatedAt        DateTime     @updatedAt
+
+    @@index([reportedDriverId, status])
+    @@index([reporterId])
+    @@index([status])
+    @@index([createdAt])
+}
+
+// SC#15 — ระบบรีวิวการเดินทาง
+model Review {
+    id          String   @id @default(cuid())
+    bookingId   String   @unique
+    booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+    passengerId String
+    passenger   User     @relation("ReviewsGiven", fields: [passengerId], references: [id], onDelete: Cascade)
+    driverId    String
+    driver      User     @relation("ReviewsReceived", fields: [driverId], references: [id], onDelete: Cascade)
+    rating      Int      // 1–5 ดาว
+    comment     String?  // ความคิดเห็น (ไม่บังคับ)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@index([driverId])
+    @@index([passengerId])
+    @@map("reviews")
+}
+
+// SC#14 — ระบบแชร์โลเคชันให้ Emergency Contacts
+model LocationShare {
+    id            String   @id @default(cuid())
+    passengerId   String
+    passenger     User     @relation("PassengerLocationShares", fields: [passengerId], references: [id], onDelete: Cascade)
+    bookingId     String?
+    booking       Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+    shareToken    String   @unique
+    isActive      Boolean  @default(true)
+    lastLat       Float?
+    lastLng       Float?
+    lastUpdatedAt DateTime?
+    expiresAt     DateTime
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    @@index([passengerId, isActive])
+    @@index([shareToken])
+    @@map("location_shares")
+}

@@ -1,0 +1,35 @@
+const express = require("express");
+const authRoutes = require("./auth.routes");
+const userRoutes = require("./user.routes");
+const vehicleRoutes = require("./vehicle.routes");
+const routeRoutes = require("./route.routes");
+const driverVerifRoutes = require("./driverVerification.routes");
+const bookingRoutes = require("./booking.routes");
+const notificationRoutes = require("./notification.routes");
+const mapRoutes = require("./maps.routes");
+const messageRoutes = require("./message.routes");
+const blacklistRoutes = require("./blacklist.routes");
+const emergencyContactRoutes = require("./emergencyContact.routes");
+const pushRoutes = require("./push.routes");
+const reportRoutes = require("./report.routes");
+const locationShareRoutes = require("./locationShare.routes");
+const reviewRoutes = require("./review.routes");
+const router = express.Router();
+
+router.use("/auth", authRoutes);
+router.use("/users", userRoutes);
+router.use("/vehicles", vehicleRoutes);
+router.use("/routes", routeRoutes);
+router.use("/driver-verifications", driverVerifRoutes);
+router.use("/bookings", bookingRoutes);
+// Message routes - nested under /bookings/:bookingId
+router.use("/bookings/:bookingId", messageRoutes);
+router.use("/notifications", notificationRoutes);
+router.use("/api/maps", mapRoutes);
+router.use("/blacklist", blacklistRoutes);
+router.use("/emergency-contacts", emergencyContactRoutes);
+router.use("/push", pushRoutes);
+router.use("/reports", reportRoutes);
+router.use("/location-sharing", locationShareRoutes);
+router.use("/reviews", reviewRoutes);
+module.exports = router;

@@ -1,0 +1,429 @@
+{
+  "info": {
+    "_postman_id": "8c437abb-d02b-4133-824e-d0a00d2c5bfe",
+    "name": "agile sprint2 nonitifaction",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1.login as driver",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "f2758ff4-7a3a-41b4-a532-33edaaba666d",
+            "exec": [
+              "let body = pm.response.json();",
+              "console.log(body.data.token)",
+              "pm.environment.set(\"token\", body.data.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "4ea8c08b-5a68-4e50-b098-f79cac16fead",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "389c089f-d3f4-42fb-8ae9-f89b7f982c36",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\":\"user12\",\n    \"password\": \"12345678\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://9838-202-12-97-192.ngrok-free.app/api/auth/login",
+          "protocol": "https",
+          "host": [
+            "9838-202-12-97-192",
+            "ngrok-free",
+            "app"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2.Driver แจ้ง Passenger ว่ากำลังไปรับ",
+      "id": "0a764a0b-bdcd-4947-9844-93885fb4eac7",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmln7q0pd0058fzm3tmu8ic6i/notify-pickup",
+          "protocol": "https",
+          "host": [
+            "9838-202-12-97-192",
+            "ngrok-free",
+            "app"
+          ],
+          "path": [
+            "api",
+            "bookings",
+            "cmln7q0pd0058fzm3tmu8ic6i",
+            "notify-pickup"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3.invalid id",
+      "id": "a7312331-8b69-4d9b-9161-27d34b51e278",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmln7q0pd0058fzm3tmu8ic6i/notify-pickup",
+          "protocol": "https",
+          "host": [
+            "9838-202-12-97-192",
+            "ngrok-free",
+            "app"
+          ],
+          "path": [
+            "api",
+            "bookings",
+            "cmln7q0pd0058fzm3tmu8ic6i",
+            "notify-pickup"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4.login as another driver",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "bb7fd3cf-a53a-4266-bde0-4bd20fe25425",
+            "exec": [
+              "let body = pm.response.json();",
+              "console.log(body.data.token)",
+              "pm.environment.set(\"token\", body.data.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "eef4f2a2-f90f-4b56-b8da-00f50469cea0",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "b1193a2e-cd5e-41e4-9a0a-23db8db43529",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\":\"user14\",\n    \"password\": \"12345678\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://9838-202-12-97-192.ngrok-free.app/api/auth/login",
+          "protocol": "https",
+          "host": [
+            "9838-202-12-97-192",
+            "ngrok-free",
+            "app"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5.Driver ไม่ใช่เจ้าของ route",
+      "id": "a0f377fc-ea44-49a2-8051-67e12714eed3",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmln7q0pd0058fzm3tmu8ic6i/notify-pickup",
+          "protocol": "https",
+          "host": [
+            "9838-202-12-97-192",
+            "ngrok-free",
+            "app"
+          ],
+          "path": [
+            "api",
+            "bookings",
+            "cmln7q0pd0058fzm3tmu8ic6i",
+            "notify-pickup"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "6.login as driver Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "69d98cef-1ff9-4e6a-b13f-01346fd31e80",
+            "exec": [
+              "let body = pm.response.json();",
+              "console.log(body.data.token)",
+              "pm.environment.set(\"token\", body.data.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "c1b1b3bb-5013-47da-a25a-1e0973b3df1f",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "e846338d-d9ef-4d6c-9903-6b18799b367c",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\":\"user12\",\n    \"password\": \"12345678\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://9838-202-12-97-192.ngrok-free.app/api/auth/login",
+          "protocol": "https",
+          "host": [
+            "9838-202-12-97-192",
+            "ngrok-free",
+            "app"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "7.Booking ไม่ใช่ CONFIRMED",
+      "id": "fc7b857b-61b4-4637-9fc5-912c4b62a221",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmlqpt3u300ak3ughdidqh6md/notify-pickup",
+          "protocol": "https",
+          "host": [
+            "9838-202-12-97-192",
+            "ngrok-free",
+            "app"
+          ],
+          "path": [
+            "api",
+            "bookings",
+            "cmlqpt3u300ak3ughdidqh6md",
+            "notify-pickup"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "8.login as passenger",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "3cddbb71-bd17-48bc-9d33-55dd93a0e5dd",
+            "exec": [
+              "let body = pm.response.json();",
+              "console.log(body.data.token)",
+              "pm.environment.set(\"token\", body.data.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "6e03250b-b1c2-4127-b46d-351f9480f062",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "0c733b39-51a1-446e-becf-2c4b08d58a29",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\":\"user13\",\n    \"password\": \"12345678\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://9838-202-12-97-192.ngrok-free.app/api/auth/login",
+          "protocol": "https",
+          "host": [
+            "9838-202-12-97-192",
+            "ngrok-free",
+            "app"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "9.passenger แจ้ง Passenger ว่ากำลังไปรับ Copy",
+      "id": "2f025dd1-d70a-4fcc-b7c7-961ad1da6dbc",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "https://9838-202-12-97-192.ngrok-free.app/api/bookings/cmln7q0pd0058fzm3tmu8ic6i/notify-pickup",
+          "protocol": "https",
+          "host": [
+            "9838-202-12-97-192",
+            "ngrok-free",
+            "app"
+          ],
+          "path": [
+            "api",
+            "bookings",
+            "cmln7q0pd0058fzm3tmu8ic6i",
+            "notify-pickup"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
