@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.1 (Python 3.10.11 on win32)" generated="2026-03-01T19:04:13.228314" rpa="false" schemaversion="5">
+<suite id="s1" name="Test Driver" source="E:\ecommerce-ai\SoftwareEn_Group2\Project\PaiNamNaeWebApp\test\notification-pickup_test\test_driver.robot">
+<test id="s1-t1" name="Driver001 - Login As Driver Successfully" line="7">
+<kw name="Login As Driver" owner="resource">
+<kw name="Open Browser To Login Page" owner="resource">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:13.422914" level="INFO">Opening browser 'Chrome' to base url 'http://10.198.200.88:3003/login'.</msg>
+<arg>${LOGIN URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-01T19:04:13.422914" elapsed="2.835154"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-01T19:04:16.259253" elapsed="0.029534"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-01T19:04:16.288787" elapsed="0.001237"/>
+</kw>
+<kw name="Title Should Be" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:16.798037" level="INFO">Page title is 'ไปนำแหน่'.</msg>
+<arg>ไปนำแหน่</arg>
+<doc>Verifies that the current page title equals ``title``.</doc>
+<status status="PASS" start="2026-03-01T19:04:16.290024" elapsed="0.508013"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:04:13.422914" elapsed="3.375123"/>
+</kw>
+<kw name="Input Username" owner="resource">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:16.799753" level="INFO">Typing text 'user12' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${username}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:04:16.798662" elapsed="1.601315"/>
+</kw>
+<arg>${DRIVER USER}</arg>
+<status status="PASS" start="2026-03-01T19:04:16.798662" elapsed="1.601315"/>
+</kw>
+<kw name="Input Password" owner="resource">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:18.400543" level="INFO">Typing text '12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${password}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:04:18.400543" elapsed="1.566434"/>
+</kw>
+<arg>${DRIVER PASS}</arg>
+<status status="PASS" start="2026-03-01T19:04:18.400543" elapsed="1.567214"/>
+</kw>
+<kw name="Submit Login" owner="resource">
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:19.969791" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:04:19.969791" elapsed="2.613197"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:04:19.968792" elapsed="2.614196"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:04:24.587972" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:04:22.582988" elapsed="2.005987"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:04:13.421855" elapsed="11.167120"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:04:26.595592" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:04:24.589977" elapsed="2.005615"/>
+</kw>
+<kw name="Location Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:27.109325" level="INFO">Current location contains '10.198.200.88:3003'.</msg>
+<arg>${SERVER}</arg>
+<doc>Verifies that the current URL contains ``expected``.</doc>
+<status status="PASS" start="2026-03-01T19:04:26.595592" elapsed="0.513733"/>
+</kw>
+<kw name="Title Should Be" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:27.623232" level="INFO">Page title is 'ไปนำแหน่'.</msg>
+<arg>ไปนำแหน่</arg>
+<doc>Verifies that the current page title equals ``title``.</doc>
+<status status="PASS" start="2026-03-01T19:04:27.110006" elapsed="0.513226"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-01T19:04:27.624234" elapsed="2.576568"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:04:27.623232" elapsed="2.578129"/>
+</kw>
+<doc>เข้าสู่ระบบในฐานะคนขับสำเร็จ</doc>
+<status status="PASS" start="2026-03-01T19:04:13.421855" elapsed="16.779506"/>
+</test>
+<test id="s1-t2" name="Driver002 - Driver Can See My Trips Page With Notify Button" line="15">
+<kw name="Login As Driver" owner="resource">
+<kw name="Open Browser To Login Page" owner="resource">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:30.206647" level="INFO">Opening browser 'Chrome' to base url 'http://10.198.200.88:3003/login'.</msg>
+<arg>${LOGIN URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-01T19:04:30.205648" elapsed="3.331497"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-01T19:04:33.537145" elapsed="0.547373"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-01T19:04:34.084518" elapsed="0.000000"/>
+</kw>
+<kw name="Title Should Be" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:34.597139" level="INFO">Page title is 'ไปนำแหน่'.</msg>
+<arg>ไปนำแหน่</arg>
+<doc>Verifies that the current page title equals ``title``.</doc>
+<status status="PASS" start="2026-03-01T19:04:34.084518" elapsed="0.512980"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:04:30.205648" elapsed="4.392365"/>
+</kw>
+<kw name="Input Username" owner="resource">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:34.601172" level="INFO">Typing text 'user12' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${username}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:04:34.600172" elapsed="1.614872"/>
+</kw>
+<arg>${DRIVER USER}</arg>
+<status status="PASS" start="2026-03-01T19:04:34.598013" elapsed="1.617031"/>
+</kw>
+<kw name="Input Password" owner="resource">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:36.219116" level="INFO">Typing text '12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${password}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:04:36.218111" elapsed="1.580527"/>
+</kw>
+<arg>${DRIVER PASS}</arg>
+<status status="PASS" start="2026-03-01T19:04:36.216107" elapsed="1.582531"/>
+</kw>
+<kw name="Submit Login" owner="resource">
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:37.801244" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:04:37.800255" elapsed="2.590993"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:04:37.799154" elapsed="2.592094"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:04:42.397594" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:04:40.391248" elapsed="2.006346"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:04:30.205648" elapsed="12.191946"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:04:44.409244" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:04:42.398884" elapsed="2.010360"/>
+</kw>
+<kw name="Go To My Route Page" owner="resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:44.410376" level="INFO">Opening url 'http://10.198.200.88:3003/myRoute'</msg>
+<arg>${MY Route URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-01T19:04:44.410376" elapsed="1.239514"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:04:47.659944" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:04:45.649890" elapsed="2.010054"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:04:44.409864" elapsed="3.250080"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:04:49.675732" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:04:47.660546" elapsed="2.016188"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:49.678747" level="INFO">Clicking button 'xpath://button[contains(@class,'tab-button') and contains(.,'ยืนยันแล้ว')]'.</msg>
+<arg>xpath://button[contains(@class,'tab-button') and contains(.,'ยืนยันแล้ว')]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:04:49.677752" elapsed="2.631157"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:04:54.317113" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:04:52.309695" elapsed="2.008297"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'แจ้งกำลังไปรับ')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-01T19:04:54.318993" elapsed="0.510332"/>
+</kw>
+<kw name="Element Should Be Enabled" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'แจ้งกำลังไปรับ')]</arg>
+<doc>Verifies that element identified by ``locator`` is enabled.</doc>
+<status status="PASS" start="2026-03-01T19:04:54.831228" elapsed="1.552261"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-01T19:04:56.384484" elapsed="2.588477"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:04:56.384484" elapsed="2.588477"/>
+</kw>
+<doc>ในหน้าการเดินทางของฉันจะต้องแสดงงาน พร้อมทั้งปุ่ม "แจ้งกำลังไปรับ" ที่สามารถกดได้</doc>
+<status status="PASS" start="2026-03-01T19:04:30.203543" elapsed="28.770931"/>
+</test>
+<test id="s1-t3" name="Driver003 - Driver Press Notify Button Then Button Becomes Disabled" line="27">
+<kw name="Login As Driver" owner="resource">
+<kw name="Open Browser To Login Page" owner="resource">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:04:58.978554" level="INFO">Opening browser 'Chrome' to base url 'http://10.198.200.88:3003/login'.</msg>
+<arg>${LOGIN URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-01T19:04:58.977495" elapsed="3.134908"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-01T19:05:02.112403" elapsed="0.541820"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-01T19:05:02.654223" elapsed="0.000505"/>
+</kw>
+<kw name="Title Should Be" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:05:03.166944" level="INFO">Page title is 'ไปนำแหน่'.</msg>
+<arg>ไปนำแหน่</arg>
+<doc>Verifies that the current page title equals ``title``.</doc>
+<status status="PASS" start="2026-03-01T19:05:02.654728" elapsed="0.513110"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:04:58.977495" elapsed="4.190343"/>
+</kw>
+<kw name="Input Username" owner="resource">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:05:03.171077" level="INFO">Typing text 'user12' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${username}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:05:03.170080" elapsed="1.599812"/>
+</kw>
+<arg>${DRIVER USER}</arg>
+<status status="PASS" start="2026-03-01T19:05:03.168836" elapsed="1.602382"/>
+</kw>
+<kw name="Input Password" owner="resource">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:05:04.774250" level="INFO">Typing text '12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${password}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:05:04.773248" elapsed="1.587492"/>
+</kw>
+<arg>${DRIVER PASS}</arg>
+<status status="PASS" start="2026-03-01T19:05:04.772244" elapsed="1.589018"/>
+</kw>
+<kw name="Submit Login" owner="resource">
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:05:06.363279" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:05:06.362280" elapsed="2.629889"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:05:06.361262" elapsed="2.630907"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:05:10.999825" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:05:08.992169" elapsed="2.008207"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:04:58.977495" elapsed="12.023500"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:05:13.009490" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:05:11.002269" elapsed="2.007221"/>
+</kw>
+<kw name="Go To My Route Page" owner="resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:05:13.010099" level="INFO">Opening url 'http://10.198.200.88:3003/myRoute'</msg>
+<arg>${MY Route URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-01T19:05:13.010099" elapsed="1.492952"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:05:16.506554" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:05:14.503051" elapsed="2.003503"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:05:13.010099" elapsed="3.496455"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:05:16.507215" level="INFO">Clicking button 'xpath://button[contains(@class,'tab-button') and contains(.,'ยืนยันแล้ว')]'.</msg>
+<arg>xpath://button[contains(@class,'tab-button') and contains(.,'ยืนยันแล้ว')]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:05:16.507215" elapsed="2.612464"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:05:21.126539" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:05:19.121683" elapsed="2.004856"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:05:21.128536" level="INFO">Clicking element 'xpath://button[contains(.,'แจ้งกำลังไปรับ')]'.</msg>
+<arg>xpath://button[contains(.,'แจ้งกำลังไปรับ')]</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-01T19:05:21.127541" elapsed="1.067291"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-01T19:05:24.207282" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-01T19:05:22.196353" elapsed="2.011447"/>
+</kw>
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-01T19:05:28.466941" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-1.png"&gt;&lt;img src="selenium-screenshot-1.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-01T19:05:28.467981" level="FAIL">Page should have contained text 'ระบบแจ้ง' but did not.</msg>
+<arg>ระบบแจ้ง</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="FAIL" start="2026-03-01T19:05:24.208797" elapsed="4.260192">Page should have contained text 'ระบบแจ้ง' but did not.</status>
+</kw>
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<arg>กำลังเดินทางมารับแล้ว</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="NOT RUN" start="2026-03-01T19:05:28.469991" elapsed="0.000000"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'รอ') and contains(.,'วิ')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="NOT RUN" start="2026-03-01T19:05:28.469991" elapsed="0.000000"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<arg>1s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="NOT RUN" start="2026-03-01T19:05:28.469991" elapsed="0.000000"/>
+</kw>
+<kw name="Element Should Be Disabled" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'รอ') and contains(.,'วิ')]</arg>
+<doc>Verifies that element identified by ``locator`` is disabled.</doc>
+<status status="NOT RUN" start="2026-03-01T19:05:28.469991" elapsed="0.000000"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-01T19:05:28.470995" elapsed="2.587206"/>
+</kw>
+<status status="PASS" start="2026-03-01T19:05:28.470995" elapsed="2.587973"/>
+</kw>
+<doc>หลังจากกดปุ่ม "แจ้งกำลังไปรับ" ต้องแสดงแจ้งเตือนสำเร็จ และปุ่ม disable พร้อมข้อความ "รอ 180 วิ"</doc>
+<status status="FAIL" start="2026-03-01T19:04:58.975487" elapsed="32.083481">Page should have contained text 'ระบบแจ้ง' but did not.</status>
+</test>
+<doc>Test Cases for Driver - PBL-Sprint2 NO.12</doc>
+<status status="FAIL" start="2026-03-01T19:04:13.229314" elapsed="77.830666"/>
+</suite>
+<statistics>
+<total>
+<stat pass="2" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Test Driver" id="s1" pass="2" fail="1" skip="0">Test Driver</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
