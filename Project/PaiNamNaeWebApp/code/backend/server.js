@@ -20,7 +20,7 @@ promClient.collectDefaultMetrics();
 
 // CORS Configuration
 const corsOptions = {
-  origin: "http://10.198.200.88:3003",
+  origin: "http://10.198.200.88:3011",
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: [
