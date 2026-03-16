@@ -1,10 +1,11 @@
-# Robot Framework Test — Sprint 3 (Story Card #13 & #14 Browser Tests)
+# Robot Framework Test — Sprint 3 (Story Card #13, #14 & #15 Browser Tests)
 
 > **หมายเหตุ**: API tests ย้ายไปเป็น Postman collection แล้วทั้งหมด  
 > - SC#10 Chat API → `../API_Test/Chat/chat_api.postman_collection.json` (31 cases)  
 > - SC#12 Push Notification API → `../API_Test/PushNotification/push_notification_api.postman_collection.json` (21 cases)  
 > - SC#13 Driver Report API → `../API_Test/Report/driver_report.postman_collection.json`  
 > - SC#14 Location Sharing API → `../API_Test/LocationSharing/location_sharing_api.postman_collection.json` (18 cases)  
+> - SC#15 Ride Review API → `../API_Test/Review/ride_review_api.postman_collection.json`  
 >
 > ไฟล์ Robot Framework ในโฟลเดอร์นี้ใช้สำหรับ **Browser (Selenium) tests เท่านั้น**
 
@@ -15,6 +16,7 @@ Robot_Test/
 ├── driver_report_api.robot          ← SC#13 API Test Suite — Robot (27 test cases)
 ├── driver_report_browser.robot      ← SC#13 Browser (Selenium) Test Suite (16 test cases)
 ├── location_sharing_browser.robot   ← SC#14 Browser (Selenium) Test Suite (10 test cases)
+├── ride_review_browser.robot        ← SC#15 Browser (Selenium) Test Suite (11 test cases)
 ├── resources/
 │   └── common.resource              ← Shared keywords & variables
 └── README.md                        ← ไฟล์นี้
@@ -148,17 +150,48 @@ robot --outputdir result driver_report_browser.robot
 
 ---
 
+## SC#15 — Ride Review Browser Tests (`ride_review_browser.robot`)
+
+**ก่อนรัน**: ตรวจสอบว่า frontend รันอยู่และมี Booking ที่มีสถานะ COMPLETED ในระบบ
+
+```bash
+robot ride_review_browser.robot
+robot --variable BASE_URL_UI:http://10.198.200.88:3002 ride_review_browser.robot
+robot --include sc15 ride_review_browser.robot
+robot --variable BROWSER:headlesschrome ride_review_browser.robot
+robot --outputdir result ride_review_browser.robot
+```
+
+## Test Cases ทั้งหมด (11 cases) — SC#15 Ride Review Browser Tests (`ride_review_browser.robot`)
+
+| TC     | ชื่อ                                                                 | Tag                                    |
+|--------|----------------------------------------------------------------------|----------------------------------------|
+| TC-B01 | ✅ Passenger Can Login and Access My Trip Page                       | auth, setup, happy_path                |
+| TC-B02 | ✅ My Trip Page Shows Completed Tab                                  | navigation, happy_path, sc15           |
+| TC-B03 | ✅ My Trip Page Shows All Required Tabs                              | navigation, happy_path                 |
+| TC-B04 | ✅ Clicking Completed Tab Filters Trip List                          | navigation, happy_path, sc15           |
+| TC-B05 | ✅ Review Button Appears Only For COMPLETED Trips                    | review, happy_path, sc15               |
+| TC-B06 | ✅ Clicking Review Button Opens Review Modal                         | review, happy_path, sc15               |
+| TC-B07 | ✅ Review Modal Has Star Rating Buttons (5 Stars)                    | review, happy_path, sc15               |
+| TC-B08 | ❌ Review Modal Submit Button Disabled Without Rating                | review, validation, sc15               |
+| TC-B09 | ✅ Closing Review Modal Works (Cancel Button)                        | review, happy_path, sc15               |
+| TC-B10 | ❌ Unauthenticated Access to My Trip Redirects to Login              | auth, security                         |
+| TC-B11 | ✅ Clicking Driver Card Opens Driver Reviews Modal                   | review, driver_reviews, happy_path, sc15 |
+
+### หมายเหตุ SC#15
+- TC-B05 ถึง TC-B09, TC-B11 ต้องการ **Booking ที่มีสถานะ COMPLETED** ในระบบ — ถ้าไม่มีจะถูก Skip อัตโนมัติ
+- TC-B11 ต้องการปุ่ม "ดูรีวิว" ปรากฏใน trip card — ถ้าไม่มีจะถูก Skip อัตโนมัติ
+- ใช้ `PASSENGER_USER=Billy12` / `PASSENGER_PASS=billy12345678` (เปลี่ยนได้ที่ `*** Variables ***`)
+
+---
+
 ## ดู API Tests (Postman)
 
-SC#10 และ SC#12 ใช้ Postman collection แทน Robot Framework:
+SC#10, SC#12, SC#13, SC#15 ใช้ Postman collection:
 
 | Story Card | ไฟล์ Postman Collection |
 |------------|-------------------------|
 | SC#10 Chat API (31 cases) | `../API_Test/Chat/chat_api.postman_collection.json` |
 | SC#12 Push Notification API (21 cases) | `../API_Test/PushNotification/push_notification_api.postman_collection.json` |
 | SC#13 Driver Report API | `../API_Test/Report/driver_report.postman_collection.json` |
-
-### SC#13 Browser Tests
-- TC-B07 (Submit Report) ต้องการ driver ที่มีอยู่ในระบบ — ถ้าไม่มี driver ใน dropdown จะ fail
-- TC-B12 และ TC-B13 ต้องการรายงานที่สร้างไว้แล้วในระบบ — ถ้า list ว่างจะถูก Skip อัตโนมัติ
-- ใช้ `--variable BROWSER:headlesschrome` เพื่อรันแบบไม่เปิดหน้าต่าง
+| SC#15 Ride Review API | `../API_Test/Review/ride_review_api.postman_collection.json` |
