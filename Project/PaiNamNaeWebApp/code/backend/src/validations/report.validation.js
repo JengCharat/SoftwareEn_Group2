@@ -3,7 +3,7 @@ const { ReportReason, ReportStatus } = require('@prisma/client');
 
 const createReportSchema = z.object({
     reportedDriverId: z.string().cuid('รหัสคนขับไม่ถูกต้อง'),
-    bookingId: z.string().cuid('รหัสการจองไม่ถูกต้อง').optional(),
+    bookingId: z.string().cuid('รหัสการจองไม่ถูกต้อง'),
     reason: z.nativeEnum(ReportReason, { errorMap: () => ({ message: 'เหตุผลการรายงานไม่ถูกต้อง' }) }),
     description: z.string()
         .min(10, 'คำอธิบายต้องมีอย่างน้อย 10 ตัวอักษร')
