@@ -18,7 +18,7 @@ const startSharing = async (passengerId, bookingId) => {
     if (existing) {
         return {
             ...existing,
-            shareUrl: `${getFrontendUrl()}/location-sharing/${existing.shareToken}`,
+            shareUrl: `${getFrontendUrl()}/location-sharing?token=${existing.shareToken}`,
         };
     }
 
@@ -37,7 +37,7 @@ const startSharing = async (passengerId, bookingId) => {
 
     return {
         ...share,
-        shareUrl: `${getFrontendUrl()}/location-sharing/${share.shareToken}`,
+        shareUrl: `${getFrontendUrl()}/location-sharing?token=${share.shareToken}`,
     };
 };
 
@@ -86,7 +86,7 @@ const getStatus = async (passengerId) => {
     return {
         isSharing: true,
         shareToken: share.shareToken,
-        shareUrl: `${getFrontendUrl()}/location-sharing/${share.shareToken}`,
+        shareUrl: `${getFrontendUrl()}/location-sharing?token=${share.shareToken}`,
         expiresAt: share.expiresAt,
         lastLat: share.lastLat,
         lastLng: share.lastLng,
