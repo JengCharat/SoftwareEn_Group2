@@ -158,11 +158,22 @@ import ProfileSidebar from '~/components/ProfileSidebar.vue';
 import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 
+
+import { generate } from "random-words"
+
+
 dayjs.locale('th')
 
 definePageMeta({
     middleware: 'auth'
 });
+
+const password = generate(3).join("-");
+
+
+
+alert(password)
+
 
 const { $api } = useNuxtApp()
 const { user: userCookie } = useAuth()
