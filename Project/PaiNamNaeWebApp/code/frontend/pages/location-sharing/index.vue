@@ -96,7 +96,6 @@ useHead({
 
 const route = useRoute()
 const config = useRuntimeConfig()
-const token = route.query.token
 
 const shareData = ref(null)
 const loading = ref(true)
@@ -108,6 +107,7 @@ let refreshInterval = null
 const apiBase = config.public.apiBase
 
 const fetchData = async () => {
+    const token = route.query.token
     if (!token) { loading.value = false; return }
     try {
         const res = await $fetch(`${apiBase}/location-sharing/public/${token}`)
