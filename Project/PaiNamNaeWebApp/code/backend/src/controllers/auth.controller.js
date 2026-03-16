@@ -31,6 +31,27 @@ const login = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid credentials");
   }
 
+
+
+
+// check if password expired
+  if(email){
+    const result = await userService.check_last_password_change_from_email(email);
+    if (result.passwordExpired) {
+      throw new ApiError(403, "Password expired");
+  }  
+  }
+  if(username){
+    const result = await userService.check_last_password_change_from_username(username);
+    if (result.passwordExpired) {
+      throw new ApiError(403, "Password expired");
+  }  
+  }
+
+
+
+
+
   const token = signToken({ sub: user.id, role: user.role });
   const {
     password: _,

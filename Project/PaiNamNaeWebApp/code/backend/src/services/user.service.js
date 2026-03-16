@@ -315,6 +315,68 @@ const getAllblacklistUser = async () => {
 
   return blacklists;
 };
+
+
+
+
+
+
+
+
+
+//get last password update and check if it more than 90 days
+const check_last_password_change_from_email = async (email) => {
+  const user = await prisma.user.findUnique({
+    where: { email }
+  });
+
+  if (!user) return null;
+
+  const lastUpdate = new Date(user.updatedAt);
+  const now = new Date();
+
+  const diffDays = (now - lastUpdate) / (1000 * 60 * 60 * 24);
+
+  const passwordExpired = diffDays > 90;
+
+  return {
+    ...user,
+    passwordExpired
+  };
+};
+
+const check_last_password_change_from_username = async (username) => {
+  const user = await prisma.user.findUnique({
+    where: { username }
+  });
+
+  if (!user) return null;
+
+  const lastUpdate = new Date(user.updatedAt);
+  const now = new Date();
+
+  const diffDays = (now - lastUpdate) / (1000 * 60 * 60 * 24);
+
+  const passwordExpired = diffDays > 90;
+
+console.log("lastUpdate:", user.updatedAt);
+console.log("now:", new Date());
+console.log("diffDays:", diffDays);  return {
+    ...user,
+    passwordExpired
+  };
+};
+
+
+
+
+
+
+
+
+
+
+
 module.exports = {
   searchUsers,
   getAllUsers,
@@ -331,4 +393,11 @@ module.exports = {
   validateBlacklist,
   AddBlacklistUser,
   getAllblacklistUser,
+
+
+
+
+check_last_password_change_from_email,
+check_last_password_change_from_username,
+
 };
