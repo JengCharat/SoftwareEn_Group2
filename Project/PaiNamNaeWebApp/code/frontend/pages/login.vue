@@ -39,6 +39,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '~/composables/useAuth'
+import Swal from 'sweetalert2'
 
 const identifier = ref('')
 const password = ref('')
@@ -48,15 +49,29 @@ const { login } = useAuth()
 
 const submit = async () => {
   errorMessage.value = ''
+
   try {
-    await login(identifier.value, password.value)
-    router.push('/')
+    const res = await login(identifier.value, password.value)
+
+    if (res.passwordExpired) {
+        await Swal.fire({
+          icon: 'warning',
+          title: 'Password หมดอายุ',
+          text: 'รหัสผ่านครบ 90 วันแล้ว กรุณาเปลี่ยนรหัสผ่าน',
+          confirmButtonText: 'เปลี่ยนรหัสผ่าน',
+    confirmButtonColor: '#ef4444'
+  })
+
+      router.push('/profile')
+    } else {
+      router.push('/')
+    }
+
   } catch (e) {
     console.error(e)
     errorMessage.value = e?.data?.message || 'เข้าสู่ระบบไม่สำเร็จ'
   }
 }
-
 </script>
 
 <style scoped>
