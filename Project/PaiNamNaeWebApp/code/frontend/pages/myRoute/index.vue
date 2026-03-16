@@ -921,7 +921,7 @@ const completeTrip = async (trip) => {
     try {
         await $api(`/bookings/${trip.id}/complete`, { method: 'PATCH' })
         toast.success('เสร็จสิ้น', `การเดินทางของ ${trip.passenger?.name || 'ผู้โดยสาร'} ถูกบันทึกเป็นเสร็จสิ้นแล้ว`)
-        await fetchAllData()
+        await fetchMyRoutes()
     } catch (err) {
         console.error('completeTrip error:', err)
         const msg = err?.data?.message || err?.message || ''
