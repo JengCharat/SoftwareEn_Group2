@@ -1,8 +1,8 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Header -->
-    <div class="bg-red-600 text-white px-6 py-4 flex items-center gap-3 shadow">
-      <span class="text-2xl">🚨</span>
+    <div class="bg-blue-600 text-white px-6 py-4 flex items-center gap-3 shadow">
+      <span class="text-2xl">📍</span>
       <div>
         <h1 class="font-bold text-lg leading-tight">ไปนำแหน่ — โลเคชันฉุกเฉิน</h1>
         <p class="text-sm opacity-80">ระบบติดตามโลเคชัน TripSafe</p>
@@ -50,9 +50,7 @@
           <p class="text-gray-500 text-sm">รอรับพิกัดจากผู้โดยสาร...</p>
           <p class="text-xs text-gray-400">หน้านี้จะรีเฟรชอัตโนมัติทุก 30 วินาที</p>
         </div>
-        <div v-else>
-          <div id="location-map" class="h-72 w-full z-0"></div>
-        </div>
+        <div id="location-map" style="height:288px;width:100%"></div>
       </div>
 
       <!-- Coordinates + Google Maps Link -->
@@ -83,7 +81,11 @@
 import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 
 definePageMeta({ layout: false })
-useHead({ title: 'โลเคชันฉุกเฉิน — ไปนำแหน่' })
+useHead({
+  title: 'โลเคชันฉุกเฉิน — ไปนำแหน่',
+  link: [{ rel: 'stylesheet', href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' }],
+  script: [{ src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js' }],
+})
 
 const route = useRoute()
 const config = useRuntimeConfig()
@@ -111,15 +113,20 @@ const fetchData = async () => {
 
 const initMap = async () => {
     if (!shareData.value?.lastLat || !shareData.value?.lastLng) return
-    const L = (await import('leaflet')).default
+    if (mapInstance) return
+    await nextTick()
 
-    // Fix Leaflet default icon paths (broken in Vite builds)
-    delete L.Icon.Default.prototype._getIconUrl
-    L.Icon.Default.mergeOptions({
-        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-    })
+    // รอให้ Leaflet CDN โหลดเสร็จ (window.L)
+    let attempts = 0
+    while (typeof window.L === 'undefined' && attempts < 30) {
+        await new Promise(r => setTimeout(r, 100))
+        attempts++
+    }
+    const L = window.L
+    if (!L) {
+        console.error('[Map] Leaflet CDN failed to load')
+        return
+    }
 
     mapInstance = L.map('location-map').setView(
         [shareData.value.lastLat, shareData.value.lastLng], 15
@@ -143,6 +150,9 @@ const initMap = async () => {
         .addTo(mapInstance)
         .bindPopup(`📍 ${shareData.value.passengerName}`)
         .openPopup()
+
+    // force Leaflet to recalculate size (element was hidden via v-show)
+    setTimeout(() => mapInstance?.invalidateSize(), 150)
 }
 
 const updateMarker = () => {

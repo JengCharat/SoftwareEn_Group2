@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
+      // apiBase: "http://localhost:3002/api",
       apiBase: "http://10.198.200.88:3002/api",
       // apiBase:"https://painamnae-backend.onrender.com/api/",
       googleMapsApiKey: "YOUR_GOOGLE_KEY",
@@ -36,7 +37,7 @@ export default defineNuxtConfig({
     plugins: [tailwindcssVite()],
   },
 
-  css: ["leaflet/dist/leaflet.css", "~/assets/css/input.css"],
+  css: ["~/assets/css/input.css"],
   build: {
     transpile: ["leaflet"],
   },
