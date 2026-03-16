@@ -94,9 +94,9 @@ useHead({
   script: [{ src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js' }],
 })
 
-const route = useRoute()
 const config = useRuntimeConfig()
 
+const token = ref('')
 const shareData = ref(null)
 const loading = ref(true)
 
@@ -107,10 +107,9 @@ let refreshInterval = null
 const apiBase = config.public.apiBase
 
 const fetchData = async () => {
-    const token = route.query.token
-    if (!token) { loading.value = false; return }
+    if (!token.value) { loading.value = false; return }
     try {
-        const res = await $fetch(`${apiBase}/location-sharing/public/${token}`)
+        const res = await $fetch(`${apiBase}/location-sharing/public/${token.value}`)
         shareData.value = res?.data ?? res
     } catch {
         shareData.value = { isActive: false }
@@ -192,6 +191,9 @@ const formatExpiry = (iso) => {
 }
 
 onMounted(async () => {
+    // อ่าน token จาก URL โดยตรง (ใช้ได้กับ static site ที่ route.query อาจยังว่างตอน hydrate)
+    const params = new URLSearchParams(window.location.search)
+    token.value = params.get('token') || ''
     await fetchData()
     if (shareData.value?.isActive && shareData.value?.lastLat) {
         await nextTick()
