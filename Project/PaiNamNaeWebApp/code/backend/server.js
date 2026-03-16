@@ -22,6 +22,7 @@ promClient.collectDefaultMetrics();
 const corsOptions = {
   origin: [
     "http://10.198.200.88:3011",
+    "http://10.198.200.88:3000",
     "http://localhost:3011",
     "http://localhost:3011",
     "https://csse0269cpkku.com",

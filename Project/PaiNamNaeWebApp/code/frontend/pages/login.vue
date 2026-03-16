@@ -67,10 +67,33 @@ const submit = async () => {
       router.push('/')
     }
 
-  } catch (e) {
-    console.error(e)
-    errorMessage.value = e?.data?.message || 'เข้าสู่ระบบไม่สำเร็จ'
+  } 
+/*
+catch (e) {
+  console.log("LOGIN ERROR RAW:", e)
+  console.log("TYPE:", typeof e)
+
+  if (e instanceof Error) {
+    console.log("STACK:", e.stack)
   }
+
+  console.dir(e)
+
+  alert(JSON.stringify(e, null, 2))
+
+  errorMessage.value = 'debug'
+}
+*/
+catch (e) {
+  console.error("LOGIN ERROR:", e)
+
+  const message =
+    e?.data?.message ||
+    e?.message ||
+    'เข้าสู่ระบบไม่สำเร็จ'
+
+  errorMessage.value = message
+}
 }
 </script>
 
