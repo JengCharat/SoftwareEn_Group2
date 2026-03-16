@@ -374,6 +374,44 @@ console.log("diffDays:", diffDays);  return {
 
 
 
+//increate attemps if login fail
+const increaseLoginAttempts = async (user) => {
+  const attempts = user.loginAttempts + 1;
+
+  if (attempts >= 3) {
+    return prisma.user.update({
+      where: { id: user.id },
+      data: {
+        loginAttempts: attempts,
+        lockUntil: new Date(Date.now() + 1 * 60 * 1000) // lock 1 นาที
+      }
+    });
+  }
+
+  return prisma.user.update({
+    where: { id: user.id },
+    data: { loginAttempts: attempts }
+  });
+};
+
+const resetLoginAttempts = async (userId) => {
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      loginAttempts: 0,
+      lockUntil: null
+    }
+  });
+};
+
+
+
+
+
+
+
+
+
 
 
 
@@ -399,5 +437,7 @@ module.exports = {
 
 check_last_password_change_from_email,
 check_last_password_change_from_username,
+  increaseLoginAttempts,
+resetLoginAttempts
 
 };

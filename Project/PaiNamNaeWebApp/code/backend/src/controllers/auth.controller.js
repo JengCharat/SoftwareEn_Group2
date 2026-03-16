@@ -19,7 +19,23 @@ const login = asyncHandler(async (req, res) => {
   } else if (username) {
     user = await userService.getUserByUsername(username);
   }
+  //check if accout have lock because enter wrong answer >= 3 attemps
+  //and check if not lock timeout
+    if (user?.lockUntil) {
 
+      const now = new Date();
+
+      // ถ้ายัง lock อยู่
+      if (user.lockUntil > now) {
+        throw new ApiError(403, "Account locked. Try again later.");
+      }
+
+      // ถ้า lock หมดเวลาแล้ว → reset attempts
+      await userService.resetLoginAttempts(user.id);
+
+      user.loginAttempts = 0;
+      user.lockUntil = null;
+    }
   if (user && !user.isActive) {
     throw new ApiError(401, "Your account has been deactivated.");
   }
@@ -28,6 +44,10 @@ const login = asyncHandler(async (req, res) => {
     ? await userService.comparePassword(user, password)
     : false;
   if (!user || !passwordIsValid) {
+    //increse attemps to login
+     if (user) {
+        await userService.increaseLoginAttempts(user);
+      }
     throw new ApiError(401, "Invalid credentials");
   }
 
@@ -50,6 +70,8 @@ let passwordExpired = false;
   }
   console.log(passwordExpired)
   const token = signToken({ sub: user.id, role: user.role });
+
+  await userService.resetLoginAttempts(user.id);
   const {
     password: _,
     gender,
