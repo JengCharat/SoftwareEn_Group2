@@ -30,6 +30,14 @@ export function useAuth() {
     })
     token.value = res.token
     user.value = res.user
+
+
+  let passwordExpired = useCookie('passwordExpired', cookieOpts)
+  passwordExpired.value = res.passwordExpired
+    if(passwordExpired.value) {
+      alert("password expire")
+    }
+
     return res
   }
 

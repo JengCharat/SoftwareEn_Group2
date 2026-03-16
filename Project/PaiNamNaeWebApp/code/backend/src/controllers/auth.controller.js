@@ -35,23 +35,20 @@ const login = asyncHandler(async (req, res) => {
 
 
 // check if password expired
+let passwordExpired = false;
   if(email){
     const result = await userService.check_last_password_change_from_email(email);
     if (result.passwordExpired) {
-      throw new ApiError(403, "Password expired");
+      passwordExpired = result.passwordExpired;
   }  
   }
   if(username){
     const result = await userService.check_last_password_change_from_username(username);
     if (result.passwordExpired) {
-      throw new ApiError(403, "Password expired");
+      passwordExpired = result.passwordExpired;
   }  
   }
-
-
-
-
-
+  console.log(passwordExpired)
   const token = signToken({ sub: user.id, role: user.role });
   const {
     password: _,
@@ -75,7 +72,7 @@ const login = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Login successful",
-    data: { token, user: safeUser },
+    data: { token, user: safeUser,passwordExpired },
   });
 });
 
