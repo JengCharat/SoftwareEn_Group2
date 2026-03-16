@@ -1,6 +1,5 @@
 import { useCookie } from '#app'
 import { useRouter } from 'vue-router'
-
 export function useAuth() {
   const { $api } = useNuxtApp()
 
@@ -30,6 +29,14 @@ export function useAuth() {
     })
     token.value = res.token
     user.value = res.user
+
+       
+
+    // check if password have not change for 90 days
+      let passwordExpired = useCookie('passwordExpired', cookieOpts)
+
+      passwordExpired.value = res.passwordExpired
+
     return res
   }
 

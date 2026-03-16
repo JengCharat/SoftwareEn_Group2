@@ -1,7 +1,7 @@
-import prisma from "../utils/prisma.js";
-import { UAParser } from "ua-parser-js";
+const prisma = require("../utils/prisma.js");
+const { UAParser } = require("ua-parser-js");
 
-export const activityLogger = (req, res, next) => {
+const activityLogger = (req, res, next) => {
   const startTime = Date.now();
 
   res.on("finish", async () => {
@@ -18,7 +18,6 @@ export const activityLogger = (req, res, next) => {
           method: req.method,
           endpoint: req.originalUrl,
           statusCode: res.statusCode,
-
           ipAddress: req.ip,
           userAgent: userAgent,
         },
@@ -30,3 +29,5 @@ export const activityLogger = (req, res, next) => {
 
   next();
 };
+
+module.exports = { activityLogger };

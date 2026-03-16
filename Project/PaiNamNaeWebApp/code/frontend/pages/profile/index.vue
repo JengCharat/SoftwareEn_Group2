@@ -122,6 +122,48 @@
                                             class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
                                     </div>
                                 </div>
+
+                                    <div class="mt-2">
+                                    <label class="block mb-1 text-sm text-gray-600">จำนวนคำของรหัสผ่าน</label>
+
+                                    <select v-model="wordCount"
+                                        class="px-3 py-2 border rounded-md">
+                                        <option :value="3">3 คำ</option>
+                                        <option :value="4">4 คำ</option>
+                                        <option :value="5">5 คำ</option>
+                                    </select>
+
+                                    <button
+                                        type="button"
+                                        @click="generatePassword"
+                                        class="px-3 py-2 ml-2 text-white bg-green-600 rounded">
+                                        สุ่มรหัสผ่าน
+                                    </button>
+                                </div>
+
+                                <div v-if="showSuggestedPassword && suggestedPassword" class="p-3 mt-3 bg-gray-100 rounded">
+    
+    <div class="flex items-center justify-between mb-2">
+        <p class="text-sm text-gray-600">รหัสผ่านที่แนะนำ</p>
+
+        <button
+            type="button"
+            @click="showSuggestedPassword = false"
+            class="text-gray-500 hover:text-gray-700">
+            ✕
+        </button>
+    </div>
+
+    <div class="flex items-center gap-2">
+        <input
+            :value="suggestedPassword"
+            readonly
+            class="w-full px-3 py-2 border rounded"
+        />
+
+    </div>
+
+</div>
                             </div>
 
                             <div class="flex justify-end gap-4 pt-6">
@@ -158,11 +200,29 @@ import ProfileSidebar from '~/components/ProfileSidebar.vue';
 import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 
+
+import { generate } from "random-words"
+
+
 dayjs.locale('th')
 
 definePageMeta({
     middleware: 'auth'
 });
+
+const wordCount = ref(3)
+const suggestedPassword = ref("")
+const showSuggestedPassword = ref(false)
+
+function generatePassword() {
+    suggestedPassword.value = generate({
+        exactly: wordCount.value,
+        join: "-"
+    })
+    showSuggestedPassword.value = true
+}
+
+
 
 const { $api } = useNuxtApp()
 const { user: userCookie } = useAuth()
