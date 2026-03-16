@@ -59,6 +59,64 @@
               :class="{ 'border-red-500 ring-1 ring-red-500': errors.confirmPassword }">
             <p v-if="errors.confirmPassword" class="mt-1 text-xs text-red-600">{{ errors.confirmPassword }}</p>
           </div>
+
+
+
+
+
+
+
+
+
+
+          <div class="m-2">
+    <label class="block mb-1 text-sm text-gray-600">จำนวนคำของรหัสผ่าน</label>
+
+    <select v-model="wordCount"
+        class="px-3 py-2 border rounded-md">
+        <option :value="3">3 คำ</option>
+        <option :value="4">4 คำ</option>
+        <option :value="5">5 คำ</option>
+    </select>
+
+    <button
+        type="button"
+        @click="generatePassword"
+        class="px-3 py-2 ml-2 text-white bg-green-600 rounded">
+        สุ่มรหัสผ่าน
+    </button>
+</div>
+<div v-if="showSuggestedPassword && suggestedPassword" class="p-3 mt-3 bg-gray-100 rounded">
+    
+    <div class="flex items-center justify-between mb-2">
+        <p class="text-sm text-gray-600">รหัสผ่านที่แนะนำ</p>
+
+        <button
+            type="button"
+            @click="showSuggestedPassword = false"
+            class="text-gray-500 hover:text-gray-700">
+            ✕
+        </button>
+    </div>
+
+    <div class="flex items-center gap-2">
+        <input
+            :value="suggestedPassword"
+            readonly
+            class="w-full px-3 py-2 border rounded"
+        />
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
           <button type="button" @click="nextStep"
             class="w-full py-3 font-medium text-white transition bg-blue-600 rounded-md hover:bg-blue-700">ถัดไป</button>
         </div>
@@ -213,10 +271,48 @@
 </template>
 
 <script setup>
+import { generate } from "random-words"
+
+
+
+
+
+
+
 import { ref, reactive, computed, nextTick } from 'vue';
 import { useAuth } from '~/composables/useAuth';
 import { useToast } from '~/composables/useToast';
 import { useRouter } from '#app';
+
+
+
+
+
+
+
+
+
+
+const wordCount = ref(3)
+const suggestedPassword = ref("")
+const showSuggestedPassword = ref(false)
+
+function generatePassword() {
+    suggestedPassword.value = generate({
+        exactly: wordCount.value,
+        join: "-"
+    })
+    showSuggestedPassword.value = true
+}
+
+
+
+
+
+
+
+
+
 
 const { register } = useAuth();
 const { toast } = useToast();

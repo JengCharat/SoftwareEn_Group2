@@ -141,18 +141,29 @@
                                     </button>
                                 </div>
 
-                                <div v-if="suggestedPassword" class="p-3 mt-3 bg-gray-100 rounded">
-                                    <p class="text-sm text-gray-600">รหัสผ่านที่แนะนำ</p>
+                                <div v-if="showSuggestedPassword && suggestedPassword" class="p-3 mt-3 bg-gray-100 rounded">
+    
+    <div class="flex items-center justify-between mb-2">
+        <p class="text-sm text-gray-600">รหัสผ่านที่แนะนำ</p>
 
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <input
-                                            :value="suggestedPassword"
-                                            readonly
-                                            class="w-full px-3 py-2 border rounded"
-                                        />
+        <button
+            type="button"
+            @click="showSuggestedPassword = false"
+            class="text-gray-500 hover:text-gray-700">
+            ✕
+        </button>
+    </div>
 
-                                    </div>
-                                </div>
+    <div class="flex items-center gap-2">
+        <input
+            :value="suggestedPassword"
+            readonly
+            class="w-full px-3 py-2 border rounded"
+        />
+
+    </div>
+
+</div>
                             </div>
 
                             <div class="flex justify-end gap-4 pt-6">
@@ -201,16 +212,16 @@ definePageMeta({
 
 const wordCount = ref(3)
 const suggestedPassword = ref("")
+const showSuggestedPassword = ref(false)
 
 function generatePassword() {
     suggestedPassword.value = generate({
         exactly: wordCount.value,
         join: "-"
     })
+    showSuggestedPassword.value = true
 }
 
-
-alert(password)
 
 
 const { $api } = useNuxtApp()
