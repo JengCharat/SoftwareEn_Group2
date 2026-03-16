@@ -1,0 +1,362 @@
+{
+  "info": {
+    "_postman_id": "c15a0000-0000-0000-0000-sc15review0001",
+    "name": "Ride Review API Tests — SC#15",
+    "description": "Postman collection สำหรับทดสอบ Ride Review API — Story Card #15\n\"As a passenger, I want to give a review for each ride that I took to support the community.\"\n\nครอบคลุม:\n- POST   /api/reviews                      สร้างรีวิว\n- GET    /api/reviews/my                   ดูรีวิวของตัวเอง\n- GET    /api/reviews/driver/:driverId     ดูรีวิวของคนขับ + คะแนนเฉลี่ย\n- PATCH  /api/reviews/:reviewId            แก้ไขรีวิว\n- DELETE /api/reviews/:reviewId            ลบรีวิว\n\nTest Accounts:\n- Passenger: Billy12 / billy12345678\n- Driver:    user12  / 12345678\n\nหมายเหตุ: ต้องมีการจองที่สถานะ COMPLETED เท่านั้นถึงจะรีวิวได้ (คนขับต้องกด PATCH /bookings/:id/complete ก่อน)\nก่อนรัน TC-05 ให้เซ็ต bookingId ที่เหมาะสมใน Collection Variables",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl",        "value": "http://localhost:3000", "type": "string" },
+    { "key": "passengerToken", "value": "", "type": "string" },
+    { "key": "driverToken",    "value": "", "type": "string" },
+    { "key": "driverId",       "value": "", "type": "string" },
+    { "key": "bookingId",      "value": "", "type": "string" },
+    { "key": "reviewId",       "value": "", "type": "string" }
+  ],
+  "item": [
+
+    {
+      "name": "Setup",
+      "item": [
+        {
+          "name": "[TC-01] Login as Passenger",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-01: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "pm.test('TC-01: Has token', () => pm.expect(body.data).to.have.property('token'));",
+            "pm.collectionVariables.set('passengerToken', body.data.token);",
+            "console.log('Passenger token saved');"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"Billy12\",\n  \"password\": \"billy12345678\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-02] Login as Driver",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-02: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "pm.test('TC-02: Has token', () => pm.expect(body.data).to.have.property('token'));",
+            "pm.collectionVariables.set('driverToken', body.data.token);",
+            "const user = body.data.user;",
+            "if (user && user.id) pm.collectionVariables.set('driverId', user.id);",
+            "console.log('Driver ID:', user ? user.id : 'N/A');"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"user12\",\n  \"password\": \"12345678\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-03] Get Passenger Bookings — Save Eligible bookingId",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-03: Status 200', () => pm.response.to.have.status(200));",
+            "const bookings = pm.response.json();",
+            "pm.test('TC-03: Response is array', () => pm.expect(bookings).to.be.an('array'));",
+            "const now = new Date();",
+            "const eligible = bookings.find(b => {",
+            "  // รีวิวได้เฉพาะ COMPLETED (คนขับกด PATCH /bookings/:id/complete แล้ว)",
+            "  return b.status === 'COMPLETED' && !b.review;",
+            "});",
+            "if (eligible) {",
+            "  pm.collectionVariables.set('bookingId', eligible.id);",
+            "  if (eligible.route && eligible.route.driverId) pm.collectionVariables.set('driverId', eligible.route.driverId);",
+            "  console.log('Eligible booking found:', eligible.id, '| driver:', eligible.route.driverId);",
+            "  pm.test('TC-03: Found eligible booking', () => pm.expect(eligible.id).to.be.a('string'));",
+            "} else {",
+            "  console.warn('No eligible booking found — set bookingId manually in Collection Variables');",
+            "  pm.test('TC-03: Eligible booking check (may be skipped)', () => true);",
+            "}"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/me", "host": ["{{baseUrl}}"], "path": ["api","bookings","me"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Create Review",
+      "item": [
+        {
+          "name": "[TC-04] Create Review — No Auth (401)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-04: Status 401 Unauthorized', () => pm.response.to.have.status(401));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"bookingId\": \"someBookingId\",\n  \"rating\": 5\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/reviews", "host": ["{{baseUrl}}"], "path": ["api","reviews"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-05] Create Review — Non-Existent Booking (404)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-05: Status 404 Not Found', () => pm.response.to.have.status(404));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{passengerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"bookingId\": \"nonexistent-booking-id-9999\",\n  \"rating\": 5\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/reviews", "host": ["{{baseUrl}}"], "path": ["api","reviews"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-06] Create Review — Invalid Rating Below 1 (400)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-06: Status 400 Bad Request', () => {",
+            "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+            "});"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{passengerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"bookingId\": \"{{bookingId}}\",\n  \"rating\": 0\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/reviews", "host": ["{{baseUrl}}"], "path": ["api","reviews"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-07] Create Review — Invalid Rating Above 5 (400)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-07: Status 400 Bad Request', () => {",
+            "  pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+            "});"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{passengerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"bookingId\": \"{{bookingId}}\",\n  \"rating\": 6\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/reviews", "host": ["{{baseUrl}}"], "path": ["api","reviews"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-08] Create Review — Success with Comment (201)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-08: Status 201 Created', () => pm.response.to.have.status(201));",
+            "const body = pm.response.json();",
+            "pm.test('TC-08: success = true', () => pm.expect(body.success).to.be.true);",
+            "const review = body.data;",
+            "pm.test('TC-08: Has review id', () => pm.expect(review).to.have.property('id'));",
+            "pm.test('TC-08: rating = 4', () => pm.expect(review.rating).to.equal(4));",
+            "pm.test('TC-08: Has comment', () => pm.expect(review.comment).to.equal('บริการดีมาก คนขับสุภาพ'));",
+            "pm.test('TC-08: Has driverId', () => pm.expect(review).to.have.property('driverId'));",
+            "pm.test('TC-08: Has passengerId', () => pm.expect(review).to.have.property('passengerId'));",
+            "pm.collectionVariables.set('reviewId', review.id);",
+            "console.log('Review ID saved:', review.id);"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{passengerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"bookingId\": \"{{bookingId}}\",\n  \"rating\": 4,\n  \"comment\": \"\u0e1a\u0e23\u0e34\u0e01\u0e32\u0e23\u0e14\u0e35\u0e21\u0e32\u0e01 \u0e04\u0e19\u0e02\u0e31\u0e1a\u0e2a\u0e38\u0e20\u0e32\u0e1e\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/reviews", "host": ["{{baseUrl}}"], "path": ["api","reviews"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-09] Create Review — Duplicate (409 Conflict)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-09: Status 409 Conflict', () => pm.response.to.have.status(409));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{passengerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"bookingId\": \"{{bookingId}}\",\n  \"rating\": 3\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/reviews", "host": ["{{baseUrl}}"], "path": ["api","reviews"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Get Reviews",
+      "item": [
+        {
+          "name": "[TC-10] Get My Reviews — Success (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-10: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "pm.test('TC-10: success = true', () => pm.expect(body.success).to.be.true);",
+            "pm.test('TC-10: data is array', () => pm.expect(body.data).to.be.an('array'));",
+            "pm.test('TC-10: Contains created review', () => {",
+            "  const found = body.data.find(r => r.id === pm.collectionVariables.get('reviewId'));",
+            "  pm.expect(found).to.not.be.undefined;",
+            "});"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/reviews/my", "host": ["{{baseUrl}}"], "path": ["api","reviews","my"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-11] Get My Reviews — No Auth (401)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-11: Status 401 Unauthorized', () => pm.response.to.have.status(401));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/reviews/my", "host": ["{{baseUrl}}"], "path": ["api","reviews","my"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-12] Get Driver Reviews — Success with avgRating (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-12: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "pm.test('TC-12: success = true', () => pm.expect(body.success).to.be.true);",
+            "pm.test('TC-12: data is array', () => pm.expect(body.data).to.be.an('array'));",
+            "pm.test('TC-12: Has avgRating field', () => pm.expect(body).to.have.property('avgRating'));",
+            "pm.test('TC-12: Has totalReviews field', () => pm.expect(body).to.have.property('totalReviews'));",
+            "pm.test('TC-12: totalReviews >= 1', () => pm.expect(body.totalReviews).to.be.at.least(1));",
+            "pm.test('TC-12: avgRating is 1-5', () => {",
+            "  const r = body.avgRating;",
+            "  pm.expect(r).to.be.within(1, 5);",
+            "});"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/reviews/driver/{{driverId}}", "host": ["{{baseUrl}}"], "path": ["api","reviews","driver","{{driverId}}"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-13] Get Driver Reviews — Non-Existent Driver Returns Empty (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-13: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "pm.test('TC-13: data is empty array', () => pm.expect(body.data).to.be.an('array').that.is.empty);",
+            "pm.test('TC-13: totalReviews = 0', () => pm.expect(body.totalReviews).to.equal(0));",
+            "pm.test('TC-13: avgRating is null', () => pm.expect(body.avgRating).to.be.null);"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/reviews/driver/nonexistent-driver-id-9999", "host": ["{{baseUrl}}"], "path": ["api","reviews","driver","nonexistent-driver-id-9999"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Update Review",
+      "item": [
+        {
+          "name": "[TC-14] Update Review — Success (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-14: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "pm.test('TC-14: success = true', () => pm.expect(body.success).to.be.true);",
+            "const review = body.data;",
+            "pm.test('TC-14: rating updated to 5', () => pm.expect(review.rating).to.equal(5));",
+            "pm.test('TC-14: comment updated', () => pm.expect(review.comment).to.equal('\u0e14\u0e35\u0e21\u0e32\u0e01\u0e40\u0e25\u0e22 \u0e1b\u0e23\u0e30\u0e17\u0e31\u0e1a\u0e43\u0e08\u0e21\u0e32\u0e01'));"
+          ]}}],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{passengerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"rating\": 5,\n  \"comment\": \"\u0e14\u0e35\u0e21\u0e32\u0e01\u0e40\u0e25\u0e22 \u0e1b\u0e23\u0e30\u0e17\u0e31\u0e1a\u0e43\u0e08\u0e21\u0e32\u0e01\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/reviews/{{reviewId}}", "host": ["{{baseUrl}}"], "path": ["api","reviews","{{reviewId}}"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-15] Update Review — Not Owner (Driver token) → 403",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-15: Status 403 Forbidden', () => pm.response.to.have.status(403));"
+          ]}}],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{driverToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"rating\": 1\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/reviews/{{reviewId}}", "host": ["{{baseUrl}}"], "path": ["api","reviews","{{reviewId}}"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-16] Update Non-Existent Review (404)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-16: Status 404 Not Found', () => pm.response.to.have.status(404));"
+          ]}}],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{passengerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"rating\": 3\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/reviews/nonexistent-review-id-9999", "host": ["{{baseUrl}}"], "path": ["api","reviews","nonexistent-review-id-9999"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Delete Review",
+      "item": [
+        {
+          "name": "[TC-17] Delete Review — Not Owner (Driver token) → 403",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-17: Status 403 Forbidden', () => pm.response.to.have.status(403));"
+          ]}}],
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/reviews/{{reviewId}}", "host": ["{{baseUrl}}"], "path": ["api","reviews","{{reviewId}}"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-18] Delete Review — Success (200)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-18: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "pm.test('TC-18: success = true', () => pm.expect(body.success).to.be.true);",
+            "pm.test('TC-18: Message confirms deletion', () => pm.expect(body.message).to.include('\u0e25\u0e1a\u0e23\u0e35\u0e27\u0e34\u0e27'));"
+          ]}}],
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/reviews/{{reviewId}}", "host": ["{{baseUrl}}"], "path": ["api","reviews","{{reviewId}}"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-19] Delete Already Deleted Review (404)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-19: Status 404 Not Found', () => pm.response.to.have.status(404));"
+          ]}}],
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/reviews/{{reviewId}}", "host": ["{{baseUrl}}"], "path": ["api","reviews","{{reviewId}}"] }
+          }, "response": []
+        }
+      ]
+    }
+
+  ]
+}

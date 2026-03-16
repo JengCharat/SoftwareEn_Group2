@@ -3,6 +3,7 @@ const ApiError = require('../utils/ApiError');
 const { RouteStatus, BookingStatus } = require('@prisma/client');
 const { checkAndApplyPassengerSuspension } = require('./penalty.service');
 const { sendEmail } = require('../utils/email');
+const { sendPushToUser } = require('../utils/webpush');
 
 const ACTIVE_STATUSES = [BookingStatus.PENDING, BookingStatus.CONFIRMED];
 
@@ -307,8 +308,15 @@ const getMyBookings = async (passengerId) => {
             }
           }
         }
+      },
+      review: {
+        select: {
+          id: true,
+          rating: true,
+          comment: true,
+          createdAt: true,
+        }
       }
-
     },
     orderBy: { createdAt: 'desc' },
   });
@@ -553,7 +561,15 @@ const notifyPassengerDriverOnTheWay = async (bookingId, driverId) => {
     }),
   ]);
 
-  // ส่งอีเมลแจ้งเตือนแบบ best-effort (ไม่ block response)
+  // ส่ง Web Push แบบ best-effort (ไม่ block response)
+  sendPushToUser(booking.passengerId, {
+    title: 'คนขับกำลังมารับคุณแล้ว',
+    body: notifBody,
+    url: `/myTrip`,
+    icon: '/favicon.ico',
+  }).catch(() => {});
+
+  // ส่งอีเมลแจ้งเตือนแบบ best-effort (fallback)
   if (booking.passenger?.email) {
     const passengerName = booking.passenger.firstName || 'ผู้โดยสาร';
     sendEmail({
@@ -580,6 +596,20 @@ const notifyPassengerDriverOnTheWay = async (bookingId, driverId) => {
   return notification;
 };
 
+const completeBooking = async (bookingId, driverId) => {
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+    include: { route: { select: { driverId: true } } },
+  });
+  if (!booking) throw new ApiError(404, 'ไม่พบการจองนี้');
+  if (booking.route.driverId !== driverId) throw new ApiError(403, 'คุณไม่ใช่คนขับของการจองนี้');
+  if (booking.status !== 'CONFIRMED') throw new ApiError(400, 'สามารถเสร็จสิ้นได้เฉพาะการจองที่ยืนยันแล้วเท่านั้น');
+  return prisma.booking.update({
+    where: { id: bookingId },
+    data: { status: 'COMPLETED' },
+  });
+};
+
 module.exports = {
   searchBookingsAdmin,
   adminCreateBooking,
@@ -593,4 +623,5 @@ module.exports = {
   deleteBooking,
   adminDeleteBooking,
   notifyPassengerDriverOnTheWay,
+  completeBooking,
 };

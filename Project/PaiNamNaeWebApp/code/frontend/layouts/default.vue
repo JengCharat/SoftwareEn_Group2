@@ -40,6 +40,14 @@
                             </NuxtLink>
                         </div>
 
+                        <div v-if="user && (user.role === 'PASSENGER' || user.role === 'DRIVER')">
+                            <NuxtLink to="/report"
+                                class="flex items-center text-gray-600 transition-colors duration-200 hover:text-blue-600"
+                                :class="{ 'text-blue-600': $route.path.startsWith('/report') }">
+                                รายงานคนขับ
+                            </NuxtLink>
+                        </div>
+
                         <!-- คนขับ: แสดงคำว่า การเดินทางทั้งหมด + ดรอปดาวน์ (การเดินทางของฉัน / คำขอจองเส้นทางของฉัน) -->
                         <div v-if="user && (user.role === 'DRIVER' || user.role === 'ADMIN')"class="flex items-center">
                 
@@ -300,8 +308,17 @@
                             การเดินทางของฉัน
                         </NuxtLink>
 
+                        <NuxtLink
+                            v-if="user && (user.role === 'PASSENGER' || user.role === 'DRIVER')"
+                            to="/report"
+                            class="block px-3 py-2 transition-colors duration-200 rounded-md"
+                            :class="$route.path.startsWith('/report') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'"
+                            @click="closeMobileMenu">
+                            รายงานคนขับ
+                        </NuxtLink>
+
                         <!-- คนขับ: เมนูย่อย 2 รายการ -->
-                        <div v-else-if="user && (user.role === 'DRIVER' || user.role === 'ADMIN')" class="relative">
+                        <div v-if="user && (user.role === 'DRIVER' || user.role === 'ADMIN')" class="relative">
                             <button @click="toggleMobileTripMenu"
                                 class="flex items-center justify-between w-full px-3 py-2 text-left text-gray-600 transition-colors duration-200 rounded-md hover:text-blue-600 hover:bg-blue-50">
                                 การเดินทางทั้งหมด
@@ -405,9 +422,11 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRuntimeConfig, useCookie } from '#app'
 import { useAuth } from '~/composables/useAuth'
 import { useToast } from '~/composables/useToast'
+import { usePushNotification } from '~/composables/usePushNotification'
 
 const { token, user, logout } = useAuth()
 const { toast } = useToast()
+const { subscribePush, checkExistingSubscription, pushSubscribed } = usePushNotification()
 
 /* ====== เมนูบนสุดเดิม ====== */
 const isMobileMenuOpen = ref(false)
@@ -626,6 +645,10 @@ onMounted(() => {
     if (token.value) {
         fetchUserNotifications()
         startNotificationPolling()
+        // ลงทะเบียน Web Push — ถ้ายังไม่เคย subscribe จะขอ permission
+        checkExistingSubscription().then((exists) => {
+            if (!exists) subscribePush()
+        })
     }
 })
 

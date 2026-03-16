@@ -1,6 +1,7 @@
 const prisma = require('../utils/prisma');
 const ApiError = require('../utils/ApiError');
 const { BookingStatus } = require('@prisma/client');
+const { detectPersonalInfo } = require('../utils/personalInfoDetector');
 
 /**
  * ตรวจสอบสิทธิ์การเข้าถึง booking (ต้องเป็น driver หรือ passenger ของ booking นั้น)
@@ -64,6 +65,17 @@ const sendMessage = async (bookingId, userId, content) => {
             createdAt: true
         }
     });
+
+    // ตรวจจับข้อมูลส่วนตัวในข้อความ
+    const piiResult = detectPersonalInfo(content);
+    if (piiResult.detected) {
+        // แจ้งเตือนผู้ส่งว่าข้อความมีข้อมูลส่วนตัว
+        message.personalInfoWarning = {
+            detected: true,
+            types: piiResult.types,
+            warning: `ข้อความของคุณอาจมี${piiResult.types.join(', ')} กรุณาระวังการเปิดเผยข้อมูลส่วนตัว`
+        };
+    }
 
     // สร้าง notification แจ้งเตือนผู้รับ
     const recipientId = role === 'DRIVER' ? booking.passengerId : booking.route.driverId;

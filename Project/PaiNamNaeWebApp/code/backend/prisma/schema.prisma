@@ -32,6 +32,7 @@ enum BookingStatus {
     CONFIRMED
     REJECTED
     CANCELLED
+    COMPLETED // SC#15 — การเดินทางเสร็จสิ้นแล้ว
 }
 
 enum CancelReason {
@@ -91,6 +92,12 @@ model User {
     emergencyContacts       EmergencyContact[]
     activityLogs            ActivityLog[]
     blacklists              Blacklist[]
+    pushSubscriptions       PushSubscription[]
+    reportsCreated          DriverReport[]     @relation("ReportsCreated")
+    reportsReceived         DriverReport[]     @relation("ReportsReceived")
+    locationShares          LocationShare[]    @relation("PassengerLocationShares")
+    reviewsGiven            Review[]           @relation("ReviewsGiven")
+    reviewsReceived         Review[]           @relation("ReviewsReceived")
 
     @@index([role])
     @@index([isActive])
@@ -228,6 +235,9 @@ model Booking {
     metadata        Json?         @db.Json
     createdAt       DateTime      @default(now())
     messages        Message[]     @relation("BookingMessages")
+    driverReports   DriverReport[]
+    locationShares  LocationShare[]
+    review          Review?
 }
 
 // ระบบข้อความแบบปลอดภัย - สื่อสารผ่าน booking โดยไม่เปิดเผยข้อมูลส่วนตัว
@@ -265,6 +275,21 @@ model ActivityLog {
     @@index([endpoint])
 }
 
+model PushSubscription {
+    id       String @id @default(cuid())
+    userId   String
+    user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    endpoint String
+    p256dh   String
+    auth     String
+
+    createdAt DateTime @default(now())
+
+    @@unique([userId, endpoint])
+    @@index([userId])
+}
+
 model Blacklist {
     id String @id @default(cuid())
 
@@ -279,4 +304,89 @@ model Blacklist {
     createdAt    DateTime  @default(now())
 
     @@index([userId])
+}
+
+enum ReportStatus {
+    PENDING
+    REVIEWING
+    RESOLVED
+    DISMISSED
+}
+
+enum ReportReason {
+    UNSAFE_DRIVING       // ขับรถไม่ปลอดภัย
+    HARASSMENT           // คุกคาม/ก้าวร้าว
+    VEHICLE_CONDITION    // สภาพรถไม่ดี
+    LATE_OR_NO_SHOW      // มาสาย/ไม่มารับ
+    ROUTE_DEVIATION      // เปลี่ยนเส้นทาง
+    OVERCHARGING         // เก็บเงินเกิน
+    SUBSTANCE_USE        // ดื่มเหล้า/ใช้สารเสพติด
+    OTHER                // อื่นๆ
+}
+
+model DriverReport {
+    id               String       @id @default(cuid())
+    reporterId       String
+    reporter         User         @relation("ReportsCreated", fields: [reporterId], references: [id], onDelete: Cascade)
+    reportedDriverId String
+    reportedDriver   User         @relation("ReportsReceived", fields: [reportedDriverId], references: [id], onDelete: Cascade)
+    bookingId        String?
+    booking          Booking?     @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+    reason           ReportReason
+    description      String
+    evidence         Json?        @db.Json // [{ url, type, publicId }]
+
+    status           ReportStatus @default(PENDING)
+    adminId          String?
+    adminNotes       String?
+    resolvedAt       DateTime?
+
+    createdAt        DateTime     @default(now())
+    updatedAt        DateTime     @updatedAt
+
+    @@index([reportedDriverId, status])
+    @@index([reporterId])
+    @@index([status])
+    @@index([createdAt])
+}
+
+// SC#15 — ระบบรีวิวการเดินทาง
+model Review {
+    id          String   @id @default(cuid())
+    bookingId   String   @unique
+    booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+    passengerId String
+    passenger   User     @relation("ReviewsGiven", fields: [passengerId], references: [id], onDelete: Cascade)
+    driverId    String
+    driver      User     @relation("ReviewsReceived", fields: [driverId], references: [id], onDelete: Cascade)
+    rating      Int      // 1–5 ดาว
+    comment     String?  // ความคิดเห็น (ไม่บังคับ)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@index([driverId])
+    @@index([passengerId])
+    @@map("reviews")
+}
+
+// SC#14 — ระบบแชร์โลเคชันให้ Emergency Contacts
+model LocationShare {
+    id            String   @id @default(cuid())
+    passengerId   String
+    passenger     User     @relation("PassengerLocationShares", fields: [passengerId], references: [id], onDelete: Cascade)
+    bookingId     String?
+    booking       Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+    shareToken    String   @unique
+    isActive      Boolean  @default(true)
+    lastLat       Float?
+    lastLng       Float?
+    lastUpdatedAt DateTime?
+    expiresAt     DateTime
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    @@index([passengerId, isActive])
+    @@index([shareToken])
+    @@map("location_shares")
 }
