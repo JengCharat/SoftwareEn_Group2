@@ -7,6 +7,7 @@ myvenv/
 test/myvenv/
 venv/
 .env/
+**/myvenv/
 
 # Password word list (ไฟล์ใหญ่ ไม่ commit ลง git)
 code/backend/src/data/common_passwords.txt
