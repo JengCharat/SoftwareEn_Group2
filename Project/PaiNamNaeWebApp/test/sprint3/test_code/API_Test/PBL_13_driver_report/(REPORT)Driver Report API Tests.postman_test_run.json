@@ -1,0 +1,188 @@
+{
+	"id": "73afaff8-70f0-4a32-9b42-4ace5380fa30",
+	"name": "Driver Report API Tests",
+	"timestamp": "2026-03-17T14:07:09.859Z",
+	"collection_id": "42521469-ca065b09-cb26-411e-8e6c-f7c21bb6cc28",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 6,
+	"delay": 0,
+	"persist": true,
+	"status": "error",
+	"startedAt": "2026-03-17T14:07:08.604Z",
+	"totalFail": 5,
+	"results": [
+		{
+			"id": "2c4c1a73-7ee7-45f0-a698-1aa23ea2ec33",
+			"name": "[Setup] Login as Passenger",
+			"url": "http://10.198.200.88:3002/api/auth/login",
+			"time": 161,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 - Login success": true,
+				"Response has token": true
+			},
+			"testPassFailCounts": {
+				"Status 200 - Login success": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				161
+			],
+			"allTests": [
+				{
+					"Status 200 - Login success": true,
+					"Response has token": true
+				}
+			]
+		},
+		{
+			"id": "bb808691-5da9-45c0-9e77-873e03443bc7",
+			"name": "[Setup] Login as Driver",
+			"url": "http://10.198.200.88:3002/api/auth/login",
+			"time": 149,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 - Login success": true,
+				"Response has token": true
+			},
+			"testPassFailCounts": {
+				"Status 200 - Login success": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				149
+			],
+			"allTests": [
+				{
+					"Status 200 - Login success": true,
+					"Response has token": true
+				}
+			]
+		},
+		{
+			"id": "6fe7dfcf-c7f5-481d-8d68-78a6cb6af325",
+			"name": "[Setup] Login as Admin",
+			"url": "http://10.198.200.88:3002/api/auth/login",
+			"time": 153,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status 200 - Login success": true,
+				"Response has token": true
+			},
+			"testPassFailCounts": {
+				"Status 200 - Login success": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				153
+			],
+			"allTests": [
+				{
+					"Status 200 - Login success": true,
+					"Response has token": true
+				}
+			]
+		},
+		{
+			"id": "aac88387-ba59-4e8b-9f7c-37067ea61794",
+			"name": "[POST /reports] Happy path - สร้างรายงานสำเร็จ",
+			"url": "http://10.198.200.88:3002/api/reports",
+			"time": 12,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status 201 - Report created": false,
+				"success = true": false,
+				"data has required fields": false,
+				"status is PENDING": false,
+				"reason matches input": false
+			},
+			"testPassFailCounts": {
+				"Status 201 - Report created": {
+					"pass": 0,
+					"fail": 1
+				},
+				"success = true": {
+					"pass": 0,
+					"fail": 1
+				},
+				"data has required fields": {
+					"pass": 0,
+					"fail": 1
+				},
+				"status is PENDING": {
+					"pass": 0,
+					"fail": 1
+				},
+				"reason matches input": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				12
+			],
+			"allTests": [
+				{
+					"Status 201 - Report created": false,
+					"success = true": false,
+					"data has required fields": false,
+					"status is PENDING": false,
+					"reason matches input": false
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 475,
+	"collection": {
+		"requests": [
+			{
+				"id": "2c4c1a73-7ee7-45f0-a698-1aa23ea2ec33",
+				"method": "POST"
+			},
+			{
+				"id": "bb808691-5da9-45c0-9e77-873e03443bc7",
+				"method": "POST"
+			},
+			{
+				"id": "6fe7dfcf-c7f5-481d-8d68-78a6cb6af325",
+				"method": "POST"
+			},
+			{
+				"id": "aac88387-ba59-4e8b-9f7c-37067ea61794",
+				"method": "POST"
+			}
+		]
+	}
+}
