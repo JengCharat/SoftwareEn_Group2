@@ -44,11 +44,11 @@
           <div class="mb-4">
             <label for="password" class="block mb-1 text-sm font-medium text-gray-700">รหัสผ่าน <span
                 class="text-red-500">*</span></label>
-            <input type="password" id="password" v-model="formData.password" placeholder="อย่างน้อย 8 ตัวอักษร"
+            <input type="password" id="password" v-model="formData.password" placeholder="อย่างน้อย 10 ตัวอักษร"
               class="w-full px-4 py-2 transition border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               :class="{ 'border-red-500 ring-1 ring-red-500': errors.password }">
             <p v-if="errors.password" class="mt-1 text-xs text-red-600">{{ errors.password }}</p>
-            <p v-else class="mt-1 text-xs text-gray-500">ต้องประกอบด้วย A–Z, a–z และตัวเลข 0–9</p>
+            <p v-else class="mt-1 text-xs text-gray-500">ต้องมีความยาวอย่างน้อย 10 ตัวอักษร และต้องไม่เป็นรหัสผ่านยอดนิยม (NCSC UK)</p>
           </div>
           <div class="mb-6">
             <label for="confirmPassword" class="block mb-1 text-sm font-medium text-gray-700">ยืนยันรหัสผ่าน <span
@@ -272,6 +272,7 @@
 
 <script setup>
 import { generate } from "random-words"
+import { isCommonPassword } from '~/utils/commonPasswords';
 
 
 
@@ -402,7 +403,11 @@ const validationFunctions = [
     clearErrors();
     if (!formData.username || formData.username.length < 4) errors.username = 'ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร';
     if (!/^\S+@\S+\.\S+$/.test(formData.email)) errors.email = 'รูปแบบอีเมลไม่ถูกต้อง';
-    if (!formData.password || formData.password.length < 8) errors.password = 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร';
+    if (!formData.password || formData.password.length < 10) {
+      errors.password = 'รหัสผ่านต้องมีความยาวอย่างน้อย 10 ตัวอักษร';
+    } else if (isCommonPassword(formData.password)) {
+      errors.password = 'รหัสผ่านนี้อยู่ใน word list ที่ใช้โจมตีบัญชีผู้ใช้ (NCSC UK) กรุณาตั้งรหัสผ่านที่ยาวกว่านี้หรือใช้ประโยค';
+    }
     if (formData.password !== formData.confirmPassword || !formData.confirmPassword) errors.confirmPassword = 'รหัสผ่านไม่ตรงกัน';
     return Object.keys(errors).length === 0;
   },
