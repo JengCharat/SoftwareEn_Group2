@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.2 (Python 3.9.6 on darwin)" generated="2026-03-17T21:24:04.345274" rpa="false" schemaversion="5">
+<suite id="s1" name="UAT-PBL19-002" source="/Users/jengcharat/Desktop/softwareEN_real/SoftwareEn_Group2/Project/PaiNamNaeWebApp/test/sprint3/test_code/Robot_Test/PBL19/UAT-PBL19-002.robot">
+<test id="s1-t1" name="Check Password Expired Popup" line="11">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:24:04.476406" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/login'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T21:24:04.476236" elapsed="2.162135"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T21:24:06.640680" elapsed="0.380835"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>id=identifier</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-17T21:24:07.021726" elapsed="0.020287"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:24:07.042461" level="INFO">Typing text 'user17' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${USERNAME}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T21:24:07.042209" elapsed="0.122667"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:24:07.165313" level="INFO">Typing text 'user17user17' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T21:24:07.165088" elapsed="0.043914"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:24:07.209982" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T21:24:07.209278" elapsed="0.048072"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>id=swal2-html-container</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-17T21:24:07.257550" elapsed="0.951335"/>
+</kw>
+<kw name="Element Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:24:08.228685" level="INFO">Element 'id=swal2-title' contains text 'Password หมดอายุ'.</msg>
+<arg>id=swal2-title</arg>
+<arg>Password หมดอายุ</arg>
+<doc>Verifies that element ``locator`` contains text ``expected``.</doc>
+<status status="PASS" start="2026-03-17T21:24:08.209237" elapsed="0.019555"/>
+</kw>
+<kw name="Element Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:24:08.237430" level="INFO">Element 'id=swal2-html-container' contains text 'รหัสผ่านครบ 90 วันแล้ว กรุณาเปลี่ยนรหัสผ่าน'.</msg>
+<arg>id=swal2-html-container</arg>
+<arg>รหัสผ่านครบ 90 วันแล้ว กรุณาเปลี่ยนรหัสผ่าน</arg>
+<doc>Verifies that element ``locator`` contains text ``expected``.</doc>
+<status status="PASS" start="2026-03-17T21:24:08.229008" elapsed="0.008521"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T21:24:08.237751" elapsed="0.068901"/>
+</kw>
+<status status="PASS" start="2026-03-17T21:24:04.475576" elapsed="3.831296"/>
+</test>
+<status status="PASS" start="2026-03-17T21:24:04.346314" elapsed="3.960889"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="UAT-PBL19-002" id="s1" pass="1" fail="0" skip="0">UAT-PBL19-002</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
