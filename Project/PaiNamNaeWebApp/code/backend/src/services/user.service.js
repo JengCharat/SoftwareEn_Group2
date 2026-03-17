@@ -1,6 +1,8 @@
 const prisma = require("../utils/prisma");
 const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcrypt");
+const { sendEmail } = require('../utils/email');
+
 const SALT_ROUNDS = 10;
 
 const searchUsers = async (opts = {}) => {
@@ -379,13 +381,37 @@ const increaseLoginAttempts = async (user) => {
   const attempts = user.loginAttempts + 1;
 
   if (attempts >= 3) {
-    return prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: {
         loginAttempts: attempts,
         lockUntil: new Date(Date.now() + 1 * 60 * 1000) // lock 1 นาที
       }
     });
+
+    if (user.email) {
+      sendEmail({
+        to: user.email,
+        subject: "บัญชีของคุณถูกล็อคชั่วคราว",
+        text: `บัญชีของคุณถูกล็อคชั่วคราว เนื่องจากใส่รหัสผ่านผิดเกิน 3 ครั้ง\n\nกรุณาลองใหม่อีกครั้งใน 1 นาที`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 520px; margin: auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
+            <div style="background: #ef4444; color: #fff; padding: 20px;">
+              <h2 style="margin: 0;">บัญชีถูกล็อคชั่วคราว</h2>
+            </div>
+            <div style="padding: 20px;">
+              <p>สวัสดีคุณ <strong>${user.firstName || "ผู้ใช้งาน"}</strong>,</p>
+              <p>บัญชีของคุณถูกล็อคชั่วคราว เนื่องจากใส่รหัสผ่านผิดเกิน <strong>3 ครั้ง</strong></p>
+              <p>กรุณาลองใหม่อีกครั้งใน <strong>1 นาที</strong></p>
+              <hr />
+              <p style="font-size: 12px; color: #6b7280;">— ทีมระบบ</p>
+            </div>
+          </div>
+        `,
+      }).catch(() => {}); // fire-and-forget
+    }
+
+    return updatedUser;
   }
 
   return prisma.user.update({
@@ -393,6 +419,11 @@ const increaseLoginAttempts = async (user) => {
     data: { loginAttempts: attempts }
   });
 };
+
+
+
+
+
 
 const resetLoginAttempts = async (userId) => {
   return prisma.user.update({
