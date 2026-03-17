@@ -393,7 +393,7 @@ const increaseLoginAttempts = async (user) => {
       sendEmail({
         to: user.email,
         subject: "บัญชีของคุณถูกล็อคชั่วคราว",
-        text: `บัญชีของคุณถูกล็อคชั่วคราว เนื่องจากใส่รหัสผ่านผิดเกิน 3 ครั้ง\n\nกรุณาลองใหม่อีกครั้งใน 1 นาที`,
+        text: `บัญชีของคุณถูกล็อคชั่วคราว เนื่องจาก ip: 123.123.123.123 ใส่รหัสผ่านผิดเกิน 3 ครั้ง\n\nกรุณาลองใหม่อีกครั้งใน 1 นาที`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 520px; margin: auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
             <div style="background: #ef4444; color: #fff; padding: 20px;">
@@ -401,7 +401,7 @@ const increaseLoginAttempts = async (user) => {
             </div>
             <div style="padding: 20px;">
               <p>สวัสดีคุณ <strong>${user.firstName || "ผู้ใช้งาน"}</strong>,</p>
-              <p>บัญชีของคุณถูกล็อคชั่วคราว เนื่องจากใส่รหัสผ่านผิดเกิน <strong>3 ครั้ง</strong></p>
+              <p>บัญชีของคุณถูกล็อคชั่วคราว เนื่องจาก ip: 123.123.123.123 Khonkean mueang ใส่รหัสผ่านผิดเกิน <strong>3 ครั้ง</strong></p>
               <p>กรุณาลองใหม่อีกครั้งใน <strong>1 นาที</strong></p>
               <hr />
               <p style="font-size: 12px; color: #6b7280;">— ทีมระบบ</p>
