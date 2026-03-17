@@ -27,16 +27,17 @@
                     </select>
                 </div>
 
-                <!-- เลือก Booking (ถ้ามี) -->
-                <div v-if="bookings.length > 0">
-                    <label class="block mb-1 text-sm font-medium text-gray-700">การจองที่เกี่ยวข้อง (ไม่บังคับ)</label>
-                    <select v-model="form.bookingId"
+                <!-- เลือก Booking -->
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-700">การจองที่เกี่ยวข้อง <span class="text-red-500">*</span></label>
+                    <select v-model="form.bookingId" required
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">-- ไม่ระบุ --</option>
+                        <option value="" disabled>-- เลือกการจอง --</option>
                         <option v-for="b in bookings" :key="b.id" :value="b.id">
                             {{ b.route?.routeSummary || b.id }} — {{ formatDate(b.route?.departureTime) }}
                         </option>
                     </select>
+                    <p v-if="bookings.length === 0" class="mt-1 text-xs text-red-500">ไม่พบข้อมูลการจอง — ต้องมีการจองร่วมกับคนขับก่อนจึงจะรายงานได้</p>
                 </div>
 
                 <!-- เหตุผล -->
@@ -67,7 +68,7 @@
 
                 <!-- อัพโหลดหลักฐาน -->
                 <div>
-                    <label class="block mb-1 text-sm font-medium text-gray-700">หลักฐาน (รูปภาพ/วิดีโอ)</label>
+                    <label class="block mb-1 text-sm font-medium text-gray-700">หลักฐาน (รูปภาพ/วิดีโอ) <span class="text-red-500">*</span></label>
                     <p class="mb-2 text-xs text-gray-400">รองรับ JPEG, PNG, MP4, MP3 สูงสุด 20MB ต่อไฟล์ (ไม่เกิน 5 ไฟล์)</p>
 
                     <div class="flex flex-wrap gap-3">
@@ -224,8 +225,12 @@ function formatDate(dateStr) {
 }
 
 async function submitReport() {
-    if (!form.reportedDriverId || !form.reason || form.description.length < 10) {
-        toast.warning('กรอกไม่ครบ', 'กรุณากรอกข้อมูลให้ครบถ้วน')
+    if (!form.reportedDriverId || !form.bookingId || !form.reason || form.description.length < 10) {
+        toast.warning('กรอกไม่ครบ', 'กรุณากรอกข้อมูลให้ครบถ้วน (คนขับ, การจอง, เหตุผล, และรายละเอียด)')
+        return
+    }
+    if (selectedFiles.value.length === 0) {
+        toast.warning('ไม่มีหลักฐาน', 'กรุณาแนบรูปภาพหรือวิดีโอเป็นหลักฐานอย่างน้อย 1 ไฟล์')
         return
     }
 

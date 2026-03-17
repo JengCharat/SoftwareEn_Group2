@@ -1,7 +1,7 @@
-import prisma from "../utils/prisma.js";
-import ApiError from "../utils/ApiError.js";
+const prisma = require("../utils/prisma.js");
+const ApiError = require("../utils/ApiError.js");
 
-export const checkUserAccess = async (userId) => {
+const checkUserAccess = async (userId) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
@@ -25,22 +25,6 @@ export const checkUserAccess = async (userId) => {
   if (!blacklist) return;
 
   const now = new Date();
-  console.log("===== BLACKLIST CHECK =====");
-  console.log("now:", now);
-  console.log("now ISO:", now.toISOString());
-
-  console.log("expireAt:", blacklist.expiresAt);
-  console.log(
-    "expireAt ISO:",
-    blacklist.expiresAt ? blacklist.expiresAt.toISOString() : null,
-  );
-
-  console.log(
-    "isExpired:",
-    blacklist.expiresAt ? blacklist.expiresAt < now : "no expire",
-  );
-
-  console.log("===========================");
 
   if (!blacklist.expiresAt || blacklist.expiresAt > now) {
     throw new ApiError(403, "Your account has been suspended.");
@@ -56,7 +40,7 @@ export const checkUserAccess = async (userId) => {
   });
 };
 
-export const deleteBlacklist = async (id) => {
+const deleteBlacklist = async (id) => {
   const blacklist = await prisma.blacklist.findUnique({
     where: { id },
   });
@@ -69,9 +53,13 @@ export const deleteBlacklist = async (id) => {
     where: { id },
   });
 
-  // reactivate user
   await prisma.user.updateMany({
     where: { nationalIdNumber: blacklist.nationalIdNumber },
     data: { isActive: true },
   });
+};
+
+module.exports = {
+  checkUserAccess,
+  deleteBlacklist,
 };

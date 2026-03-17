@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      apiBase: "http://10.198.200.88:3002/api",
+      apiBase: "http://10.198.200.88:3010/api",
       // apiBase:"https://painamnae-backend.onrender.com/api/",
       googleMapsApiKey: "YOUR_GOOGLE_KEY",
     },
@@ -25,6 +25,10 @@ export default defineNuxtConfig({
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap",
         },
+        {
+          rel: "stylesheet",
+          href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css",
+        },
       ],
     },
   },
@@ -32,7 +36,7 @@ export default defineNuxtConfig({
     plugins: [tailwindcssVite()],
   },
 
-  css: ["leaflet/dist/leaflet.css", "~/assets/css/input.css"],
+  css: ["~/assets/css/input.css"],
   build: {
     transpile: ["leaflet"],
   },

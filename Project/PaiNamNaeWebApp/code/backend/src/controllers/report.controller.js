@@ -1,8 +1,12 @@
 const asyncHandler = require('express-async-handler');
 const reportService = require('../services/report.service');
+const ApiError = require('../utils/ApiError');
 
 const createReport = asyncHandler(async (req, res) => {
     const reporterId = req.user.sub;
+    if (!req.files || req.files.length === 0) {
+        throw new ApiError(400, 'กรุณาแนบหลักฐาน (รูปภาพหรือวิดีโอ) อย่างน้อย 1 ไฟล์');
+    }
     const report = await reportService.createReport(reporterId, req.body, req.files);
     res.status(201).json({ success: true, message: 'สร้างรายงานสำเร็จ', data: report });
 });
