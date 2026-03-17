@@ -299,10 +299,19 @@ const suggestedPassword = ref("")
 const showSuggestedPassword = ref(false)
 
 function generatePassword() {
-    suggestedPassword.value = generate({
-        exactly: wordCount.value,
-        join: "-"
-    })
+    // สุ่มซ้ำจนกว่าจะได้รหัสผ่านที่ไม่อยู่ใน word list
+    // รหัสผ่านแบบ passphrase (word-word-word) จะผ่าน exact match เสมอ
+    // แต่อาจโดน substring check ถ้าคำยาว >= 5 ตัว ดังนั้น loop จนผ่าน
+    let candidate = ""
+    let attempts = 0
+    do {
+        candidate = generate({
+            exactly: wordCount.value,
+            join: "-"
+        })
+        attempts++
+    } while (isCommonPassword(candidate) && attempts < 20)
+    suggestedPassword.value = candidate
     showSuggestedPassword.value = true
 }
 
