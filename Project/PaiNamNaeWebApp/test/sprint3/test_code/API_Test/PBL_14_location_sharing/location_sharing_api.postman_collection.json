@@ -6,7 +6,7 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl",        "value": "http://localhost:3000", "type": "string" },
+    { "key": "baseUrl",        "value": "http://10.198.200.88:3002", "type": "string" },
     { "key": "passengerToken", "value": "", "type": "string" },
     { "key": "driverToken",    "value": "", "type": "string" },
     { "key": "shareToken",     "value": "", "type": "string" },

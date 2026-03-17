@@ -6,7 +6,7 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl",    "value": "http://localhost:3000", "type": "string" },
+    { "key": "baseUrl",    "value": "http://10.198.200.88:3002", "type": "string" },
     { "key": "bookingId",  "value": "", "type": "string" },
     { "key": "messageId",  "value": "", "type": "string" },
     { "key": "passengerToken", "value": "", "type": "string" },
@@ -53,7 +53,7 @@
           "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
             "pm.test('TC-03: Status 200', () => pm.response.to.have.status(200));",
             "const body = pm.response.json();",
-            "const bookings = body.data?.bookings || [];",
+            "const bookings = body.data || [];",
             "const confirmed = bookings.find(b => b.status === 'CONFIRMED' || b.status === 'PENDING');",
             "if (confirmed) {",
             "    pm.collectionVariables.set('bookingId', confirmed.id);",
@@ -67,7 +67,7 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
-            "url": { "raw": "{{baseUrl}}/api/bookings/my", "host": ["{{baseUrl}}"], "path": ["api","bookings","my"] }
+            "url": { "raw": "{{baseUrl}}/api/bookings/me", "host": ["{{baseUrl}}"], "path": ["api","bookings","me"] }
           }, "response": []
         }
       ]

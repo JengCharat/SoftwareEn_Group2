@@ -1,0 +1,742 @@
+{
+	"id": "52543022-b6ff-4f3d-9ea4-2b8e64c8c847",
+	"name": "Location Sharing API Tests — SC#14",
+	"timestamp": "2026-03-17T13:20:42.961Z",
+	"collection_id": "42521469-3ac8617b-93b7-4d2e-841b-986887418037",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 44,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2026-03-17T13:20:39.591Z",
+	"totalFail": 1,
+	"results": [
+		{
+			"id": "8084327b-d766-454e-9d10-91c278883b88",
+			"name": "[TC-01] Login as Passenger",
+			"url": "http://10.198.200.88:3002/api/auth/login",
+			"time": 661,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-01: Status 200": true,
+				"TC-01: Has token": true
+			},
+			"testPassFailCounts": {
+				"TC-01: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-01: Has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				661
+			],
+			"allTests": [
+				{
+					"TC-01: Status 200": true,
+					"TC-01: Has token": true
+				}
+			]
+		},
+		{
+			"id": "db287017-9b0f-4196-8ced-d550339d5c86",
+			"name": "[TC-02] Login as Driver",
+			"url": "http://10.198.200.88:3002/api/auth/login",
+			"time": 165,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-02: Status 200": true,
+				"TC-02: Has token": true
+			},
+			"testPassFailCounts": {
+				"TC-02: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-02: Has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				165
+			],
+			"allTests": [
+				{
+					"TC-02: Status 200": true,
+					"TC-02: Has token": true
+				}
+			]
+		},
+		{
+			"id": "35b9279d-2775-4bed-9b8b-e11505a0467f",
+			"name": "[TC-03] Passenger Starts Location Sharing — 201 + shareUrl",
+			"url": "http://10.198.200.88:3002/api/location-sharing/start",
+			"time": 26,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-03: Status 201": true,
+				"TC-03: Has shareToken": true,
+				"TC-03: Has shareUrl": true,
+				"TC-03: shareToken length >= 40": true,
+				"TC-03: isActive = true": true,
+				"TC-03: expiresAt in future": true
+			},
+			"testPassFailCounts": {
+				"TC-03: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-03: Has shareToken": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-03: Has shareUrl": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-03: shareToken length >= 40": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-03: isActive = true": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-03: expiresAt in future": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				26
+			],
+			"allTests": [
+				{
+					"TC-03: Status 201": true,
+					"TC-03: Has shareToken": true,
+					"TC-03: Has shareUrl": true,
+					"TC-03: shareToken length >= 40": true,
+					"TC-03: isActive = true": true,
+					"TC-03: expiresAt in future": true
+				}
+			]
+		},
+		{
+			"id": "c55b0e68-d108-4ab1-9324-94e8f1e1f743",
+			"name": "[TC-04] Start Sharing Again — Returns Same Active Share (Idempotent)",
+			"url": "http://10.198.200.88:3002/api/location-sharing/start",
+			"time": 16,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-04: Not 500 (idempotent)": true,
+				"TC-04: Same shareToken returned": true
+			},
+			"testPassFailCounts": {
+				"TC-04: Not 500 (idempotent)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-04: Same shareToken returned": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				16
+			],
+			"allTests": [
+				{
+					"TC-04: Not 500 (idempotent)": true,
+					"TC-04: Same shareToken returned": true
+				}
+			]
+		},
+		{
+			"id": "b4871f4c-a8c2-4930-89a9-42f25b09b65a",
+			"name": "[TC-05] Driver Cannot Start Sharing — 403",
+			"url": "http://10.198.200.88:3002/api/location-sharing/start",
+			"time": 16,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-05: Status 403": false
+			},
+			"testPassFailCounts": {
+				"TC-05: Status 403": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				16
+			],
+			"allTests": [
+				{
+					"TC-05: Status 403": false
+				}
+			]
+		},
+		{
+			"id": "24bb832a-ef0d-4851-b70b-bc3472197fa1",
+			"name": "[TC-06] Start Sharing Without Token — 401",
+			"url": "http://10.198.200.88:3002/api/location-sharing/start",
+			"time": 12,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-06: Status 401": true
+			},
+			"testPassFailCounts": {
+				"TC-06: Status 401": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				12
+			],
+			"allTests": [
+				{
+					"TC-06: Status 401": true
+				}
+			]
+		},
+		{
+			"id": "cbee8b6f-e8fc-4896-88ca-32c24d770e1e",
+			"name": "[TC-07] Passenger Updates GPS Coordinates — 200",
+			"url": "http://10.198.200.88:3002/api/location-sharing/update-location",
+			"time": 31,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-07: Status 200": true,
+				"TC-07: updated = true": true
+			},
+			"testPassFailCounts": {
+				"TC-07: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-07: updated = true": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				31
+			],
+			"allTests": [
+				{
+					"TC-07: Status 200": true,
+					"TC-07: updated = true": true
+				}
+			]
+		},
+		{
+			"id": "ea8e10e5-3058-4fbd-9576-7c2db473aa02",
+			"name": "[TC-08] Update Second Time (Simulates 30s Interval) — 200",
+			"url": "http://10.198.200.88:3002/api/location-sharing/update-location",
+			"time": 26,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-08: Status 200": true,
+				"TC-08: updated = true": true
+			},
+			"testPassFailCounts": {
+				"TC-08: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-08: updated = true": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				26
+			],
+			"allTests": [
+				{
+					"TC-08: Status 200": true,
+					"TC-08: updated = true": true
+				}
+			]
+		},
+		{
+			"id": "437be873-8810-48da-ad13-37a77c1edf38",
+			"name": "[TC-09] Update with Invalid Lat (out of range) — 400",
+			"url": "http://10.198.200.88:3002/api/location-sharing/update-location",
+			"time": 18,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"TC-09: Status 400": true
+			},
+			"testPassFailCounts": {
+				"TC-09: Status 400": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				18
+			],
+			"allTests": [
+				{
+					"TC-09: Status 400": true
+				}
+			]
+		},
+		{
+			"id": "f6f3db1d-7fbf-4e30-b20c-cf2b0e8d3e03",
+			"name": "[TC-10] Update Without Token — 401",
+			"url": "http://10.198.200.88:3002/api/location-sharing/update-location",
+			"time": 11,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-10: Status 401": true
+			},
+			"testPassFailCounts": {
+				"TC-10: Status 401": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				11
+			],
+			"allTests": [
+				{
+					"TC-10: Status 401": true
+				}
+			]
+		},
+		{
+			"id": "672d94a9-be6f-4926-a367-896345b9efb8",
+			"name": "[TC-11] Passenger Gets Sharing Status — isSharing = true",
+			"url": "http://10.198.200.88:3002/api/location-sharing/status",
+			"time": 28,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-11: Status 200": true,
+				"TC-11: isSharing = true": true,
+				"TC-11: Has shareUrl": true,
+				"TC-11: Has shareToken matching": true,
+				"TC-11: lastLat updated": true,
+				"TC-11: lastLng updated": true,
+				"TC-11: lastUpdatedAt not null": true
+			},
+			"testPassFailCounts": {
+				"TC-11: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-11: isSharing = true": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-11: Has shareUrl": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-11: Has shareToken matching": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-11: lastLat updated": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-11: lastLng updated": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-11: lastUpdatedAt not null": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				28
+			],
+			"allTests": [
+				{
+					"TC-11: Status 200": true,
+					"TC-11: isSharing = true": true,
+					"TC-11: Has shareUrl": true,
+					"TC-11: Has shareToken matching": true,
+					"TC-11: lastLat updated": true,
+					"TC-11: lastLng updated": true,
+					"TC-11: lastUpdatedAt not null": true
+				}
+			]
+		},
+		{
+			"id": "2967c1da-a62f-4706-a1ad-b89c115bf2a5",
+			"name": "[TC-12] Get Status Without Token — 401",
+			"url": "http://10.198.200.88:3002/api/location-sharing/status",
+			"time": 9,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-12: Status 401": true
+			},
+			"testPassFailCounts": {
+				"TC-12: Status 401": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"TC-12: Status 401": true
+				}
+			]
+		},
+		{
+			"id": "922e35d4-2d28-4f2c-bd37-d19257008843",
+			"name": "[TC-13] Public View Returns Passenger Name + Location — No Auth Required",
+			"url": "http://10.198.200.88:3002/api/location-sharing/public/df96b9dbbc1d12c3f00c64af60a01a95e5981034e2787e26",
+			"time": 24,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-13: Status 200": true,
+				"TC-13: isActive = true": true,
+				"TC-13: Has passengerName": true,
+				"TC-13: Has lastLat": true,
+				"TC-13: Has lastLng": true,
+				"TC-13: Has expiresAt": true
+			},
+			"testPassFailCounts": {
+				"TC-13: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-13: isActive = true": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-13: Has passengerName": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-13: Has lastLat": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-13: Has lastLng": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-13: Has expiresAt": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				24
+			],
+			"allTests": [
+				{
+					"TC-13: Status 200": true,
+					"TC-13: isActive = true": true,
+					"TC-13: Has passengerName": true,
+					"TC-13: Has lastLat": true,
+					"TC-13: Has lastLng": true,
+					"TC-13: Has expiresAt": true
+				}
+			]
+		},
+		{
+			"id": "8ff7bae9-27d6-481f-90a4-57acbbb2da3a",
+			"name": "[TC-14] Public View Has No Sensitive User Data",
+			"url": "http://10.198.200.88:3002/api/location-sharing/public/df96b9dbbc1d12c3f00c64af60a01a95e5981034e2787e26",
+			"time": 13,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-14: Status 200": true,
+				"TC-14: No passengerId in response": true,
+				"TC-14: No email in response": true,
+				"TC-14: No phoneNumber in response": true
+			},
+			"testPassFailCounts": {
+				"TC-14: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-14: No passengerId in response": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-14: No email in response": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-14: No phoneNumber in response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				13
+			],
+			"allTests": [
+				{
+					"TC-14: Status 200": true,
+					"TC-14: No passengerId in response": true,
+					"TC-14: No email in response": true,
+					"TC-14: No phoneNumber in response": true
+				}
+			]
+		},
+		{
+			"id": "49c332cc-c608-4603-b3b9-5c46d1286b8d",
+			"name": "[TC-15] Public View with Invalid Token — 404",
+			"url": "http://10.198.200.88:3002/api/location-sharing/public/invalidtokenabcdef12345678900000",
+			"time": 13,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"TC-15: Status 404": true
+			},
+			"testPassFailCounts": {
+				"TC-15: Status 404": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				13
+			],
+			"allTests": [
+				{
+					"TC-15: Status 404": true
+				}
+			]
+		},
+		{
+			"id": "bc9ae080-b6b8-4a14-8051-77a9f626a41a",
+			"name": "[TC-16] Passenger Stops Sharing — stopped = true",
+			"url": "http://10.198.200.88:3002/api/location-sharing/stop",
+			"time": 27,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-16: Status 200": true,
+				"TC-16: stopped = true": true
+			},
+			"testPassFailCounts": {
+				"TC-16: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-16: stopped = true": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				27
+			],
+			"allTests": [
+				{
+					"TC-16: Status 200": true,
+					"TC-16: stopped = true": true
+				}
+			]
+		},
+		{
+			"id": "eb98e4e9-78c0-4e47-849c-c5cf566a3cda",
+			"name": "[TC-17] After Stop — Status Shows isSharing = false",
+			"url": "http://10.198.200.88:3002/api/location-sharing/status",
+			"time": 14,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-17: Status 200": true,
+				"TC-17: isSharing = false": true
+			},
+			"testPassFailCounts": {
+				"TC-17: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-17: isSharing = false": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				14
+			],
+			"allTests": [
+				{
+					"TC-17: Status 200": true,
+					"TC-17: isSharing = false": true
+				}
+			]
+		},
+		{
+			"id": "457dab54-4dc8-4469-a8ec-2068accb6104",
+			"name": "[TC-18] After Stop — Public View Shows isActive = false",
+			"url": "http://10.198.200.88:3002/api/location-sharing/public/df96b9dbbc1d12c3f00c64af60a01a95e5981034e2787e26",
+			"time": 13,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-18: Status 200": true,
+				"TC-18: isActive = false (share deactivated)": true
+			},
+			"testPassFailCounts": {
+				"TC-18: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-18: isActive = false (share deactivated)": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				13
+			],
+			"allTests": [
+				{
+					"TC-18: Status 200": true,
+					"TC-18: isActive = false (share deactivated)": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 1123,
+	"collection": {
+		"requests": [
+			{
+				"id": "8084327b-d766-454e-9d10-91c278883b88",
+				"method": "POST"
+			},
+			{
+				"id": "db287017-9b0f-4196-8ced-d550339d5c86",
+				"method": "POST"
+			},
+			{
+				"id": "35b9279d-2775-4bed-9b8b-e11505a0467f",
+				"method": "POST"
+			},
+			{
+				"id": "c55b0e68-d108-4ab1-9324-94e8f1e1f743",
+				"method": "POST"
+			},
+			{
+				"id": "b4871f4c-a8c2-4930-89a9-42f25b09b65a",
+				"method": "POST"
+			},
+			{
+				"id": "24bb832a-ef0d-4851-b70b-bc3472197fa1",
+				"method": "POST"
+			},
+			{
+				"id": "cbee8b6f-e8fc-4896-88ca-32c24d770e1e",
+				"method": "PATCH"
+			},
+			{
+				"id": "ea8e10e5-3058-4fbd-9576-7c2db473aa02",
+				"method": "PATCH"
+			},
+			{
+				"id": "437be873-8810-48da-ad13-37a77c1edf38",
+				"method": "PATCH"
+			},
+			{
+				"id": "f6f3db1d-7fbf-4e30-b20c-cf2b0e8d3e03",
+				"method": "PATCH"
+			},
+			{
+				"id": "672d94a9-be6f-4926-a367-896345b9efb8",
+				"method": "GET"
+			},
+			{
+				"id": "2967c1da-a62f-4706-a1ad-b89c115bf2a5",
+				"method": "GET"
+			},
+			{
+				"id": "922e35d4-2d28-4f2c-bd37-d19257008843",
+				"method": "GET"
+			},
+			{
+				"id": "8ff7bae9-27d6-481f-90a4-57acbbb2da3a",
+				"method": "GET"
+			},
+			{
+				"id": "49c332cc-c608-4603-b3b9-5c46d1286b8d",
+				"method": "GET"
+			},
+			{
+				"id": "bc9ae080-b6b8-4a14-8051-77a9f626a41a",
+				"method": "DELETE"
+			},
+			{
+				"id": "eb98e4e9-78c0-4e47-849c-c5cf566a3cda",
+				"method": "GET"
+			},
+			{
+				"id": "457dab54-4dc8-4469-a8ec-2068accb6104",
+				"method": "GET"
+			}
+		]
+	}
+}
