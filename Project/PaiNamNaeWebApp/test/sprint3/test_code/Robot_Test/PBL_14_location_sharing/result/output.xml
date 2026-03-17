@@ -1,0 +1,1168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.2 (Python 3.9.6 on darwin)" generated="2026-03-17T22:44:27.980567" rpa="false" schemaversion="5">
+<suite id="s1" name="Location Sharing Uat" source="/Users/jengcharat/Desktop/softwareEN_real/SoftwareEn_Group2/Project/PaiNamNaeWebApp/test/sprint3/test_code/Robot_Test/PBL_14_location_sharing/location_sharing_uat.robot">
+<test id="s1-t1" name="LOCSHARE-01 - Unauthenticated User Accessing Emergency Page Is Redirected To Login" line="14">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:28.121471" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/emergency_call/emergency'.</msg>
+<arg>${EMERGENCY URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:44:28.121222" elapsed="4.617090"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:44:32.744229" elapsed="0.395448"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:44:35.143437" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:44:33.140099" elapsed="2.005582"/>
+</kw>
+<kw name="Location Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:35.234288" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-1.png"&gt;&lt;img src="selenium-screenshot-1.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-17T22:44:35.234515" level="FAIL">Location should have contained 'login' but it was 'https://csse0269.cpkku.com/emergency_call/emergency/'.</msg>
+<arg>login</arg>
+<doc>Verifies that the current URL contains ``expected``.</doc>
+<status status="FAIL" start="2026-03-17T22:44:35.147346" elapsed="0.092201">Location should have contained 'login' but it was 'https://csse0269.cpkku.com/emergency_call/emergency/'.</status>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:44:35.240857" elapsed="0.072995"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:44:35.240477" elapsed="0.073717"/>
+</kw>
+<doc>ผู้ใช้ที่ยังไม่ได้ login เมื่อเข้าถึงหน้า Emergency ต้องถูก redirect ไปยังหน้า login</doc>
+<status status="FAIL" start="2026-03-17T22:44:28.120441" elapsed="7.193973">Location should have contained 'login' but it was 'https://csse0269.cpkku.com/emergency_call/emergency/'.</status>
+</test>
+<test id="s1-t2" name="LOCSHARE-02 - Passenger Can Login Successfully" line="22">
+<kw name="Login As Passenger" owner="resource">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:35.317002" level="INFO">Opening browser 'Chrome' to base url 'http://csse0269.cpkku.com/login'.</msg>
+<arg>${LOGIN URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:44:35.316663" elapsed="2.097852"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:44:37.418304" elapsed="0.371359"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-17T22:44:37.789869" elapsed="0.000460"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:37.791017" level="INFO">Typing text 'Billy12' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${PASSENGER USER}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:44:37.790483" elapsed="1.678821"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:39.470787" level="INFO">Typing text 'billy12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${PASSENGER PASS}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:44:39.469938" elapsed="1.594082"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:41.065030" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:44:41.064524" elapsed="2.619121"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:44:45.688249" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:44:43.684682" elapsed="2.004078"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:44:35.316255" elapsed="10.372939"/>
+</kw>
+<kw name="Location Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:46.201440" level="INFO">Current location contains 'csse0269.cpkku.com'.</msg>
+<arg>${SERVER}</arg>
+<doc>Verifies that the current URL contains ``expected``.</doc>
+<status status="PASS" start="2026-03-17T22:44:45.689724" elapsed="0.511997"/>
+</kw>
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:46.724518" level="INFO">Current page contains element 'xpath://*[contains(text(),'การเดินทาง') or contains(text(),'SOS') or contains(text(),'ออกจากระบบ')]'.</msg>
+<arg>xpath://*[contains(text(),'การเดินทาง') or contains(text(),'SOS') or contains(text(),'ออกจากระบบ')]</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-03-17T22:44:46.202309" elapsed="0.522462"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:44:46.726326" elapsed="0.565724"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:44:46.725608" elapsed="0.566801"/>
+</kw>
+<doc>ผู้โดยสารสามารถ login ได้สำเร็จ และระบบนำไปสู่หน้าหลัก (ไม่มีข้อความแสดงข้อผิดพลาด)</doc>
+<status status="PASS" start="2026-03-17T22:44:35.314717" elapsed="11.977918"/>
+</test>
+<test id="s1-t3" name="LOCSHARE-03 - Passenger Can Navigate To Emergency SOS Page" line="29">
+<kw name="Login As Passenger" owner="resource">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:47.297406" level="INFO">Opening browser 'Chrome' to base url 'http://csse0269.cpkku.com/login'.</msg>
+<arg>${LOGIN URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:44:47.297025" elapsed="2.011369"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:44:49.309416" elapsed="0.878669"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-17T22:44:50.189431" elapsed="0.001069"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:50.191322" level="INFO">Typing text 'Billy12' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${PASSENGER USER}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:44:50.190798" elapsed="1.676294"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:51.869066" level="INFO">Typing text 'billy12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${PASSENGER PASS}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:44:51.868134" elapsed="1.592222"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:53.461643" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:44:53.460981" elapsed="2.616028"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:44:58.079008" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:44:56.077519" elapsed="2.001855"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:44:47.296449" elapsed="10.783287"/>
+</kw>
+<kw name="Go To Emergency Page" owner="resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:44:58.081563" level="INFO">Opening url 'https://csse0269.cpkku.com/emergency_call/emergency'</msg>
+<arg>${EMERGENCY URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:44:58.081243" elapsed="0.887815"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:45:00.973746" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:44:58.971124" elapsed="2.003172"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:44:58.080496" elapsed="2.894212"/>
+</kw>
+<kw name="Location Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:01.486486" level="INFO">Current location contains 'emergency'.</msg>
+<arg>emergency</arg>
+<doc>Verifies that the current URL contains ``expected``.</doc>
+<status status="PASS" start="2026-03-17T22:45:00.975472" elapsed="0.511143"/>
+</kw>
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:02.502193" level="INFO">Current page contains text 'SOS EMERGENCY'.</msg>
+<arg>SOS EMERGENCY</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="PASS" start="2026-03-17T22:45:01.486838" elapsed="1.015803"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:45:02.505304" elapsed="0.567709"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:45:02.504339" elapsed="0.569086"/>
+</kw>
+<doc>ผู้โดยสารสามารถนำทางไปยังหน้า Emergency SOS ได้ และหน้าแสดงเนื้อหาถูกต้อง</doc>
+<status status="PASS" start="2026-03-17T22:44:47.293245" elapsed="15.780398"/>
+</test>
+<test id="s1-t4" name="LOCSHARE-04 - Location Sharing Section Header Is Visible" line="37">
+<kw name="Login As Passenger" owner="resource">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:03.079044" level="INFO">Opening browser 'Chrome' to base url 'http://csse0269.cpkku.com/login'.</msg>
+<arg>${LOGIN URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:45:03.078527" elapsed="1.903978"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:45:04.984497" elapsed="0.877677"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-17T22:45:05.863304" elapsed="0.001287"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:05.866467" level="INFO">Typing text 'Billy12' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${PASSENGER USER}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:45:05.865145" elapsed="1.695491"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:07.561942" level="INFO">Typing text 'billy12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${PASSENGER PASS}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:45:07.561237" elapsed="1.603603"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:09.166615" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:45:09.165909" elapsed="2.621467"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:45:13.792014" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:45:11.788114" elapsed="2.004277"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:45:03.077936" elapsed="10.714838"/>
+</kw>
+<kw name="Go To Emergency Page" owner="resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:13.798369" level="INFO">Opening url 'https://csse0269.cpkku.com/emergency_call/emergency'</msg>
+<arg>${EMERGENCY URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:45:13.797503" elapsed="0.723692"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:45:16.523739" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:45:14.521965" elapsed="2.002092"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:45:13.795660" elapsed="2.728573"/>
+</kw>
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:17.551339" level="INFO">Current page contains text 'แชร์โลเคชันให้คนที่ไว้ใจ'.</msg>
+<arg>แชร์โลเคชันให้คนที่ไว้ใจ</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="PASS" start="2026-03-17T22:45:16.524511" elapsed="1.027362"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:45:17.555130" elapsed="1.587772"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:45:17.553964" elapsed="1.589364"/>
+</kw>
+<doc>หน้า Emergency แสดงส่วนหัว "แชร์โลเคชันให้คนที่ไว้ใจ" เพื่อให้ผู้โดยสารทราบว่ามีฟีเจอร์แชร์โลเคชัน</doc>
+<status status="PASS" start="2026-03-17T22:45:03.074301" elapsed="16.069313"/>
+</test>
+<test id="s1-t5" name="LOCSHARE-05 - Start Sharing Button Is Visible On Emergency Page" line="44">
+<kw name="Login As Passenger" owner="resource">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:19.151519" level="INFO">Opening browser 'Chrome' to base url 'http://csse0269.cpkku.com/login'.</msg>
+<arg>${LOGIN URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:45:19.150748" elapsed="2.490927"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:45:21.643264" elapsed="0.878564"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-17T22:45:22.523731" elapsed="0.001404"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:22.526515" level="INFO">Typing text 'Billy12' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${PASSENGER USER}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:45:22.525447" elapsed="1.643102"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:24.172499" level="INFO">Typing text 'billy12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${PASSENGER PASS}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:45:24.171296" elapsed="1.573030"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:25.746346" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:45:25.745124" elapsed="2.601461"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:45:30.351885" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:45:28.348055" elapsed="2.004696"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:45:19.150069" elapsed="11.203100"/>
+</kw>
+<kw name="Go To Emergency Page" owner="resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:30.355325" level="INFO">Opening url 'https://csse0269.cpkku.com/emergency_call/emergency'</msg>
+<arg>${EMERGENCY URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:45:30.354856" elapsed="0.709551"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:45:33.074785" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:45:31.065035" elapsed="2.011366"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:45:30.354117" elapsed="2.735182"/>
+</kw>
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:33.663254" level="INFO">Current page contains element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]'.</msg>
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="PASS" start="2026-03-17T22:45:33.091588" elapsed="0.572214"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:45:33.666637" elapsed="0.572996"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:45:33.665189" elapsed="0.574652"/>
+</kw>
+<doc>ปุ่ม "เริ่มแชร์โลเคชัน" ต้องแสดงอยู่บนหน้า Emergency เมื่อยังไม่มีเซสชันแชร์ที่ active
+Pre-condition: Billy12 ต้องไม่มีการแชร์โลเคชันที่ active อยู่ก่อนรันเทสนี้</doc>
+<status status="PASS" start="2026-03-17T22:45:19.144533" elapsed="15.095413"/>
+</test>
+<test id="s1-t6" name="LOCSHARE-06 - Start Location Sharing Creates Active Session" line="52">
+<kw name="Login As Passenger With Geo Permission" owner="resource">
+<kw name="Open Browser With Geo Permission" owner="resource">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-17T22:45:34.245626" level="INFO">${prefs} = {'profile.default_content_setting_values.geolocation': 1}</msg>
+<var>${prefs}</var>
+<arg>profile.default_content_setting_values.geolocation=${1}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-17T22:45:34.244419" elapsed="0.001250"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-17T22:45:34.249457" level="INFO">${options} = &lt;selenium.webdriver.chrome.options.Options object at 0x1028754c0&gt;</msg>
+<var>${options}</var>
+<arg>sys.modules['selenium.webdriver'].ChromeOptions()</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-17T22:45:34.245809" elapsed="0.003720"/>
+</kw>
+<kw name="Call Method" owner="BuiltIn">
+<arg>${options}</arg>
+<arg>add_experimental_option</arg>
+<arg>prefs</arg>
+<arg>${prefs}</arg>
+<doc>Calls the named method of the given object with the provided arguments.</doc>
+<status status="PASS" start="2026-03-17T22:45:34.249684" elapsed="0.000329"/>
+</kw>
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:34.250379" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/login'.</msg>
+<arg>${HTTPS LOGIN URL}</arg>
+<arg>Chrome</arg>
+<arg>options=${options}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:45:34.250146" elapsed="2.485803"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:45:36.743137" elapsed="0.824818"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-17T22:45:37.569105" elapsed="0.001333"/>
+</kw>
+<doc>Opens Chrome with geolocation auto-allowed (no permission prompt) via HTTPS login</doc>
+<status status="PASS" start="2026-03-17T22:45:34.243973" elapsed="3.326734"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:37.571692" level="INFO">Typing text 'Billy12' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${PASSENGER USER}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:45:37.570989" elapsed="1.748988"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:39.321058" level="INFO">Typing text 'billy12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${PASSENGER PASS}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:45:39.320488" elapsed="1.593955"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:40.915925" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:45:40.915218" elapsed="2.602980"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:45:45.521124" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:45:43.518953" elapsed="2.002531"/>
+</kw>
+<doc>Login as passenger via HTTPS with geolocation auto-allowed</doc>
+<status status="PASS" start="2026-03-17T22:45:34.243217" elapsed="11.278697"/>
+</kw>
+<kw name="Start Fresh Location Sharing" owner="resource">
+<kw name="Go To Emergency Page" owner="resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:45.526733" level="INFO">Opening url 'https://csse0269.cpkku.com/emergency_call/emergency'</msg>
+<arg>${EMERGENCY URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:45:45.525128" elapsed="0.604978"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:45:48.136563" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:45:46.132065" elapsed="2.004736"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:45:45.524233" elapsed="2.612798"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:49.755726" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-2.png"&gt;&lt;img src="selenium-screenshot-2.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-17T22:45:49.756251" level="FAIL">Page should have contained element 'xpath://button[contains(.,'หยุดแชร์โลเคชัน')]' but did not.</msg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-03-17T22:45:48.140418" elapsed="1.624280">Page should have contained element 'xpath://button[contains(.,'หยุดแชร์โลเคชัน')]' but did not.</status>
+</kw>
+<msg time="2026-03-17T22:45:49.765038" level="INFO">${is_sharing} = False</msg>
+<var>${is_sharing}</var>
+<arg>Page Should Contain Element</arg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-17T22:45:48.137418" elapsed="1.627685"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${is_sharing}</arg>
+<arg>Click Button</arg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-17T22:45:49.765399" elapsed="0.000637"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${is_sharing}</arg>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<arg>timeout=10s</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-17T22:45:49.766277" elapsed="0.000502"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:56.516357" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-3.png"&gt;&lt;img src="selenium-screenshot-3.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-17T22:45:56.518094" level="FAIL">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</msg>
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="FAIL" start="2026-03-17T22:45:49.767033" elapsed="6.757369">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-17T22:45:56.525412" elapsed="0.000125"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>กำลังแชร์โลเคชันอยู่</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="NOT RUN" start="2026-03-17T22:45:56.525749" elapsed="0.000047"/>
+</kw>
+<doc>Navigate to emergency page, stop any active share, then start a new share session</doc>
+<status status="FAIL" start="2026-03-17T22:45:45.522957" elapsed="11.003093">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</kw>
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<arg>กำลังแชร์โลเคชันอยู่</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="NOT RUN" start="2026-03-17T22:45:56.526405" elapsed="0.000049"/>
+</kw>
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<arg>หมดอายุ:</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="NOT RUN" start="2026-03-17T22:45:56.526642" elapsed="0.000040"/>
+</kw>
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<arg>xpath://*[contains(@class,'font-mono')]</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="NOT RUN" start="2026-03-17T22:45:56.526864" elapsed="0.000040"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:45:56.528377" elapsed="0.609983"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:45:56.527508" elapsed="0.611328"/>
+</kw>
+<doc>ผู้โดยสารกด "เริ่มแชร์โลเคชัน" → ระบบสร้าง share session และแสดง:
+- สถานะ "กำลังแชร์โลเคชันอยู่" พร้อม green indicator
+- Share link แบบ monospace
+- ข้อความ "หมดอายุ:" แสดงเวลาหมดอายุ
+NOTE: ต้องใช้ HTTPS + Geolocation เพื่อให้ปุ่มไม่ถูก disabled</doc>
+<status status="FAIL" start="2026-03-17T22:45:34.240239" elapsed="22.899281">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</test>
+<test id="s1-t7" name="LOCSHARE-07 - Copy Link Button Is Shown When Sharing" line="65">
+<kw name="Login As Passenger With Geo Permission" owner="resource">
+<kw name="Open Browser With Geo Permission" owner="resource">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-17T22:45:57.148671" level="INFO">${prefs} = {'profile.default_content_setting_values.geolocation': 1}</msg>
+<var>${prefs}</var>
+<arg>profile.default_content_setting_values.geolocation=${1}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-17T22:45:57.146819" elapsed="0.002017"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-17T22:45:57.152951" level="INFO">${options} = &lt;selenium.webdriver.chrome.options.Options object at 0x1028c2c40&gt;</msg>
+<var>${options}</var>
+<arg>sys.modules['selenium.webdriver'].ChromeOptions()</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-17T22:45:57.149099" elapsed="0.003895"/>
+</kw>
+<kw name="Call Method" owner="BuiltIn">
+<arg>${options}</arg>
+<arg>add_experimental_option</arg>
+<arg>prefs</arg>
+<arg>${prefs}</arg>
+<doc>Calls the named method of the given object with the provided arguments.</doc>
+<status status="PASS" start="2026-03-17T22:45:57.153139" elapsed="0.000297"/>
+</kw>
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:45:57.153791" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/login'.</msg>
+<arg>${HTTPS LOGIN URL}</arg>
+<arg>Chrome</arg>
+<arg>options=${options}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:45:57.153549" elapsed="2.926064"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:46:00.081524" elapsed="0.831256"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-17T22:46:00.913324" elapsed="0.001040"/>
+</kw>
+<doc>Opens Chrome with geolocation auto-allowed (no permission prompt) via HTTPS login</doc>
+<status status="PASS" start="2026-03-17T22:45:57.146257" elapsed="3.768402"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:00.915708" level="INFO">Typing text 'Billy12' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${PASSENGER USER}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:46:00.914953" elapsed="1.691773"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:02.609412" level="INFO">Typing text 'billy12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${PASSENGER PASS}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:46:02.608738" elapsed="1.590824"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:04.200623" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:46:04.200099" elapsed="2.589395"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:46:08.794134" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:46:06.790434" elapsed="2.004031"/>
+</kw>
+<doc>Login as passenger via HTTPS with geolocation auto-allowed</doc>
+<status status="PASS" start="2026-03-17T22:45:57.145409" elapsed="11.649495"/>
+</kw>
+<kw name="Start Fresh Location Sharing" owner="resource">
+<kw name="Go To Emergency Page" owner="resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:08.798306" level="INFO">Opening url 'https://csse0269.cpkku.com/emergency_call/emergency'</msg>
+<arg>${EMERGENCY URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:46:08.797918" elapsed="0.623794"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:46:11.429607" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:46:09.426951" elapsed="2.002928"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:46:08.797436" elapsed="2.632661"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:13.042899" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-4.png"&gt;&lt;img src="selenium-screenshot-4.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-17T22:46:13.043629" level="FAIL">Page should have contained element 'xpath://button[contains(.,'หยุดแชร์โลเคชัน')]' but did not.</msg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-03-17T22:46:11.431116" elapsed="1.613039">Page should have contained element 'xpath://button[contains(.,'หยุดแชร์โลเคชัน')]' but did not.</status>
+</kw>
+<msg time="2026-03-17T22:46:13.044934" level="INFO">${is_sharing} = False</msg>
+<var>${is_sharing}</var>
+<arg>Page Should Contain Element</arg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-17T22:46:11.430340" elapsed="1.614666"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${is_sharing}</arg>
+<arg>Click Button</arg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-17T22:46:13.045392" elapsed="0.004032"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${is_sharing}</arg>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<arg>timeout=10s</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-17T22:46:13.049682" elapsed="0.000413"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:19.790642" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-5.png"&gt;&lt;img src="selenium-screenshot-5.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-17T22:46:19.791987" level="FAIL">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</msg>
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="FAIL" start="2026-03-17T22:46:13.050337" elapsed="6.742045">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-17T22:46:19.795984" elapsed="0.000142"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>กำลังแชร์โลเคชันอยู่</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="NOT RUN" start="2026-03-17T22:46:19.796354" elapsed="0.000050"/>
+</kw>
+<doc>Navigate to emergency page, stop any active share, then start a new share session</doc>
+<status status="FAIL" start="2026-03-17T22:46:08.796451" elapsed="11.000187">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</kw>
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'คัดลอก')]</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="NOT RUN" start="2026-03-17T22:46:19.797020" elapsed="0.000049"/>
+</kw>
+<kw name="Element Should Be Enabled" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'คัดลอก')]</arg>
+<doc>Verifies that element identified by ``locator`` is enabled.</doc>
+<status status="NOT RUN" start="2026-03-17T22:46:19.797270" elapsed="0.000040"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:46:19.798360" elapsed="0.571703"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:46:19.797845" elapsed="0.572476"/>
+</kw>
+<doc>ปุ่ม "คัดลอก" ต้องปรากฏเมื่อกำลังแชร์โลเคชัน เพื่อให้ผู้โดยสารคัดลอก share link ได้</doc>
+<status status="FAIL" start="2026-03-17T22:45:57.141921" elapsed="23.228545">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</test>
+<test id="s1-t8" name="LOCSHARE-08 - LINE Share Button Is Available And Links To LINE" line="73">
+<kw name="Login As Passenger With Geo Permission" owner="resource">
+<kw name="Open Browser With Geo Permission" owner="resource">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-17T22:46:20.374993" level="INFO">${prefs} = {'profile.default_content_setting_values.geolocation': 1}</msg>
+<var>${prefs}</var>
+<arg>profile.default_content_setting_values.geolocation=${1}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-17T22:46:20.374093" elapsed="0.000948"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-17T22:46:20.378606" level="INFO">${options} = &lt;selenium.webdriver.chrome.options.Options object at 0x10288cc70&gt;</msg>
+<var>${options}</var>
+<arg>sys.modules['selenium.webdriver'].ChromeOptions()</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-17T22:46:20.375204" elapsed="0.003525"/>
+</kw>
+<kw name="Call Method" owner="BuiltIn">
+<arg>${options}</arg>
+<arg>add_experimental_option</arg>
+<arg>prefs</arg>
+<arg>${prefs}</arg>
+<doc>Calls the named method of the given object with the provided arguments.</doc>
+<status status="PASS" start="2026-03-17T22:46:20.379349" elapsed="0.000510"/>
+</kw>
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:20.380470" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/login'.</msg>
+<arg>${HTTPS LOGIN URL}</arg>
+<arg>Chrome</arg>
+<arg>options=${options}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:46:20.380078" elapsed="2.000555"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:46:22.387156" elapsed="0.821174"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-17T22:46:23.211927" elapsed="0.001596"/>
+</kw>
+<doc>Opens Chrome with geolocation auto-allowed (no permission prompt) via HTTPS login</doc>
+<status status="PASS" start="2026-03-17T22:46:20.373793" elapsed="2.840103"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:23.215011" level="INFO">Typing text 'Billy12' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${PASSENGER USER}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:46:23.214098" elapsed="1.665983"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:24.880579" level="INFO">Typing text 'billy12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${PASSENGER PASS}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:46:24.880319" elapsed="1.607650"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:26.489003" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:46:26.488564" elapsed="2.605268"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:46:31.097716" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:46:29.094371" elapsed="2.004251"/>
+</kw>
+<doc>Login as passenger via HTTPS with geolocation auto-allowed</doc>
+<status status="PASS" start="2026-03-17T22:46:20.373379" elapsed="10.726180"/>
+</kw>
+<kw name="Start Fresh Location Sharing" owner="resource">
+<kw name="Go To Emergency Page" owner="resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:31.102789" level="INFO">Opening url 'https://csse0269.cpkku.com/emergency_call/emergency'</msg>
+<arg>${EMERGENCY URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:46:31.102448" elapsed="0.589238"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:46:33.693693" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:46:31.692283" elapsed="2.001697"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:46:31.101910" elapsed="2.592443"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:35.292116" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-6.png"&gt;&lt;img src="selenium-screenshot-6.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-17T22:46:35.292395" level="FAIL">Page should have contained element 'xpath://button[contains(.,'หยุดแชร์โลเคชัน')]' but did not.</msg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-03-17T22:46:33.695575" elapsed="1.597157">Page should have contained element 'xpath://button[contains(.,'หยุดแชร์โลเคชัน')]' but did not.</status>
+</kw>
+<msg time="2026-03-17T22:46:35.293421" level="INFO">${is_sharing} = False</msg>
+<var>${is_sharing}</var>
+<arg>Page Should Contain Element</arg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-17T22:46:33.694691" elapsed="1.598818"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${is_sharing}</arg>
+<arg>Click Button</arg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-17T22:46:35.293861" elapsed="0.000451"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${is_sharing}</arg>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<arg>timeout=10s</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-17T22:46:35.294459" elapsed="0.000277"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:42.000023" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-7.png"&gt;&lt;img src="selenium-screenshot-7.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-17T22:46:42.000371" level="FAIL">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</msg>
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="FAIL" start="2026-03-17T22:46:35.294875" elapsed="6.705793">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-17T22:46:42.001082" elapsed="0.000064"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>กำลังแชร์โลเคชันอยู่</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="NOT RUN" start="2026-03-17T22:46:42.001337" elapsed="0.000047"/>
+</kw>
+<doc>Navigate to emergency page, stop any active share, then start a new share session</doc>
+<status status="FAIL" start="2026-03-17T22:46:31.100850" elapsed="10.900741">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</kw>
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<arg>xpath://a[contains(@href,'line.me')]</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="NOT RUN" start="2026-03-17T22:46:42.001948" elapsed="0.000058"/>
+</kw>
+<kw name="Element Attribute Value Should Be" owner="SeleniumLibrary">
+<arg>xpath://a[contains(@href,'line.me')]</arg>
+<arg>target</arg>
+<arg>_blank</arg>
+<doc>Verifies element identified by ``locator`` contains expected attribute value.</doc>
+<status status="NOT RUN" start="2026-03-17T22:46:42.002270" elapsed="0.000056"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:46:42.003978" elapsed="0.591820"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:46:42.003364" elapsed="0.592552"/>
+</kw>
+<doc>ปุ่ม "ส่งผ่าน LINE" ต้องปรากฏเมื่อกำลังแชร์ และ href ต้องชี้ไปยัง line.me</doc>
+<status status="FAIL" start="2026-03-17T22:46:20.371616" elapsed="22.224406">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</test>
+<test id="s1-t9" name="LOCSHARE-09 - Stop Sharing Restores Initial State" line="81">
+<kw name="Login As Passenger With Geo Permission" owner="resource">
+<kw name="Open Browser With Geo Permission" owner="resource">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-03-17T22:46:42.599689" level="INFO">${prefs} = {'profile.default_content_setting_values.geolocation': 1}</msg>
+<var>${prefs}</var>
+<arg>profile.default_content_setting_values.geolocation=${1}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-03-17T22:46:42.599101" elapsed="0.000620"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-03-17T22:46:42.600381" level="INFO">${options} = &lt;selenium.webdriver.chrome.options.Options object at 0x102877100&gt;</msg>
+<var>${options}</var>
+<arg>sys.modules['selenium.webdriver'].ChromeOptions()</arg>
+<arg>sys</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-03-17T22:46:42.599894" elapsed="0.000522"/>
+</kw>
+<kw name="Call Method" owner="BuiltIn">
+<arg>${options}</arg>
+<arg>add_experimental_option</arg>
+<arg>prefs</arg>
+<arg>${prefs}</arg>
+<doc>Calls the named method of the given object with the provided arguments.</doc>
+<status status="PASS" start="2026-03-17T22:46:42.600528" elapsed="0.000788"/>
+</kw>
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:42.601929" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/login'.</msg>
+<arg>${HTTPS LOGIN URL}</arg>
+<arg>Chrome</arg>
+<arg>options=${options}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:46:42.601555" elapsed="1.931190"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:46:44.534956" elapsed="0.819363"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2026-03-17T22:46:45.354887" elapsed="0.000839"/>
+</kw>
+<doc>Opens Chrome with geolocation auto-allowed (no permission prompt) via HTTPS login</doc>
+<status status="PASS" start="2026-03-17T22:46:42.598898" elapsed="2.757080"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:45.356924" level="INFO">Typing text 'Billy12' into text field 'id:identifier'.</msg>
+<arg>id:identifier</arg>
+<arg>${PASSENGER USER}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:46:45.356221" elapsed="1.697390"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:47.055720" level="INFO">Typing text 'billy12345678' into text field 'id:password'.</msg>
+<arg>id:password</arg>
+<arg>${PASSENGER PASS}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:46:47.054727" elapsed="1.589841"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:48.645798" level="INFO">Clicking button 'xpath://button[@type="submit"]'.</msg>
+<arg>xpath://button[@type="submit"]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T22:46:48.645141" elapsed="2.614821"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:46:53.263028" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:46:51.261166" elapsed="2.002132"/>
+</kw>
+<doc>Login as passenger via HTTPS with geolocation auto-allowed</doc>
+<status status="PASS" start="2026-03-17T22:46:42.598586" elapsed="10.664982"/>
+</kw>
+<kw name="Start Fresh Location Sharing" owner="resource">
+<kw name="Go To Emergency Page" owner="resource">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:53.266267" level="INFO">Opening url 'https://csse0269.cpkku.com/emergency_call/emergency'</msg>
+<arg>${EMERGENCY URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:46:53.265771" elapsed="0.638750"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:46:55.907976" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:46:53.905142" elapsed="2.002981"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:46:53.265279" elapsed="2.642977"/>
+</kw>
+<kw name="Run Keyword And Return Status" owner="BuiltIn">
+<kw name="Page Should Contain Element" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:46:57.499753" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-8.png"&gt;&lt;img src="selenium-screenshot-8.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-17T22:46:57.500382" level="FAIL">Page should have contained element 'xpath://button[contains(.,'หยุดแชร์โลเคชัน')]' but did not.</msg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Verifies that element ``locator`` is found on the current page.</doc>
+<status status="FAIL" start="2026-03-17T22:46:55.908844" elapsed="1.592343">Page should have contained element 'xpath://button[contains(.,'หยุดแชร์โลเคชัน')]' but did not.</status>
+</kw>
+<msg time="2026-03-17T22:46:57.501680" level="INFO">${is_sharing} = False</msg>
+<var>${is_sharing}</var>
+<arg>Page Should Contain Element</arg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Runs the specified keyword and returns the status as a Boolean value.</doc>
+<status status="PASS" start="2026-03-17T22:46:55.908419" elapsed="1.593354"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${is_sharing}</arg>
+<arg>Click Button</arg>
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-17T22:46:57.502267" elapsed="0.000842"/>
+</kw>
+<kw name="Run Keyword If" owner="BuiltIn">
+<arg>${is_sharing}</arg>
+<arg>Wait Until Page Contains Element</arg>
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<arg>timeout=10s</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="PASS" start="2026-03-17T22:46:57.503411" elapsed="0.000530"/>
+</kw>
+<kw name="Wait Until Element Is Enabled" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:47:04.252836" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-9.png"&gt;&lt;img src="selenium-screenshot-9.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-17T22:47:04.254420" level="FAIL">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</msg>
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is enabled.</doc>
+<status status="FAIL" start="2026-03-17T22:46:57.504228" elapsed="6.750672">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-17T22:47:04.256464" elapsed="0.000137"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>กำลังแชร์โลเคชันอยู่</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="NOT RUN" start="2026-03-17T22:47:04.256826" elapsed="0.000049"/>
+</kw>
+<doc>Navigate to emergency page, stop any active share, then start a new share session</doc>
+<status status="FAIL" start="2026-03-17T22:46:53.264461" elapsed="10.992689">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'หยุดแชร์โลเคชัน')]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="NOT RUN" start="2026-03-17T22:47:04.257559" elapsed="0.000068"/>
+</kw>
+<kw name="Wait Until Page Contains Element" owner="SeleniumLibrary">
+<arg>xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` appears on the current page.</doc>
+<status status="NOT RUN" start="2026-03-17T22:47:04.257969" elapsed="0.000076"/>
+</kw>
+<kw name="Page Should Not Contain" owner="SeleniumLibrary">
+<arg>กำลังแชร์โลเคชันอยู่</arg>
+<doc>Verifies the current page does not contain ``text``.</doc>
+<status status="NOT RUN" start="2026-03-17T22:47:04.258398" elapsed="0.000062"/>
+</kw>
+<kw name="Page Should Not Contain" owner="SeleniumLibrary">
+<arg>หมดอายุ:</arg>
+<doc>Verifies the current page does not contain ``text``.</doc>
+<status status="NOT RUN" start="2026-03-17T22:47:04.258633" elapsed="0.000037"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:47:04.259745" elapsed="0.567322"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:47:04.259244" elapsed="0.568073"/>
+</kw>
+<doc>ผู้โดยสารกด "หยุดแชร์โลเคชัน" → ระบบหยุดเซสชัน และ UI กลับแสดงปุ่ม "เริ่มแชร์โลเคชัน"
+- ไม่แสดง "กำลังแชร์โลเคชันอยู่" อีกต่อไป
+- ไม่แสดงเวลาหมดอายุ</doc>
+<status status="FAIL" start="2026-03-17T22:46:42.596299" elapsed="22.231221">Element 'xpath://button[contains(.,'เริ่มแชร์โลเคชัน')]' was not enabled in 5 seconds.</status>
+</test>
+<test id="s1-t10" name="LOCSHARE-10 - Public Share Page Is Accessible Without Login" line="93">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:47:04.835771" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/location-sharing'.</msg>
+<arg>${PUBLIC LOCATION URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:47:04.834919" elapsed="2.183989"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:47:07.020690" elapsed="0.880499"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:47:09.904493" level="INFO">Slept 2 seconds.</msg>
+<arg>2s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:47:07.902049" elapsed="2.002731"/>
+</kw>
+<kw name="Location Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:47:10.423366" level="INFO">Current location contains 'location-sharing'.</msg>
+<arg>location-sharing</arg>
+<doc>Verifies that the current URL contains ``expected``.</doc>
+<status status="PASS" start="2026-03-17T22:47:09.908937" elapsed="0.514749"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:47:10.425940" elapsed="0.564649"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:47:10.425160" elapsed="0.565685"/>
+</kw>
+<doc>หน้า Public Location Sharing (/location-sharing) เปิดได้โดยไม่ต้อง login
+ผู้ติดต่อฉุกเฉินไม่จำเป็นต้องมีบัญชีในระบบ</doc>
+<status status="PASS" start="2026-03-17T22:47:04.828512" elapsed="6.162519"/>
+</test>
+<test id="s1-t11" name="LOCSHARE-11 - Public Share Page Shows Correct Site Header" line="102">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:47:10.995584" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/location-sharing'.</msg>
+<arg>${PUBLIC LOCATION URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:47:10.995017" elapsed="1.746422"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:47:12.742639" elapsed="0.882427"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-03-17T22:47:16.628546" level="INFO">Slept 3 seconds.</msg>
+<arg>3s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-03-17T22:47:13.625846" elapsed="3.003012"/>
+</kw>
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:47:17.659729" level="INFO">Current page contains text 'ไปนำแหน่ — โลเคชันฉุกเฉิน'.</msg>
+<arg>ไปนำแหน่ — โลเคชันฉุกเฉิน</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="PASS" start="2026-03-17T22:47:16.629444" elapsed="1.030940"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:47:17.664099" elapsed="0.581817"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:47:17.662014" elapsed="0.584075"/>
+</kw>
+<doc>หน้า Public Location Sharing แสดงหัวข้อ "ไปนำแหน่ — โลเคชันฉุกเฉิน" เพื่อระบุตัวตนของแพลตฟอร์ม</doc>
+<status status="PASS" start="2026-03-17T22:47:10.991590" elapsed="7.254645"/>
+</test>
+<test id="s1-t12" name="LOCSHARE-12 - Public Page With No Token Shows Invalid Link Message" line="110">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:47:18.248849" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/location-sharing'.</msg>
+<arg>${PUBLIC LOCATION URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:47:18.248532" elapsed="1.799285"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:47:20.050149" elapsed="0.891223"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>ลิงก์ไม่ถูกต้อง</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-17T22:47:20.942082" elapsed="0.527503"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:47:21.471070" elapsed="0.565378"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:47:21.470616" elapsed="0.565944"/>
+</kw>
+<doc>หน้า Public Share ที่ไม่มี token ใน URL ต้องแสดงข้อความ "ลิงก์ไม่ถูกต้อง"</doc>
+<status status="PASS" start="2026-03-17T22:47:18.246799" elapsed="3.789848"/>
+</test>
+<test id="s1-t13" name="LOCSHARE-13 - Public Page With Invalid Token Shows Expired Message" line="117">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T22:47:22.039448" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/location-sharing?token=invalidtoken00001111'.</msg>
+<arg>${PUBLIC LOCATION URL}?token=invalidtoken00001111</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T22:47:22.039121" elapsed="1.924698"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T22:47:23.965647" elapsed="0.879690"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>ลิงก์นี้ไม่สามารถใช้งานได้อีกต่อไป</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-17T22:47:24.846391" elapsed="0.519418"/>
+</kw>
+<kw name="Close Browser Session" owner="resource" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T22:47:25.376041" elapsed="0.564552"/>
+</kw>
+<status status="PASS" start="2026-03-17T22:47:25.369512" elapsed="0.571573"/>
+</kw>
+<doc>หน้า Public Share ที่มี token ไม่ถูกต้องหรือหมดอายุ ต้องแสดงข้อความ "ลิงก์นี้ไม่สามารถใช้งานได้อีกต่อไป"
+แสดงให้เห็นว่าระบบไม่เปิดเผยข้อมูลเมื่อ link ไม่ valid</doc>
+<status status="PASS" start="2026-03-17T22:47:22.036923" elapsed="3.904382"/>
+</test>
+<doc>UAT Tests for PBL_14 — Location Sharing Feature
+Story: "As a passenger, I want people in my emergency contact to check on my location from time to time."
+Server: https://csse0269.cpkku.com
+Test Account (Passenger): Billy12 / billy12345678
+
+NOTE: TC LOCSHARE-06 ถึง LOCSHARE-09 ต้องทดสอบบน HTTPS เพื่อให้ Geolocation API ใช้งานได้
+Resource file มี keyword "Login As Passenger With Geo Permission" ที่เปิด Chrome พร้อม auto-allow geolocation</doc>
+<status status="FAIL" start="2026-03-17T22:44:27.981792" elapsed="177.961487"/>
+</suite>
+<statistics>
+<total>
+<stat pass="8" fail="5" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Location Sharing Uat" id="s1" pass="8" fail="5" skip="0">Location Sharing Uat</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
