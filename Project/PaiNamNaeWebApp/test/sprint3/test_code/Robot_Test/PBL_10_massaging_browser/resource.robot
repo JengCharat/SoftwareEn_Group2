@@ -7,7 +7,7 @@ ${SERVER}         csse0269.cpkku.com
 ${BROWSER}        Chrome
 ${DELAY}          0.5
 ${DRIVER USER}    user12
-${DRIVER PASS}    12345678
+${DRIVER PASS}    dog-east-just 
 ${PASSENGER USER}    Billy12
 ${PASSENGER PASS}    billy12345678
 ${PASSENGER EMAIL}    sachittha.s@kkumail.com
