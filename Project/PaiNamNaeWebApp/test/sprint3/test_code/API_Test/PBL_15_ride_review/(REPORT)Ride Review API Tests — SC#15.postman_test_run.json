@@ -1,0 +1,330 @@
+{
+	"id": "5140aeb1-d5d9-4d53-97d7-1fbd84034856",
+	"name": "Ride Review API Tests — SC#15",
+	"timestamp": "2026-03-17T13:55:36.865Z",
+	"collection_id": "42521469-80b3dd74-44e9-4f37-8b18-b6879f98ffcf",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 9,
+	"delay": 0,
+	"persist": true,
+	"status": "error",
+	"startedAt": "2026-03-17T13:55:34.989Z",
+	"totalFail": 9,
+	"results": [
+		{
+			"id": "d1bdc699-426f-4b49-8237-5ae09ce77b14",
+			"name": "[TC-01] Login as Passenger",
+			"url": "http://10.198.200.88:3002/api/auth/login",
+			"time": 155,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-01: Status 200": true,
+				"TC-01: Has token": true
+			},
+			"testPassFailCounts": {
+				"TC-01: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-01: Has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				155
+			],
+			"allTests": [
+				{
+					"TC-01: Status 200": true,
+					"TC-01: Has token": true
+				}
+			]
+		},
+		{
+			"id": "3a9a00dc-43ba-4298-9190-ea947f99e8a8",
+			"name": "[TC-02] Login as Driver",
+			"url": "http://10.198.200.88:3002/api/auth/login",
+			"time": 148,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-02: Status 200": true,
+				"TC-02: Has token": true
+			},
+			"testPassFailCounts": {
+				"TC-02: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-02: Has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				148
+			],
+			"allTests": [
+				{
+					"TC-02: Status 200": true,
+					"TC-02: Has token": true
+				}
+			]
+		},
+		{
+			"id": "5f4623b1-237d-4e61-b234-76448745143b",
+			"name": "[TC-03] Get Passenger Bookings — Save Eligible bookingId",
+			"url": "http://10.198.200.88:3002/api/bookings/me",
+			"time": 105,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-03: Status 200": true,
+				"TC-03: Response data is array": true,
+				"TC-03: Found eligible booking": true
+			},
+			"testPassFailCounts": {
+				"TC-03: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-03: Response data is array": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-03: Found eligible booking": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				105
+			],
+			"allTests": [
+				{
+					"TC-03: Status 200": true,
+					"TC-03: Response data is array": true,
+					"TC-03: Found eligible booking": true
+				}
+			]
+		},
+		{
+			"id": "fcf642db-9ad7-48b2-8e2e-242e2cf4f8ae",
+			"name": "[TC-04] Create Review — No Auth (401)",
+			"url": "http://10.198.200.88:3002/api/reviews",
+			"time": 22,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-04: Status 401 Unauthorized": true
+			},
+			"testPassFailCounts": {
+				"TC-04: Status 401 Unauthorized": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				22
+			],
+			"allTests": [
+				{
+					"TC-04: Status 401 Unauthorized": true
+				}
+			]
+		},
+		{
+			"id": "09481f69-3eae-4ea0-b8fc-bb1584a79e42",
+			"name": "[TC-05] Create Review — Non-Existent Booking (404)",
+			"url": "http://10.198.200.88:3002/api/reviews",
+			"time": 28,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"TC-05: Status 404 Not Found": true
+			},
+			"testPassFailCounts": {
+				"TC-05: Status 404 Not Found": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				28
+			],
+			"allTests": [
+				{
+					"TC-05: Status 404 Not Found": true
+				}
+			]
+		},
+		{
+			"id": "97721e79-5f8d-429c-9745-392be40e05d7",
+			"name": "[TC-06] Create Review — Invalid Rating Below 1 (400)",
+			"url": "http://10.198.200.88:3002/api/reviews",
+			"time": 47,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-06: Status 400 Bad Request": false
+			},
+			"testPassFailCounts": {
+				"TC-06: Status 400 Bad Request": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				47
+			],
+			"allTests": [
+				{
+					"TC-06: Status 400 Bad Request": false
+				}
+			]
+		},
+		{
+			"id": "771a4a13-e779-4c75-a09b-1dd2af5079bd",
+			"name": "[TC-07] Create Review — Invalid Rating Above 5 (400)",
+			"url": "http://10.198.200.88:3002/api/reviews",
+			"time": 32,
+			"responseCode": {
+				"code": 409,
+				"name": "Conflict"
+			},
+			"tests": {
+				"TC-07: Status 400 Bad Request": false
+			},
+			"testPassFailCounts": {
+				"TC-07: Status 400 Bad Request": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				32
+			],
+			"allTests": [
+				{
+					"TC-07: Status 400 Bad Request": false
+				}
+			]
+		},
+		{
+			"id": "5a8d1b98-f89b-46df-8399-1ce70af2554e",
+			"name": "[TC-08] Create Review — Success with Comment (201)",
+			"url": "http://10.198.200.88:3002/api/reviews",
+			"time": 33,
+			"responseCode": {
+				"code": 409,
+				"name": "Conflict"
+			},
+			"tests": {
+				"TC-08: Status 201 Created": false,
+				"TC-08: success = true": false,
+				"TC-08: Has review id": false,
+				"TC-08: rating = 4": false,
+				"TC-08: Has comment": false,
+				"TC-08: Has driverId": false,
+				"TC-08: Has passengerId": false
+			},
+			"testPassFailCounts": {
+				"TC-08: Status 201 Created": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-08: success = true": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-08: Has review id": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-08: rating = 4": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-08: Has comment": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-08: Has driverId": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-08: Has passengerId": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				33
+			],
+			"allTests": [
+				{
+					"TC-08: Status 201 Created": false,
+					"TC-08: success = true": false,
+					"TC-08: Has review id": false,
+					"TC-08: rating = 4": false,
+					"TC-08: Has comment": false,
+					"TC-08: Has driverId": false,
+					"TC-08: Has passengerId": false
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 570,
+	"collection": {
+		"requests": [
+			{
+				"id": "d1bdc699-426f-4b49-8237-5ae09ce77b14",
+				"method": "POST"
+			},
+			{
+				"id": "3a9a00dc-43ba-4298-9190-ea947f99e8a8",
+				"method": "POST"
+			},
+			{
+				"id": "5f4623b1-237d-4e61-b234-76448745143b",
+				"method": "GET"
+			},
+			{
+				"id": "fcf642db-9ad7-48b2-8e2e-242e2cf4f8ae",
+				"method": "POST"
+			},
+			{
+				"id": "09481f69-3eae-4ea0-b8fc-bb1584a79e42",
+				"method": "POST"
+			},
+			{
+				"id": "97721e79-5f8d-429c-9745-392be40e05d7",
+				"method": "POST"
+			},
+			{
+				"id": "771a4a13-e779-4c75-a09b-1dd2af5079bd",
+				"method": "POST"
+			},
+			{
+				"id": "5a8d1b98-f89b-46df-8399-1ce70af2554e",
+				"method": "POST"
+			}
+		]
+	}
+}

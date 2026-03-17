@@ -1,10 +1,14 @@
 const { z } = require('zod')
 const { Role } = require('@prisma/client')
+const { isCommonPassword } = require('../utils/commonPasswords')
 
 const createUserSchema = z.object({
     email: z.string().email("Invalid email format"),
     username: z.string().min(6, "username is require"),
-    password: z.string().min(8, "password must be at least 8 characters"),
+    password: z.string().min(10, "Password must be at least 10 characters (NCSC UK)")
+        .refine(pw => !isCommonPassword(pw), {
+            message: "Password is in the common brute-force word list (NCSC UK). Please choose a longer or more unique password.",
+        }),
     firstName: z.string().min(1, "firstname is require"),
     lastName: z.string().min(1, "lastname is require"),
     phoneNumber: z.string().min(10, "phoneNumber is require"),

@@ -44,11 +44,11 @@
           <div class="mb-4">
             <label for="password" class="block mb-1 text-sm font-medium text-gray-700">รหัสผ่าน <span
                 class="text-red-500">*</span></label>
-            <input type="password" id="password" v-model="formData.password" placeholder="อย่างน้อย 8 ตัวอักษร"
+            <input type="password" id="password" v-model="formData.password" placeholder="อย่างน้อย 10 ตัวอักษร"
               class="w-full px-4 py-2 transition border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               :class="{ 'border-red-500 ring-1 ring-red-500': errors.password }">
             <p v-if="errors.password" class="mt-1 text-xs text-red-600">{{ errors.password }}</p>
-            <p v-else class="mt-1 text-xs text-gray-500">ต้องประกอบด้วย A–Z, a–z และตัวเลข 0–9</p>
+            <p v-else class="mt-1 text-xs text-gray-500">ต้องมีความยาวอย่างน้อย 10 ตัวอักษร และต้องไม่เป็นรหัสผ่านยอดนิยม (NCSC UK)</p>
           </div>
           <div class="mb-6">
             <label for="confirmPassword" class="block mb-1 text-sm font-medium text-gray-700">ยืนยันรหัสผ่าน <span
@@ -59,6 +59,64 @@
               :class="{ 'border-red-500 ring-1 ring-red-500': errors.confirmPassword }">
             <p v-if="errors.confirmPassword" class="mt-1 text-xs text-red-600">{{ errors.confirmPassword }}</p>
           </div>
+
+
+
+
+
+
+
+
+
+
+          <div class="m-2">
+    <label class="block mb-1 text-sm text-gray-600">จำนวนคำของรหัสผ่าน</label>
+
+    <select v-model="wordCount"
+        class="px-3 py-2 border rounded-md">
+        <option :value="3">3 คำ</option>
+        <option :value="4">4 คำ</option>
+        <option :value="5">5 คำ</option>
+    </select>
+
+    <button
+        type="button"
+        @click="generatePassword"
+        class="px-3 py-2 ml-2 text-white bg-green-600 rounded">
+        สุ่มรหัสผ่าน
+    </button>
+</div>
+<div v-if="showSuggestedPassword && suggestedPassword" class="p-3 mt-3 bg-gray-100 rounded">
+    
+    <div class="flex items-center justify-between mb-2">
+        <p class="text-sm text-gray-600">รหัสผ่านที่แนะนำ</p>
+
+        <button
+            type="button"
+            @click="showSuggestedPassword = false"
+            class="text-gray-500 hover:text-gray-700">
+            ✕
+        </button>
+    </div>
+
+    <div class="flex items-center gap-2">
+        <input
+            :value="suggestedPassword"
+            readonly
+            class="w-full px-3 py-2 border rounded"
+        />
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
           <button type="button" @click="nextStep"
             class="w-full py-3 font-medium text-white transition bg-blue-600 rounded-md hover:bg-blue-700">ถัดไป</button>
         </div>
@@ -213,10 +271,58 @@
 </template>
 
 <script setup>
+import { generate } from "random-words"
+import { isCommonPassword } from '~/utils/commonPasswords';
+
+
+
+
+
+
+
 import { ref, reactive, computed, nextTick } from 'vue';
 import { useAuth } from '~/composables/useAuth';
 import { useToast } from '~/composables/useToast';
 import { useRouter } from '#app';
+
+
+
+
+
+
+
+
+
+
+const wordCount = ref(3)
+const suggestedPassword = ref("")
+const showSuggestedPassword = ref(false)
+
+function generatePassword() {
+    // สุ่มซ้ำจนกว่าจะได้รหัสผ่านที่ไม่อยู่ใน word list
+    // รหัสผ่านแบบ passphrase (word-word-word) จะผ่าน exact match เสมอ
+    // แต่อาจโดน substring check ถ้าคำยาว >= 5 ตัว ดังนั้น loop จนผ่าน
+    let candidate = ""
+    let attempts = 0
+    do {
+        candidate = generate({
+            exactly: wordCount.value,
+            join: "-"
+        })
+        attempts++
+    } while (isCommonPassword(candidate) && attempts < 20)
+    suggestedPassword.value = candidate
+    showSuggestedPassword.value = true
+}
+
+
+
+
+
+
+
+
+
 
 const { register } = useAuth();
 const { toast } = useToast();
@@ -306,7 +412,11 @@ const validationFunctions = [
     clearErrors();
     if (!formData.username || formData.username.length < 4) errors.username = 'ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร';
     if (!/^\S+@\S+\.\S+$/.test(formData.email)) errors.email = 'รูปแบบอีเมลไม่ถูกต้อง';
-    if (!formData.password || formData.password.length < 8) errors.password = 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร';
+    if (!formData.password || formData.password.length < 10) {
+      errors.password = 'รหัสผ่านต้องมีความยาวอย่างน้อย 10 ตัวอักษร';
+    } else if (isCommonPassword(formData.password)) {
+      errors.password = 'รหัสผ่านนี้อยู่ใน word list ที่ใช้โจมตีบัญชีผู้ใช้ (NCSC UK) กรุณาตั้งรหัสผ่านที่ยาวกว่านี้หรือใช้ประโยค';
+    }
     if (formData.password !== formData.confirmPassword || !formData.confirmPassword) errors.confirmPassword = 'รหัสผ่านไม่ตรงกัน';
     return Object.keys(errors).length === 0;
   },

@@ -17,25 +17,25 @@
 
 กรอก **ชื่อผู้ใช้หรืออีเมล** และ **รหัสผ่าน** จากนั้นกด **เข้าสู่ระบบ**
 
-<img width="1280" height="600" src="..\..\Img\login-menu-page.png" />
+<img width="1280" height="600" src="../../img/ui/login-menu-page.png" />
 
 ---
 
 #### ขั้นตอนที่ 2 — ไปหน้า Dashboard แล้วกดปุ่ม "การเดินทางทั้งหมด" เลือก "คำขอจองเส้นทางของฉัน" แล้วเลือกแท็บ "ยืนยันแล้ว"
 
-<img width="1280" height="600" src="../Sprint 2 Documents/Img/driver_route_confirm.png" />
+<img width="1280" height="600" src="../../img/sprint2/driver_route_confirm.png" />
 
 ---
 
 #### ขั้นตอนที่ 3 — กดปุ่ม "แจ้งกำลังไปรับ"
 
-<img width="1280" height="600" src="../Sprint 2 Documents/Img/driver_route_confirm_button.png" />
+<img width="1280" height="600" src="../../img/sprint2/driver_route_confirm_button.png" />
 
 ---
 
 #### หลังจากกดปุ่ม "แจ้งกำลังไปรับ" แล้วจะแสดงข้อความแจ้งเตือนสำเร็จ "ระบบแจ้ง passenger's user name ว่าคุณกำลังเดินทางมารับแล้ว" และต้องรอ 3 นาที ถึงจะกดปุ่มนี้ซ้ำได้อีก (เพื่อป้องกันสแปมข้อความ)
 
-<img width="980" height="600" src="../Sprint 2 Documents/Img/driver_route_confirm_button_succeed.png" />
+<img width="980" height="600" src="../../img/sprint2/driver_route_confirm_button_succeed.png" />
 
 
 ## 2. การติดตามสถานะการรับผู้โดยสาร (ฝั่งผู้โดยสาร)
@@ -48,22 +48,22 @@
 
 กรอก **ชื่อผู้ใช้หรืออีเมล** และ **รหัสผ่าน** จากนั้นกด **เข้าสู่ระบบ**
 
-<img width="1280" height="600" src="..\..\Img\login-menu-page.png" />
+<img width="1280" height="600" src="../../img/sprint2/login-menu-page.png" />
 
 ---
 
 #### ขั้นตอนที่ 2 — ไปหน้า Dashboard แล้วกดปุ่ม "การเดินทางทั้งหมด" เลือก "การเดินทางของฉัน" แล้วเลือกแท็บ "ยืนยันแล้ว" ตรวจสอบสถานะการจองจะต้องได้รับการยืนยันแล้ว
 
-<img width="1280" height="600" src="../Sprint 2 Documents/Img/passenger_route_confirm.png" />
+<img width="1280" height="600" src="../../img/sprint2/passenger_route_confirm.png" />
 
 ---
 
 #### เมื่อคนขับกดปุ่ม "แจ้งกำลังไปรับ" ระบบจะดำเนินการดังนี้
 
-<img width="680" height="400" src="../Sprint 2 Documents/Img/passenger_route_noti.png" />
+<img width="680" height="400" src="../../img/sprint2/passenger_route_noti.png" />
 
 #### บนหน้าเว็บไซต์: แสดงข้อความแจ้งเตือน (Notification) ทันทีว่า "[ชื่อคนขับ] กำลังเดินทางมารับคุณ (เส้นทาง...)"
 
-<img width="400" height="400" src="../Sprint 2 Documents/Img/passenger_route_noti_email.png" />
+<img width="400" height="400" src="../../img/sprint2/passenger_route_noti_email.png" />
 
 #### ผ่านทางอีเมล: ระบบจะส่งอีเมลแจ้งเตือนไปยังที่อยู่อีเมลของคุณโดยอัตโนมัติ เพื่อให้คุณทราบสถานะ แม้ในขณะนั้นคุณไม่ได้เปิดหน้าเว็บไซต์อยู่ก็ตาม

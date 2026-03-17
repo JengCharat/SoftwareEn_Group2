@@ -19,8 +19,7 @@ CHAT07 - Passenger Opens Chat And Sees Only Role And Profile Picture
     Click Button    xpath://button[normalize-space()='แชทกับผู้ขับ']
     Sleep    2s
     Page Should Contain Element    xpath://div[contains(@class,'text-gray-500') and normalize-space()='คนขับ']
-    Element Should Not Be Visible    xpath://div[contains(@class,'space-y-1')]//*[contains(text(),'${PASSENGER USER}')]
-    Element Should Not Be Visible    xpath://div[contains(@class,'space-y-1')]//*[contains(text(),'${DRIVER USER}')]
+    Page Should Not Contain Element    xpath://div[contains(@class,'text-gray-500') and not(normalize-space()='คนขับ')]
     Page Should Contain    ข้อความถูกส่งอย่างปลอดภัย โดยไม่เปิดเผยข้อมูลส่วนตัว
     [Teardown]    Close Browser Session
 

@@ -1,7 +1,7 @@
 import { useCookie } from '#app'
 
 export default defineNuxtPlugin(() => {
-  const config = useRuntimeConfig() 
+  const config = useRuntimeConfig()
 
   const api = $fetch.create({
     baseURL: config.public.apiBase,
@@ -9,33 +9,40 @@ export default defineNuxtPlugin(() => {
 
     async onRequest({ options }) {
       const token = useCookie('token').value
+
       options.headers = {
         ...options.headers,
         'ngrok-skip-browser-warning': 'true',
       }
+
       if (token) {
         options.headers.Authorization = `Bearer ${token}`
       }
     },
 
+    // Handle success response
     onResponse({ response }) {
-      if (response._data && Object.prototype.hasOwnProperty.call(response._data, 'data')) {
-        response._data = response._data.data
+      const body = response._data
+
+      // unwrap data only if request success
+      if (
+        response.status < 400 &&
+        body &&
+        typeof body === 'object' &&
+        Object.prototype.hasOwnProperty.call(body, 'data')
+      ) {
+        response._data = body.data
       }
     },
-    // onResponse({ response }) {
-    //   const b = response._data
-    //   if (b && typeof b === 'object' && Object.prototype.hasOwnProperty.call(b, 'data')) {
-    //     response._data = Object.prototype.hasOwnProperty.call(b, 'pagination')
-    //       ? { data: b.data, pagination: b.pagination }   
-    //       : b.data                                       
-    //   }
-    // },
 
+    // Handle error response
     onResponseError({ response }) {
       let body = response?._data
+
       if (typeof body === 'string') {
-        try { body = JSON.parse(body) } catch { }
+        try {
+          body = JSON.parse(body)
+        } catch {}
       }
 
       const msg =
@@ -53,5 +60,9 @@ export default defineNuxtPlugin(() => {
     },
   })
 
-  return { provide: { api } }
+  return {
+    provide: {
+      api,
+    },
+  }
 })

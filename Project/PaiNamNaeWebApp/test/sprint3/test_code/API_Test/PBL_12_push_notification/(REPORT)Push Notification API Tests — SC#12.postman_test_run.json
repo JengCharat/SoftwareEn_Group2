@@ -1,0 +1,799 @@
+{
+	"id": "08d0b138-a465-4925-ad87-96d6de8c3fa0",
+	"name": "Push Notification API Tests — SC#12",
+	"timestamp": "2026-03-17T13:40:21.934Z",
+	"collection_id": "42521469-2d5e9160-bf41-4a8f-bd93-006908c5f668",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 35,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2026-03-17T13:40:19.023Z",
+	"totalFail": 7,
+	"results": [
+		{
+			"id": "0d1699ab-379f-4a7b-b162-8aeffd4b4e19",
+			"name": "[TC-01] Login as Passenger",
+			"url": "http://10.198.200.88:3002/api/auth/login",
+			"time": 153,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-01: Status 200": true,
+				"TC-01: Has token": true
+			},
+			"testPassFailCounts": {
+				"TC-01: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-01: Has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				153
+			],
+			"allTests": [
+				{
+					"TC-01: Status 200": true,
+					"TC-01: Has token": true
+				}
+			]
+		},
+		{
+			"id": "ecd3997e-8fcf-4d31-b12e-db09b8daa7ec",
+			"name": "[TC-02] Login as Driver",
+			"url": "http://10.198.200.88:3002/api/auth/login",
+			"time": 158,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-02: Status 200": true,
+				"TC-02: Has token": true
+			},
+			"testPassFailCounts": {
+				"TC-02: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-02: Has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				158
+			],
+			"allTests": [
+				{
+					"TC-02: Status 200": true,
+					"TC-02: Has token": true
+				}
+			]
+		},
+		{
+			"id": "247b0992-2fa8-4816-a6c4-f651e1d550c5",
+			"name": "[TC-03] Get Confirmed Booking for Driver",
+			"url": "http://10.198.200.88:3002/api/bookings/my",
+			"time": 10,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"TC-03: Status 200": false,
+				"TC-03: WARNING — No CONFIRMED booking found": true
+			},
+			"testPassFailCounts": {
+				"TC-03: Status 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-03: WARNING — No CONFIRMED booking found": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				10
+			],
+			"allTests": [
+				{
+					"TC-03: Status 200": false,
+					"TC-03: WARNING — No CONFIRMED booking found": true
+				}
+			]
+		},
+		{
+			"id": "e27912fe-791d-4797-afb4-51a5013e3e02",
+			"name": "[TC-04] Get VAPID Public Key — 200 (Public Endpoint)",
+			"url": "http://10.198.200.88:3002/api/push/vapid-public-key",
+			"time": 6,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-04: Status 200": true,
+				"TC-04: Has vapidPublicKey": true,
+				"TC-04: vapidPublicKey is not null": true,
+				"TC-04: vapidPublicKey is not empty": true
+			},
+			"testPassFailCounts": {
+				"TC-04: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-04: Has vapidPublicKey": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-04: vapidPublicKey is not null": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-04: vapidPublicKey is not empty": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"TC-04: Status 200": true,
+					"TC-04: Has vapidPublicKey": true,
+					"TC-04: vapidPublicKey is not null": true,
+					"TC-04: vapidPublicKey is not empty": true
+				}
+			]
+		},
+		{
+			"id": "c9bd85ed-b407-44ea-8149-afd0fe81df65",
+			"name": "[TC-05] VAPID Response Has No Private Key",
+			"url": "http://10.198.200.88:3002/api/push/vapid-public-key",
+			"time": 6,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-05: Status 200": true,
+				"TC-05: No vapidPrivateKey in response": true,
+				"TC-05: No privateKey in response": true
+			},
+			"testPassFailCounts": {
+				"TC-05: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-05: No vapidPrivateKey in response": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-05: No privateKey in response": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"TC-05: Status 200": true,
+					"TC-05: No vapidPrivateKey in response": true,
+					"TC-05: No privateKey in response": true
+				}
+			]
+		},
+		{
+			"id": "5ef24362-9529-4bd0-8453-491c42635f3e",
+			"name": "[TC-06] VAPID Key is Valid Base64url Format (length >= 80)",
+			"url": "http://10.198.200.88:3002/api/push/vapid-public-key",
+			"time": 6,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-06: Status 200": true,
+				"TC-06: Key length >= 80 chars": true
+			},
+			"testPassFailCounts": {
+				"TC-06: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-06: Key length >= 80 chars": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"TC-06: Status 200": true,
+					"TC-06: Key length >= 80 chars": true
+				}
+			]
+		},
+		{
+			"id": "172c063c-db32-4dc2-91d9-7fe9252e3c56",
+			"name": "[TC-07] Passenger Subscribes to Push — 201",
+			"url": "http://10.198.200.88:3002/api/push/subscribe",
+			"time": 20,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-07: Status 201": true,
+				"TC-07: success = true": true
+			},
+			"testPassFailCounts": {
+				"TC-07: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-07: success = true": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				20
+			],
+			"allTests": [
+				{
+					"TC-07: Status 201": true,
+					"TC-07: success = true": true
+				}
+			]
+		},
+		{
+			"id": "501a41c4-82db-4e04-9e74-c4504d0107c7",
+			"name": "[TC-08] Subscribe Same Endpoint Again — Idempotent (Not 500)",
+			"url": "http://10.198.200.88:3002/api/push/subscribe",
+			"time": 19,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-08: Not 500 (idempotent)": true
+			},
+			"testPassFailCounts": {
+				"TC-08: Not 500 (idempotent)": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				19
+			],
+			"allTests": [
+				{
+					"TC-08: Not 500 (idempotent)": true
+				}
+			]
+		},
+		{
+			"id": "a7fead27-b781-4fcf-a55f-03dfa440d324",
+			"name": "[TC-09] Subscribe Without Token — 401",
+			"url": "http://10.198.200.88:3002/api/push/subscribe",
+			"time": 8,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-09: Status 401": true
+			},
+			"testPassFailCounts": {
+				"TC-09: Status 401": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"TC-09: Status 401": true
+				}
+			]
+		},
+		{
+			"id": "a310adc3-dd9b-4a0e-95d8-2923e6c80aa0",
+			"name": "[TC-10] Subscribe with Invalid Endpoint (not URL) — 400",
+			"url": "http://10.198.200.88:3002/api/push/subscribe",
+			"time": 8,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"TC-10: Status 400": true
+			},
+			"testPassFailCounts": {
+				"TC-10: Status 400": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"TC-10: Status 400": true
+				}
+			]
+		},
+		{
+			"id": "8922eb0b-4e07-484c-b640-190d75159250",
+			"name": "[TC-11] Subscribe with Missing Keys — 400",
+			"url": "http://10.198.200.88:3002/api/push/subscribe",
+			"time": 8,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"TC-11: Status 400": true
+			},
+			"testPassFailCounts": {
+				"TC-11: Status 400": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"TC-11: Status 400": true
+				}
+			]
+		},
+		{
+			"id": "c5f75abf-255a-4bb1-8f00-ee0ea5a2a5d2",
+			"name": "[TC-12] Passenger Unsubscribes from Push — 200",
+			"url": "http://10.198.200.88:3002/api/push/unsubscribe",
+			"time": 19,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-12: Status 200": true,
+				"TC-12: success = true": true
+			},
+			"testPassFailCounts": {
+				"TC-12: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-12: success = true": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				19
+			],
+			"allTests": [
+				{
+					"TC-12: Status 200": true,
+					"TC-12: success = true": true
+				}
+			]
+		},
+		{
+			"id": "3fc224ce-2842-46fc-89ed-1cc24d90828b",
+			"name": "[TC-13] Unsubscribe Non-existent Endpoint — Idempotent (Not 500)",
+			"url": "http://10.198.200.88:3002/api/push/unsubscribe",
+			"time": 13,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-13: Not 500 (idempotent)": true
+			},
+			"testPassFailCounts": {
+				"TC-13: Not 500 (idempotent)": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				13
+			],
+			"allTests": [
+				{
+					"TC-13: Not 500 (idempotent)": true
+				}
+			]
+		},
+		{
+			"id": "efc560f9-53cb-484b-85b5-41bd74d13231",
+			"name": "[TC-14] Unsubscribe Without Token — 401",
+			"url": "http://10.198.200.88:3002/api/push/unsubscribe",
+			"time": 8,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-14: Status 401": true
+			},
+			"testPassFailCounts": {
+				"TC-14: Status 401": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"TC-14: Status 401": true
+				}
+			]
+		},
+		{
+			"id": "c9d20b69-f5d8-444c-b2c5-38b795756724",
+			"name": "[TC-15] Driver Notifies Passenger — Creates In-App Notification",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/notify-pickup",
+			"time": 83,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-15: Status 200": true,
+				"TC-15: Has notification id": true,
+				"TC-15: type = BOOKING": true,
+				"TC-15: metadata.kind = DRIVER_ON_THE_WAY": true,
+				"TC-15: metadata.bookingId matches": true
+			},
+			"testPassFailCounts": {
+				"TC-15: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-15: Has notification id": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-15: type = BOOKING": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-15: metadata.kind = DRIVER_ON_THE_WAY": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-15: metadata.bookingId matches": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				83
+			],
+			"allTests": [
+				{
+					"TC-15: Status 200": true,
+					"TC-15: Has notification id": true,
+					"TC-15: type = BOOKING": true,
+					"TC-15: metadata.kind = DRIVER_ON_THE_WAY": true,
+					"TC-15: metadata.bookingId matches": true
+				}
+			]
+		},
+		{
+			"id": "39e553a5-897d-45ad-a949-f24b2393ef04",
+			"name": "[TC-16] Passenger Can See Notification in Inbox",
+			"url": "http://10.198.200.88:3002/api/notifications",
+			"time": 56,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-16: Status 200": true,
+				"TC-16: Notification found in inbox": false,
+				"TC-16: Title contains คนขับกำลังมารับคุณแล้ว": false
+			},
+			"testPassFailCounts": {
+				"TC-16: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-16: Notification found in inbox": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-16: Title contains คนขับกำลังมารับคุณแล้ว": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				56
+			],
+			"allTests": [
+				{
+					"TC-16: Status 200": true,
+					"TC-16: Notification found in inbox": false,
+					"TC-16: Title contains คนขับกำลังมารับคุณแล้ว": false
+				}
+			]
+		},
+		{
+			"id": "bbe4ca1f-4b37-4a45-abcb-76efdd2340c9",
+			"name": "[TC-17] Second Notify Within 3 Minutes — 429 Cooldown",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/notify-pickup",
+			"time": 27,
+			"responseCode": {
+				"code": 429,
+				"name": "Too Many Requests"
+			},
+			"tests": {
+				"TC-17: Status 429 (cooldown)": true
+			},
+			"testPassFailCounts": {
+				"TC-17: Status 429 (cooldown)": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				27
+			],
+			"allTests": [
+				{
+					"TC-17: Status 429 (cooldown)": true
+				}
+			]
+		},
+		{
+			"id": "fbb5b83c-2baf-42ca-ae70-7a230392a113",
+			"name": "[TC-18] Passenger Cannot Call Notify-Pickup — 403",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/notify-pickup",
+			"time": 14,
+			"responseCode": {
+				"code": 403,
+				"name": "Forbidden"
+			},
+			"tests": {
+				"TC-18: Status 403": true
+			},
+			"testPassFailCounts": {
+				"TC-18: Status 403": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				14
+			],
+			"allTests": [
+				{
+					"TC-18: Status 403": true
+				}
+			]
+		},
+		{
+			"id": "ab8144ca-d9e4-4b3a-9113-d0fb42e7800e",
+			"name": "[TC-19] Unauthenticated Cannot Call Notify-Pickup — 401",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/notify-pickup",
+			"time": 8,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-19: Status 401": true
+			},
+			"testPassFailCounts": {
+				"TC-19: Status 401": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"TC-19: Status 401": true
+				}
+			]
+		},
+		{
+			"id": "697a21ae-5496-4209-8adf-8d1a66cc0181",
+			"name": "[TC-20] Notify Non-existent Booking — 404",
+			"url": "http://10.198.200.88:3002/api/bookings/clzzzzzzzzzzzzzzzzzzzzzzzz/notify-pickup",
+			"time": 17,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"TC-20: Status 404 or 400": true
+			},
+			"testPassFailCounts": {
+				"TC-20: Status 404 or 400": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				17
+			],
+			"allTests": [
+				{
+					"TC-20: Status 404 or 400": true
+				}
+			]
+		},
+		{
+			"id": "cfc25a7f-62f9-42a0-9d56-10d22669b472",
+			"name": "[TC-21] Notification Has Correct Metadata",
+			"url": "http://10.198.200.88:3002/api/notifications",
+			"time": 18,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-21: Status 200": true,
+				"TC-21: Notification found": false,
+				"TC-21: metadata.kind = DRIVER_ON_THE_WAY": false,
+				"TC-21: metadata.bookingId correct": false,
+				"TC-21: metadata.driverId not empty": false
+			},
+			"testPassFailCounts": {
+				"TC-21: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-21: Notification found": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-21: metadata.kind = DRIVER_ON_THE_WAY": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-21: metadata.bookingId correct": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-21: metadata.driverId not empty": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				18
+			],
+			"allTests": [
+				{
+					"TC-21: Status 200": true,
+					"TC-21: Notification found": false,
+					"TC-21: metadata.kind = DRIVER_ON_THE_WAY": false,
+					"TC-21: metadata.bookingId correct": false,
+					"TC-21: metadata.driverId not empty": false
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 665,
+	"collection": {
+		"requests": [
+			{
+				"id": "0d1699ab-379f-4a7b-b162-8aeffd4b4e19",
+				"method": "POST"
+			},
+			{
+				"id": "ecd3997e-8fcf-4d31-b12e-db09b8daa7ec",
+				"method": "POST"
+			},
+			{
+				"id": "247b0992-2fa8-4816-a6c4-f651e1d550c5",
+				"method": "GET"
+			},
+			{
+				"id": "e27912fe-791d-4797-afb4-51a5013e3e02",
+				"method": "GET"
+			},
+			{
+				"id": "c9bd85ed-b407-44ea-8149-afd0fe81df65",
+				"method": "GET"
+			},
+			{
+				"id": "5ef24362-9529-4bd0-8453-491c42635f3e",
+				"method": "GET"
+			},
+			{
+				"id": "172c063c-db32-4dc2-91d9-7fe9252e3c56",
+				"method": "POST"
+			},
+			{
+				"id": "501a41c4-82db-4e04-9e74-c4504d0107c7",
+				"method": "POST"
+			},
+			{
+				"id": "a7fead27-b781-4fcf-a55f-03dfa440d324",
+				"method": "POST"
+			},
+			{
+				"id": "a310adc3-dd9b-4a0e-95d8-2923e6c80aa0",
+				"method": "POST"
+			},
+			{
+				"id": "8922eb0b-4e07-484c-b640-190d75159250",
+				"method": "POST"
+			},
+			{
+				"id": "c5f75abf-255a-4bb1-8f00-ee0ea5a2a5d2",
+				"method": "POST"
+			},
+			{
+				"id": "3fc224ce-2842-46fc-89ed-1cc24d90828b",
+				"method": "POST"
+			},
+			{
+				"id": "efc560f9-53cb-484b-85b5-41bd74d13231",
+				"method": "POST"
+			},
+			{
+				"id": "c9d20b69-f5d8-444c-b2c5-38b795756724",
+				"method": "PATCH"
+			},
+			{
+				"id": "39e553a5-897d-45ad-a949-f24b2393ef04",
+				"method": "GET"
+			},
+			{
+				"id": "bbe4ca1f-4b37-4a45-abcb-76efdd2340c9",
+				"method": "PATCH"
+			},
+			{
+				"id": "fbb5b83c-2baf-42ca-ae70-7a230392a113",
+				"method": "PATCH"
+			},
+			{
+				"id": "ab8144ca-d9e4-4b3a-9113-d0fb42e7800e",
+				"method": "PATCH"
+			},
+			{
+				"id": "697a21ae-5496-4209-8adf-8d1a66cc0181",
+				"method": "PATCH"
+			},
+			{
+				"id": "cfc25a7f-62f9-42a0-9d56-10d22669b472",
+				"method": "GET"
+			}
+		]
+	}
+}

@@ -39,41 +39,50 @@ export function useChat() {
     }
 
     /**
-     * ดึงรายการข้อความทั้งหมด
+     * ดึงรายการข้อความทั้งหมด (โหลดทุกหน้า)
      */
     const fetchMessages = async (bookingId, opts = {}) => {
-        isLoading.value = true
+        const isInitialLoad = messages.value.length === 0
+        if (isInitialLoad) {
+            isLoading.value = true
+        }
         error.value = null
         try {
-            const params = new URLSearchParams({
-                page: opts.page || 1,
-                limit: opts.limit || 50,
-                sortOrder: opts.sortOrder || 'asc'
-            })
-            const response = await $api(`/bookings/${bookingId}/messages?${params}`)
-            
-            // Response ถูก transform แล้วจาก plugin เป็น data array
-            // แต่เราต้องการ pagination ด้วย ต้องเรียกแบบ raw
-            const rawResponse = await $api.raw(`/bookings/${bookingId}/messages?${params}`)
-            const body = rawResponse._data
-            
-            if (Array.isArray(body)) {
-                messages.value = body
-            } else if (body?.data) {
-                messages.value = body.data
-                if (body.pagination) {
-                    pagination.value = body.pagination
+            const limit = opts.limit || 50
+            let allMessages = []
+            let page = 1
+            let hasMore = true
+
+            // ดึงทุกหน้าจนกว่าจะหมด
+            while (hasMore) {
+                const params = new URLSearchParams({
+                    page,
+                    limit,
+                    sortOrder: opts.sortOrder || 'asc'
+                })
+                const response = await $api(`/bookings/${bookingId}/messages?${params}`)
+                const batch = Array.isArray(response) ? response : (response || [])
+                allMessages = allMessages.concat(batch)
+
+                // ถ้าได้น้อยกว่า limit แสดงว่าหมดแล้ว
+                if (batch.length < limit) {
+                    hasMore = false
+                } else {
+                    page++
                 }
-            } else {
-                messages.value = response || []
             }
-            
+
+            messages.value = allMessages
             return messages.value
         } catch (e) {
-            error.value = e.statusMessage || 'ไม่สามารถโหลดข้อความได้'
+            if (isInitialLoad) {
+                error.value = e.statusMessage || 'ไม่สามารถโหลดข้อความได้'
+            }
             throw e
         } finally {
-            isLoading.value = false
+            if (isInitialLoad) {
+                isLoading.value = false
+            }
         }
     }
 
@@ -170,14 +179,49 @@ export function useChat() {
     }
 
     /**
-     * Refresh ข้อความ (polling)
+     * Refresh ข้อความ (polling) - ดึงข้อความล่าสุดและ merge กับข้อความเดิม
      */
     const refreshMessages = async (bookingId) => {
         try {
-            await fetchMessages(bookingId)
+            // ดึงทุกหน้าเหมือน fetchMessages แต่ไม่ set isLoading
+            const limit = 50
+            let allFresh = []
+            let page = 1
+            let hasMore = true
+
+            while (hasMore) {
+                const params = new URLSearchParams({ page, limit, sortOrder: 'asc' })
+                const response = await $api(`/bookings/${bookingId}/messages?${params}`)
+                const batch = Array.isArray(response) ? response : (response || [])
+                allFresh = allFresh.concat(batch)
+                if (batch.length < limit) {
+                    hasMore = false
+                } else {
+                    page++
+                }
+            }
+
+            // Merge: เก็บข้อความเดิมที่มีอยู่ และเพิ่มข้อความใหม่
+            const existingIds = new Set(messages.value.map(m => m.id))
+            const newMessages = allFresh.filter(m => !existingIds.has(m.id))
+            
+            if (newMessages.length > 0) {
+                messages.value = [...messages.value, ...newMessages]
+            }
+            
+            // อัพเดท readAt สำหรับข้อความที่ถูก mark as read แล้ว
+            const freshMap = new Map(allFresh.map(m => [m.id, m]))
+            messages.value = messages.value.map(m => {
+                const fresh = freshMap.get(m.id)
+                if (fresh && fresh.readAt && !m.readAt) {
+                    return { ...m, readAt: fresh.readAt }
+                }
+                return m
+            })
+            
             await fetchUnreadCount(bookingId)
         } catch (e) {
-            // Silently fail for polling
+            // Silently fail for polling — ข้อความเดิมยังคงแสดงอยู่
         }
     }
 

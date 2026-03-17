@@ -39,6 +39,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '~/composables/useAuth'
+import Swal from 'sweetalert2'
 
 const identifier = ref('')
 const password = ref('')
@@ -48,15 +49,52 @@ const { login } = useAuth()
 
 const submit = async () => {
   errorMessage.value = ''
-  try {
-    await login(identifier.value, password.value)
-    router.push('/')
-  } catch (e) {
-    console.error(e)
-    errorMessage.value = e?.data?.message || 'เข้าสู่ระบบไม่สำเร็จ'
-  }
-}
 
+  try {
+    const res = await login(identifier.value, password.value)
+
+    if (res.passwordExpired) {
+        await Swal.fire({
+          icon: 'warning',
+          title: 'Password หมดอายุ',
+          text: 'รหัสผ่านครบ 90 วันแล้ว กรุณาเปลี่ยนรหัสผ่าน',
+          confirmButtonText: 'เปลี่ยนรหัสผ่าน',
+    confirmButtonColor: '#ef4444'
+  })
+
+      router.push('/profile')
+    } else {
+      router.push('/')
+    }
+
+  } 
+/*
+catch (e) {
+  console.log("LOGIN ERROR RAW:", e)
+  console.log("TYPE:", typeof e)
+
+  if (e instanceof Error) {
+    console.log("STACK:", e.stack)
+  }
+
+  console.dir(e)
+
+  alert(JSON.stringify(e, null, 2))
+
+  errorMessage.value = 'debug'
+}
+*/
+catch (e) {
+  console.error("LOGIN ERROR:", e)
+
+  const message =
+    e?.data?.message ||
+    e?.message ||
+    'เข้าสู่ระบบไม่สำเร็จ'
+
+  errorMessage.value = message
+}
+}
 </script>
 
 <style scoped>

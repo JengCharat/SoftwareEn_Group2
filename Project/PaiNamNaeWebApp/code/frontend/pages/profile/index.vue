@@ -122,6 +122,48 @@
                                             class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
                                     </div>
                                 </div>
+
+                                    <div class="mt-2">
+                                    <label class="block mb-1 text-sm text-gray-600">จำนวนคำของรหัสผ่าน</label>
+
+                                    <select v-model="wordCount"
+                                        class="px-3 py-2 border rounded-md">
+                                        <option :value="3">3 คำ</option>
+                                        <option :value="4">4 คำ</option>
+                                        <option :value="5">5 คำ</option>
+                                    </select>
+
+                                    <button
+                                        type="button"
+                                        @click="generatePassword"
+                                        class="px-3 py-2 ml-2 text-white bg-green-600 rounded">
+                                        สุ่มรหัสผ่าน
+                                    </button>
+                                </div>
+
+                                <div v-if="showSuggestedPassword && suggestedPassword" class="p-3 mt-3 bg-gray-100 rounded">
+    
+    <div class="flex items-center justify-between mb-2">
+        <p class="text-sm text-gray-600">รหัสผ่านที่แนะนำ</p>
+
+        <button
+            type="button"
+            @click="showSuggestedPassword = false"
+            class="text-gray-500 hover:text-gray-700">
+            ✕
+        </button>
+    </div>
+
+    <div class="flex items-center gap-2">
+        <input
+            :value="suggestedPassword"
+            readonly
+            class="w-full px-3 py-2 border rounded"
+        />
+
+    </div>
+
+</div>
                             </div>
 
                             <div class="flex justify-end gap-4 pt-6">
@@ -158,11 +200,30 @@ import ProfileSidebar from '~/components/ProfileSidebar.vue';
 import dayjs from 'dayjs'
 import 'dayjs/locale/th'
 
+
+import { generate } from "random-words"
+import { isCommonPassword } from '~/utils/commonPasswords';
+
+
 dayjs.locale('th')
 
 definePageMeta({
     middleware: 'auth'
 });
+
+const wordCount = ref(3)
+const suggestedPassword = ref("")
+const showSuggestedPassword = ref(false)
+
+function generatePassword() {
+    suggestedPassword.value = generate({
+        exactly: wordCount.value,
+        join: "-"
+    })
+    showSuggestedPassword.value = true
+}
+
+
 
 const { $api } = useNuxtApp()
 const { user: userCookie } = useAuth()
@@ -172,6 +233,12 @@ const fileInput = ref(null)
 const previewUrl = ref('')
 const isLoading = ref(false)
 const showNameWarning = ref(false);
+
+// ตรวจสอบว่า a และ b เป็น anagram (สลับตำแหน่งตัวอักษรกัน) หรือไม่
+const isPermutation = (a, b) => {
+    const sort = (str) => str.toLowerCase().split('').sort().join('');
+    return sort(a) === sort(b);
+};
 
 const form = reactive({
     firstName: '',
@@ -259,8 +326,14 @@ async function handleProfileUpdate() {
             if (form.newPassword !== form.confirmNewPassword) {
                 throw new Error("รหัสผ่านใหม่และการยืนยันรหัสผ่านไม่ตรงกัน");
             }
-            if (form.newPassword.length < 6) {
-                throw new Error("รหัสผ่านใหม่ต้องมีอย่างน้อย 6 ตัวอักษร");
+            if (form.newPassword.length < 10) {
+                throw new Error("รหัสผ่านใหม่ต้องมีอย่างน้อย 10 ตัวอักษร");
+            }
+            if (isPermutation(form.currentPassword, form.newPassword)) {
+                throw new Error("รหัสผ่านใหม่ต้องไม่เป็นการสลับตำแหน่งตัวอักษรของรหัสผ่านเดิม");
+            }
+            if (isCommonPassword(form.newPassword)) {
+                throw new Error("รหัสผ่านใหม่อยู่ใน word list ที่ใช้โจมตีบัญชีผู้ใช้ (NCSC UK) กรุณาตั้งรหัสผ่านที่ยาวกว่านี้หรือใช้ประโยค");
             }
 
             await $api('/auth/change-password', {

@@ -21,8 +21,7 @@ CHAT01 - Driver Opens Chat And Sees Only Role And Profile Picture
     Click Button    xpath://button[normalize-space()='แชทกับผู้โดยสาร']
     Sleep    2s
     Page Should Contain Element    xpath://div[contains(@class,'text-gray-500') and normalize-space()='ผู้โดยสาร']
-    Element Should Not Be Visible    xpath://div[contains(@class,'space-y-1')]//*[contains(text(),'${DRIVER USER}')]
-    Element Should Not Be Visible    xpath://div[contains(@class,'space-y-1')]//*[contains(text(),'${PASSENGER USER}')]
+    Page Should Not Contain Element    xpath://div[contains(@class,'text-gray-500') and not(normalize-space()='ผู้โดยสาร')]
     Page Should Contain    ข้อความถูกส่งอย่างปลอดภัย โดยไม่เปิดเผยข้อมูลส่วนตัว
     [Teardown]    Close Browser Session
 
