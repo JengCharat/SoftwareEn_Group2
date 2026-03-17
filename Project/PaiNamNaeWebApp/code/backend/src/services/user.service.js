@@ -1,6 +1,9 @@
 const prisma = require("../utils/prisma");
 const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcrypt");
+const { sendEmail } = require('../utils/email');
+const { isCommonPassword } = require('../utils/commonPasswords');
+
 const SALT_ROUNDS = 10;
 
 const searchUsers = async (opts = {}) => {
@@ -205,6 +208,17 @@ const updatePassword = async (userId, currentPassword, newPassword) => {
     return { success: false, error: "INCORRECT_PASSWORD" };
   }
 
+  // ตรวจสอบว่า newPassword ไม่ใช่ anagram (สลับตำแหน่ง) ของ currentPassword
+  const sortChars = (str) => str.toLowerCase().split('').sort().join('');
+  if (sortChars(currentPassword) === sortChars(newPassword)) {
+    return { success: false, error: "PASSWORD_IS_PERMUTATION" };
+  }
+
+  // ตรวจสอบ NCSC UK word list
+  if (isCommonPassword(newPassword)) {
+    return { success: false, error: "PASSWORD_TOO_COMMON" };
+  }
+
   const hashedNewPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
 
   await prisma.user.update({
@@ -374,6 +388,73 @@ console.log("diffDays:", diffDays);  return {
 
 
 
+//increate attemps if login fail
+const increaseLoginAttempts = async (user) => {
+  const attempts = user.loginAttempts + 1;
+
+  if (attempts >= 3) {
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        loginAttempts: attempts,
+        lockUntil: new Date(Date.now() + 1 * 60 * 1000) // lock 1 นาที
+      }
+    });
+
+    if (user.email) {
+      sendEmail({
+        to: user.email,
+        subject: "บัญชีของคุณถูกล็อคชั่วคราว",
+        text: `บัญชีของคุณถูกล็อคชั่วคราว เนื่องจาก ip: 123.123.123.123 ใส่รหัสผ่านผิดเกิน 3 ครั้ง\n\nกรุณาลองใหม่อีกครั้งใน 1 นาที`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 520px; margin: auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
+            <div style="background: #ef4444; color: #fff; padding: 20px;">
+              <h2 style="margin: 0;">บัญชีถูกล็อคชั่วคราว</h2>
+            </div>
+            <div style="padding: 20px;">
+              <p>สวัสดีคุณ <strong>${user.firstName || "ผู้ใช้งาน"}</strong>,</p>
+              <p>บัญชีของคุณถูกล็อคชั่วคราว เนื่องจาก ip: 123.123.123.123 Khonkean mueang ใส่รหัสผ่านผิดเกิน <strong>3 ครั้ง</strong></p>
+              <p>กรุณาลองใหม่อีกครั้งใน <strong>1 นาที</strong></p>
+              <hr />
+              <p style="font-size: 12px; color: #6b7280;">— ทีมระบบ</p>
+            </div>
+          </div>
+        `,
+      }).catch(() => {}); // fire-and-forget
+    }
+
+    return updatedUser;
+  }
+
+  return prisma.user.update({
+    where: { id: user.id },
+    data: { loginAttempts: attempts }
+  });
+};
+
+
+
+
+
+
+const resetLoginAttempts = async (userId) => {
+  return prisma.user.update({
+    where: { id: userId },
+    data: {
+      loginAttempts: 0,
+      lockUntil: null
+    }
+  });
+};
+
+
+
+
+
+
+
+
+
 
 
 
@@ -399,5 +480,7 @@ module.exports = {
 
 check_last_password_change_from_email,
 check_last_password_change_from_username,
+  increaseLoginAttempts,
+resetLoginAttempts
 
 };

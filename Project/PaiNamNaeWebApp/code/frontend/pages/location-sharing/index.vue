@@ -9,8 +9,8 @@
       </div>
     </div>
 
-    <!-- Loading -->
-    <div v-if="loading" class="flex justify-center items-center h-64">
+    <!-- Loading: แสดงตอน server pre-render หรือ client ยังโหลดอยู่ -->
+    <div v-if="!isClient || loading" class="flex justify-center items-center h-64">
       <p class="text-gray-500">กำลังโหลดข้อมูล...</p>
     </div>
 
@@ -93,6 +93,9 @@ useHead({
   link: [{ rel: 'stylesheet', href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css' }],
   script: [{ src: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js' }],
 })
+
+// บังคับให้ render ฝั่ง client เท่านั้น — ป้องกัน hydration mismatch บน static build
+const isClient = ref(false)
 
 const config = useRuntimeConfig()
 
@@ -191,15 +194,35 @@ const formatExpiry = (iso) => {
 }
 
 onMounted(async () => {
-    // อ่าน token จาก URL โดยตรง (ใช้ได้กับ static site ที่ route.query อาจยังว่างตอน hydrate)
-    const params = new URLSearchParams(window.location.search)
-    token.value = params.get('token') || ''
+    isClient.value = true
+    // รอให้ hydration เสร็จก่อนอ่าน token (ป้องกัน hydration mismatch บน static build)
+    await nextTick()
+
+    // อ่าน token จากหลายแหล่ง: route query → window.location.search
+    token.value = route.query.token
+        || new URLSearchParams(window.location.search).get('token')
+        || ''
+
     await fetchData()
     if (shareData.value?.isActive && shareData.value?.lastLat) {
         await nextTick()
         await initMap()
     }
     refreshInterval = setInterval(fetchData, 30000)
+})
+
+// Fallback: ถ้า route.query ยังไม่พร้อมตอน onMounted (เกิดบน static build)
+// ให้ watch รอจนกว่า query จะมี token แล้วค่อย fetch
+const route = useRoute()
+watch(() => route.query.token, async (newToken) => {
+    if (newToken && !token.value) {
+        token.value = newToken
+        await fetchData()
+        if (shareData.value?.isActive && shareData.value?.lastLat) {
+            await nextTick()
+            await initMap()
+        }
+    }
 })
 
 onUnmounted(() => {

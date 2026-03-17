@@ -1,0 +1,302 @@
+{
+  "info": {
+    "_postman_id": "c14a0000-0000-0000-0000-sc14location01",
+    "name": "Location Sharing API Tests — SC#14",
+    "description": "Postman collection สำหรับทดสอบ Location Sharing API — Story Card #14\n\"As a passenger, I want people in my emergency contact to check on my location from time to time.\"\n\nครอบคลุม:\n- POST   /api/location-sharing/start            เริ่มแชร์โลเคชัน\n- PATCH  /api/location-sharing/update-location  อัปเดตพิกัด GPS\n- GET    /api/location-sharing/status           ดูสถานะการแชร์\n- GET    /api/location-sharing/public/:token    Public view (ไม่ต้อง login)\n- DELETE /api/location-sharing/stop             หยุดแชร์\n\nTest Accounts:\n- Passenger: Billy12 / billy12345678\n- Driver:    user12  / 12345678",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl",        "value": "http://10.198.200.88:3002", "type": "string" },
+    { "key": "passengerToken", "value": "", "type": "string" },
+    { "key": "driverToken",    "value": "", "type": "string" },
+    { "key": "shareToken",     "value": "", "type": "string" },
+    { "key": "shareUrl",       "value": "", "type": "string" }
+  ],
+  "item": [
+
+    {
+      "name": "Setup",
+      "item": [
+        {
+          "name": "[TC-01] Login as Passenger",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-01: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "pm.test('TC-01: Has token', () => pm.expect(body.data).to.have.property('token'));",
+            "pm.collectionVariables.set('passengerToken', body.data.token);"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"Billy12\",\n  \"password\": \"billy12345678\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-02] Login as Driver",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-02: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "pm.test('TC-02: Has token', () => pm.expect(body.data).to.have.property('token'));",
+            "pm.collectionVariables.set('driverToken', body.data.token);"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"user12\",\n  \"password\": \"12345678\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Start Sharing",
+      "item": [
+        {
+          "name": "[TC-03] Passenger Starts Location Sharing — 201 + shareUrl",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-03: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-03: Has shareToken', () => pm.expect(data).to.have.property('shareToken'));",
+            "pm.test('TC-03: Has shareUrl', () => pm.expect(data).to.have.property('shareUrl'));",
+            "pm.test('TC-03: shareToken length >= 40', () => pm.expect(data.shareToken.length).to.be.at.least(40));",
+            "pm.test('TC-03: isActive = true', () => pm.expect(data.isActive).to.be.true);",
+            "pm.test('TC-03: expiresAt in future', () => pm.expect(new Date(data.expiresAt).getTime()).to.be.above(Date.now()));",
+            "pm.collectionVariables.set('shareToken', data.shareToken);",
+            "pm.collectionVariables.set('shareUrl', data.shareUrl);",
+            "console.log('Share Token:', data.shareToken);",
+            "console.log('Share URL:', data.shareUrl);"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/start", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","start"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-04] Start Sharing Again — Returns Same Active Share (Idempotent)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-04: Not 500 (idempotent)', () => pm.expect(pm.response.code).to.be.below(500));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-04: Same shareToken returned', () => pm.expect(data.shareToken).to.eql(pm.collectionVariables.get('shareToken')));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/start", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","start"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-05] Driver Cannot Start Sharing — 403",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-05: Status 403', () => pm.response.to.have.status(403));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/start", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","start"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-06] Start Sharing Without Token — 401",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-06: Status 401', () => pm.response.to.have.status(401));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/start", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","start"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Update Location",
+      "item": [
+        {
+          "name": "[TC-07] Passenger Updates GPS Coordinates — 200",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-07: Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('TC-07: updated = true', () => pm.expect(pm.response.json().data.updated).to.be.true);"
+          ]}}],
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"lat\": 13.736717,\n  \"lng\": 100.523186\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/update-location", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","update-location"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-08] Update Second Time (Simulates 30s Interval) — 200",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-08: Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('TC-08: updated = true', () => pm.expect(pm.response.json().data.updated).to.be.true);"
+          ]}}],
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"lat\": 13.740000,\n  \"lng\": 100.530000\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/update-location", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","update-location"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-09] Update with Invalid Lat (out of range) — 400",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-09: Status 400', () => pm.response.to.have.status(400));"
+          ]}}],
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"lat\": 999,\n  \"lng\": 100.523186\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/update-location", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","update-location"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-10] Update Without Token — 401",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-10: Status 401', () => pm.response.to.have.status(401));"
+          ]}}],
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"lat\": 13.736717,\n  \"lng\": 100.523186\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/update-location", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","update-location"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Get Status",
+      "item": [
+        {
+          "name": "[TC-11] Passenger Gets Sharing Status — isSharing = true",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-11: Status 200', () => pm.response.to.have.status(200));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-11: isSharing = true', () => pm.expect(data.isSharing).to.be.true);",
+            "pm.test('TC-11: Has shareUrl', () => pm.expect(data.shareUrl).to.be.a('string'));",
+            "pm.test('TC-11: Has shareToken matching', () => pm.expect(data.shareToken).to.eql(pm.collectionVariables.get('shareToken')));",
+            "pm.test('TC-11: lastLat updated', () => pm.expect(data.lastLat).to.be.a('number'));",
+            "pm.test('TC-11: lastLng updated', () => pm.expect(data.lastLng).to.be.a('number'));",
+            "pm.test('TC-11: lastUpdatedAt not null', () => pm.expect(data.lastUpdatedAt).to.not.be.null);"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/status", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","status"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-12] Get Status Without Token — 401",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-12: Status 401', () => pm.response.to.have.status(401));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/status", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","status"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Public View (No Auth)",
+      "item": [
+        {
+          "name": "[TC-13] Public View Returns Passenger Name + Location — No Auth Required",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-13: Status 200', () => pm.response.to.have.status(200));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-13: isActive = true', () => pm.expect(data.isActive).to.be.true);",
+            "pm.test('TC-13: Has passengerName', () => pm.expect(data.passengerName).to.be.a('string').and.not.empty);",
+            "pm.test('TC-13: Has lastLat', () => pm.expect(data.lastLat).to.be.a('number'));",
+            "pm.test('TC-13: Has lastLng', () => pm.expect(data.lastLng).to.be.a('number'));",
+            "pm.test('TC-13: Has expiresAt', () => pm.expect(data.expiresAt).to.not.be.null);"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/public/{{shareToken}}", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","public","{{shareToken}}"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-14] Public View Has No Sensitive User Data",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-14: Status 200', () => pm.response.to.have.status(200));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-14: No passengerId in response', () => pm.expect(data).to.not.have.property('passengerId'));",
+            "pm.test('TC-14: No email in response', () => pm.expect(data).to.not.have.property('email'));",
+            "pm.test('TC-14: No phoneNumber in response', () => pm.expect(data).to.not.have.property('phoneNumber'));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/public/{{shareToken}}", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","public","{{shareToken}}"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-15] Public View with Invalid Token — 404",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-15: Status 404', () => pm.response.to.have.status(404));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/public/invalidtokenabcdef12345678900000", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","public","invalidtokenabcdef12345678900000"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Stop Sharing",
+      "item": [
+        {
+          "name": "[TC-16] Passenger Stops Sharing — stopped = true",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-16: Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('TC-16: stopped = true', () => pm.expect(pm.response.json().data.stopped).to.be.true);"
+          ]}}],
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/stop", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","stop"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-17] After Stop — Status Shows isSharing = false",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-17: Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('TC-17: isSharing = false', () => pm.expect(pm.response.json().data.isSharing).to.be.false);"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/status", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","status"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-18] After Stop — Public View Shows isActive = false",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-18: Status 200', () => pm.response.to.have.status(200));",
+            "pm.test('TC-18: isActive = false (share deactivated)', () => pm.expect(pm.response.json().data.isActive).to.be.false);"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/location-sharing/public/{{shareToken}}", "host": ["{{baseUrl}}"], "path": ["api","location-sharing","public","{{shareToken}}"] }
+          }, "response": []
+        }
+      ]
+    }
+
+  ]
+}

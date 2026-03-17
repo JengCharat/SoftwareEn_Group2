@@ -98,6 +98,14 @@ model User {
     locationShares          LocationShare[]    @relation("PassengerLocationShares")
     reviewsGiven            Review[]           @relation("ReviewsGiven")
     reviewsReceived         Review[]           @relation("ReviewsReceived")
+    
+
+
+    loginAttempts Int @default(0)
+    lockUntil DateTime?
+
+
+
 
     @@index([role])
     @@index([isActive])

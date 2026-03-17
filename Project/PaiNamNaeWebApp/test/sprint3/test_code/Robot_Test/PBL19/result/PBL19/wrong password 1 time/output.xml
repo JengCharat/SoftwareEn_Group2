@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.2 (Python 3.9.6 on darwin)" generated="2026-03-17T21:45:47.890666" rpa="false" schemaversion="5">
+<suite id="s1" name="UAT-PBL19-004" source="/Users/jengcharat/Desktop/softwareEN_real/SoftwareEn_Group2/Project/PaiNamNaeWebApp/test/sprint3/test_code/Robot_Test/PBL19/UAT-PBL19-004.robot">
+<test id="s1-t1" name="TC5.1 Login Wrong Password Once" line="11">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:45:48.014903" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/login'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T21:45:48.014731" elapsed="2.343036"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T21:45:50.358354" elapsed="0.378953"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>id=identifier</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-17T21:45:50.737656" elapsed="0.017787"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:45:50.755875" level="INFO">Typing text 'user17' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${USERNAME}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T21:45:50.755634" elapsed="0.110282"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:45:50.866347" level="INFO">Typing text '12345678905675' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T21:45:50.866117" elapsed="0.037052"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:45:50.903559" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T21:45:50.903385" elapsed="0.039796"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>รหัสผ่านไม่ถูกต้อง เหลืออีก 2 ครั้งก่อนถูกล็อก</arg>
+<arg>10s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2026-03-17T21:45:50.943368" elapsed="0.656571"/>
+</kw>
+<kw name="Page Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:45:51.610748" level="INFO">Current page contains text 'รหัสผ่านไม่ถูกต้อง เหลืออีก 2 ครั้งก่อนถูกล็อก'.</msg>
+<arg>รหัสผ่านไม่ถูกต้อง เหลืออีก 2 ครั้งก่อนถูกล็อก</arg>
+<doc>Verifies that current page contains ``text``.</doc>
+<status status="PASS" start="2026-03-17T21:45:51.600354" elapsed="0.010540"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T21:45:51.611206" elapsed="0.072648"/>
+</kw>
+<status status="PASS" start="2026-03-17T21:45:48.014073" elapsed="3.670065"/>
+</test>
+<status status="PASS" start="2026-03-17T21:45:47.891443" elapsed="3.793137"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="UAT-PBL19-004" id="s1" pass="1" fail="0" skip="0">UAT-PBL19-004</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

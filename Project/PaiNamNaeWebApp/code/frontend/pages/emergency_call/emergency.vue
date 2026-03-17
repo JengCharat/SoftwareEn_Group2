@@ -89,6 +89,17 @@
                 ส่งผ่าน LINE
               </a>
             </div>
+            <!-- SMS to emergency contacts -->
+            <a
+              v-if="personalContacts.length > 0"
+              :href="smsHref"
+              class="block w-full py-2 mt-1 text-sm bg-orange-500 text-white rounded-lg font-medium text-center active:bg-orange-700">
+              📱 ส่ง SMS ถึงรายชื่อฉุกเฉิน ({{ personalContacts.length }} เบอร์)
+            </a>
+            <p v-else class="text-xs text-gray-400 mt-1">
+              <NuxtLink to="/profile/manage_contacts" class="text-blue-500 underline">เพิ่มรายชื่อฉุกเฉิน</NuxtLink>
+              เพื่อส่ง SMS ได้
+            </p>
           </div>
 
           <p v-if="geoError" class="text-xs text-red-500">⚠️ {{ geoError }}</p>
@@ -134,7 +145,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useLocationSharing } from '~/composables/useLocationSharing'
 
 const { $api } = useNuxtApp()
@@ -181,6 +192,12 @@ const {
 } = useLocationSharing()
 
 const copied = ref(false)
+
+const smsHref = computed(() => {
+  const phones = personalContacts.value.map(c => c.phone).join(',')
+  const msg = encodeURIComponent('📍 ไปนำแหน่: ติดตามโลเคชันของฉันได้ที่ ' + shareUrl.value)
+  return `sms:${phones}?&body=${msg}`
+})
 
 const handleStart = async () => {
   try {

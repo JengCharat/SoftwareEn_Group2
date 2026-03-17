@@ -1,0 +1,526 @@
+{
+  "info": {
+    "_postman_id": "c10a0000-0000-0000-0000-sc10chat00001",
+    "name": "Chat API Tests — SC#10",
+    "description": "Postman collection สำหรับทดสอบ Chat/Message API — Story Card #10\n\"As a driver, I want to send a message to a passenger without revealing too much personal information so that I can communicate with them in a safer manner.\"\n\nครอบคลุม:\n- GET    /api/bookings/:bookingId/chat              ดึงข้อมูลห้องแชท\n- GET    /api/bookings/:bookingId/messages          ดึงรายการข้อความ\n- POST   /api/bookings/:bookingId/messages          ส่งข้อความ + PII detection\n- GET    /api/bookings/:bookingId/messages/unread-count\n- PATCH  /api/bookings/:bookingId/messages/read-all\n- PATCH  /api/bookings/:bookingId/messages/:messageId/read",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl",    "value": "http://10.198.200.88:3002", "type": "string" },
+    { "key": "bookingId",  "value": "", "type": "string" },
+    { "key": "messageId",  "value": "", "type": "string" },
+    { "key": "passengerToken", "value": "", "type": "string" },
+    { "key": "driverToken",    "value": "", "type": "string" },
+    { "key": "adminToken",     "value": "", "type": "string" }
+  ],
+  "item": [
+
+    {
+      "name": "Setup",
+      "item": [
+        {
+          "name": "[TC-01] Login as Passenger",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-01: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "pm.test('TC-01: Has token', () => pm.expect(body.data).to.have.property('token'));",
+            "pm.collectionVariables.set('passengerToken', body.data.token);"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"Billy12\",\n  \"password\": \"billy12345678\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-02] Login as Driver",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-02: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "pm.test('TC-02: Has token', () => pm.expect(body.data).to.have.property('token'));",
+            "pm.collectionVariables.set('driverToken', body.data.token);"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"user12\",\n  \"password\": \"12345678\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-03] Get Confirmed Booking ID",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-03: Status 200', () => pm.response.to.have.status(200));",
+            "const body = pm.response.json();",
+            "const bookings = body.data || [];",
+            "const confirmed = bookings.find(b => b.status === 'CONFIRMED' || b.status === 'PENDING');",
+            "if (confirmed) {",
+            "    pm.collectionVariables.set('bookingId', confirmed.id);",
+            "    pm.test('TC-03: Found usable booking — ID saved', () => pm.expect(confirmed.id).to.be.a('string'));",
+            "    console.log('Booking ID:', confirmed.id);",
+            "} else {",
+            "    console.warn('TC-03: No CONFIRMED booking found — subsequent tests may be skipped');",
+            "    pm.test('TC-03: WARNING — No confirmed booking found', () => pm.expect(true).to.be.true);",
+            "}"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/me", "host": ["{{baseUrl}}"], "path": ["api","bookings","me"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Chat Room",
+      "item": [
+        {
+          "name": "[TC-04] Passenger Gets Chat Room — 200",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-04: Status 200', () => pm.response.to.have.status(200));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-04: Response has bookingId', () => pm.expect(data).to.have.property('bookingId'));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/chat", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","chat"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-05] Unauthenticated Cannot Get Chat Room — 401",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-05: Status 401', () => pm.response.to.have.status(401));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/chat", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","chat"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Send Message",
+      "item": [
+        {
+          "name": "[TC-06] Driver Sends Normal Message — 201",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-06: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-06: Has message id', () => pm.expect(data).to.have.property('id'));",
+            "pm.collectionVariables.set('messageId', data.id);",
+            "const warn = data.personalInfoWarning;",
+            "pm.test('TC-06: No PII warning (normal message)', () => {",
+            "    if (warn) { pm.expect(warn.detected).to.be.false; }",
+            "    else { pm.expect(true).to.be.true; }",
+            "});"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"สวัสดีครับ ผมจะไปรับคุณที่จุดนัดพบใน 10 นาทีครับ\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-07] Passenger Sends Normal Message — 201",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-07: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-07: senderRole = PASSENGER', () => pm.expect(data.senderRole).to.eql('PASSENGER'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"โอเคครับ ผมรอที่จุดนัดพบอยู่นะครับ\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-08] Send Message Without Token — 401",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-08: Status 401', () => pm.response.to.have.status(401));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"ทดสอบไม่มี token\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-09] Send Empty Message — 400",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-09: Status 400', () => pm.response.to.have.status(400));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-10] Send Message Over 1000 Characters — 400",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-10: Status 400', () => pm.response.to.have.status(400));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"กกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกกก\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-11] Third Party Cannot Send Message — 403",
+          "event": [{ "listen": "pre-request", "script": { "type": "text/javascript", "exec": [
+            "// Login as admin (third party) and save token",
+            "const loginReq = { url: pm.collectionVariables.get('baseUrl') + '/api/auth/login', method: 'POST', header: { 'Content-Type': 'application/json' }, body: { mode: 'raw', raw: JSON.stringify({ username: 'admin1', password: '123456789' }) } };",
+            "pm.sendRequest(loginReq, (err, res) => { pm.collectionVariables.set('adminToken', res.json().data.token); });"
+          ]}}, { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-11: Status 403', () => pm.response.to.have.status(403));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"ทดสอบแอบส่งข้อความ\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "PII Detection (Regex)",
+      "item": [
+        {
+          "name": "[TC-12] Phone Number Triggers PII Warning",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-12: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-12: PII detected', () => pm.expect(data.personalInfoWarning.detected).to.be.true);",
+            "pm.test('TC-12: Type = เบอร์โทรศัพท์', () => pm.expect(data.personalInfoWarning.types).to.include('เบอร์โทรศัพท์'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"โทรหาผมได้เลยครับ 0812345678\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-13] Email Address Triggers PII Warning",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-13: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-13: PII detected', () => pm.expect(data.personalInfoWarning.detected).to.be.true);",
+            "pm.test('TC-13: Type = อีเมล', () => pm.expect(data.personalInfoWarning.types).to.include('อีเมล'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"ติดต่อผมที่ myemail@gmail.com ได้เลยครับ\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-14] LINE ID Triggers PII Warning",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-14: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-14: PII detected', () => pm.expect(data.personalInfoWarning.detected).to.be.true);",
+            "pm.test('TC-14: Type = LINE ID', () => pm.expect(data.personalInfoWarning.types).to.include('LINE ID'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"แอดไลน์ผมได้เลยนะครับ line: mylineid123\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-15] Thai Address Triggers PII Warning",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-15: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-15: PII detected', () => pm.expect(data.personalInfoWarning.detected).to.be.true);",
+            "pm.test('TC-15: Type = ที่อยู่', () => pm.expect(data.personalInfoWarning.types).to.include('ที่อยู่'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"บ้านผมอยู่ซอยลาดพร้าว 71 แขวงลาดพร้าว เขตลาดพร้าว กรุงเทพ\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-16] National ID 13 Digits Triggers PII Warning",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-16: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-16: PII detected', () => pm.expect(data.personalInfoWarning.detected).to.be.true);",
+            "pm.test('TC-16: Type = เลขบัตรประชาชน', () => pm.expect(data.personalInfoWarning.types).to.include('เลขบัตรประชาชน'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"เลขบัตรประชาชนผม 1234567890123 ครับ\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-17] Facebook Triggers PII Warning",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-17: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-17: PII detected', () => pm.expect(data.personalInfoWarning.detected).to.be.true);",
+            "pm.test('TC-17: Type = Facebook', () => pm.expect(data.personalInfoWarning.types).to.include('Facebook'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"inbox มาหาผมบน facebook: john.driver ได้เลยนะครับ\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-18] Bank Account Number Triggers PII Warning",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-18: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-18: PII detected', () => pm.expect(data.personalInfoWarning.detected).to.be.true);",
+            "pm.test('TC-18: Type = เลขบัญชีธนาคาร', () => pm.expect(data.personalInfoWarning.types).to.include('เลขบัญชีธนาคาร'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"โอนเงินให้ผมที่บัญชีกสิกร 123-4-56789-0 ครับ\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-19] URL Link Triggers PII Warning",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-19: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-19: PII detected', () => pm.expect(data.personalInfoWarning.detected).to.be.true);",
+            "pm.test('TC-19: Type = ลิงก์/URL', () => pm.expect(data.personalInfoWarning.types).to.include('ลิงก์/URL'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"ดูรายละเอียดได้ที่ https://maps.example.com/route/123\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-20] Obfuscated Phone Number (dots) Triggers PII Warning",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-20: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-20: PII detected (obfuscated phone)', () => pm.expect(data.personalInfoWarning.detected).to.be.true);",
+            "pm.test('TC-20: Type = เบอร์โทรศัพท์', () => pm.expect(data.personalInfoWarning.types).to.include('เบอร์โทรศัพท์'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"โทรได้เลย 08.1.2.3.4.5.6.7.8 ครับ\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-21] Thai Zip Code Triggers PII Warning",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-21: Status 201', () => pm.response.to.have.status(201));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-21: PII detected (zip code)', () => pm.expect(data.personalInfoWarning.detected).to.be.true);",
+            "pm.test('TC-21: Type = ที่อยู่', () => pm.expect(data.personalInfoWarning.types).to.include('ที่อยู่'));"
+          ]}}],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"content\": \"ส่งพัสดุมาได้ที่บ้านผม รหัสไปรษณีย์ 10900 ครับ\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Get Messages",
+      "item": [
+        {
+          "name": "[TC-22] Passenger Gets Message List — No Personal Info in Response",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-22: Status 200', () => pm.response.to.have.status(200));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-22: Has messages array', () => pm.expect(data).to.have.property('messages'));",
+            "pm.test('TC-22: Messages do not expose personal info fields', () => {",
+            "    data.messages.forEach(msg => {",
+            "        pm.expect(msg).to.not.have.property('senderEmail');",
+            "        pm.expect(msg).to.not.have.property('senderPhone');",
+            "        pm.expect(msg).to.not.have.property('senderRealName');",
+            "    });",
+            "});"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-23] Get Messages with Pagination (limit=5)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-23: Status 200', () => pm.response.to.have.status(200));",
+            "const msgs = pm.response.json().data.messages;",
+            "pm.test('TC-23: Returns at most 5 messages', () => pm.expect(msgs.length).to.be.at.most(5));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages?page=1&limit=5", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"], "query": [{ "key": "page", "value": "1" }, { "key": "limit", "value": "5" }] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-24] Get Messages Without Token — 401",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-24: Status 401', () => pm.response.to.have.status(401));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages"] }
+          }, "response": []
+        }
+      ]
+    },
+
+    {
+      "name": "Unread Count & Mark as Read",
+      "item": [
+        {
+          "name": "[TC-25] Driver Gets Unread Message Count — 200",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-25: Status 200', () => pm.response.to.have.status(200));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-25: Has unreadCount >= 0', () => pm.expect(data.unreadCount).to.be.at.least(0));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/unread-count", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages","unread-count"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-26] Passenger Marks All Messages as Read — 200",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-26: Status 200', () => pm.response.to.have.status(200));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-26: Has count >= 0', () => pm.expect(data.count).to.be.at.least(0));"
+          ]}}],
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/read-all", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages","read-all"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-27] After Mark All Read — Unread Count = 0 for Passenger",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-27: Status 200', () => pm.response.to.have.status(200));",
+            "const data = pm.response.json().data;",
+            "pm.test('TC-27: unreadCount = 0 after mark all read', () => pm.expect(data.unreadCount).to.eql(0));"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/unread-count", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages","unread-count"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-28] Driver Marks Single Message as Read — 200",
+          "event": [
+            { "listen": "pre-request", "script": { "type": "text/javascript", "exec": [
+              "// Passenger sends a message first to get a fresh messageId",
+              "const req = {",
+              "    url: pm.collectionVariables.get('baseUrl') + '/api/bookings/' + pm.collectionVariables.get('bookingId') + '/messages',",
+              "    method: 'POST',",
+              "    header: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + pm.collectionVariables.get('passengerToken') },",
+              "    body: { mode: 'raw', raw: JSON.stringify({ content: 'ข้อความทดสอบสำหรับ mark read' }) }",
+              "};",
+              "pm.sendRequest(req, (err, res) => {",
+              "    pm.collectionVariables.set('freshMessageId', res.json().data.id);",
+              "});"
+            ]}},
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('TC-28: Status 200', () => pm.response.to.have.status(200));",
+              "const data = pm.response.json().data;",
+              "pm.test('TC-28: readAt is not null', () => pm.expect(data.readAt).to.not.be.null);"
+            ]}}
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/{{freshMessageId}}/read", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages","{{freshMessageId}}","read"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-29] Cannot Mark Own Message as Read — 400",
+          "event": [
+            { "listen": "pre-request", "script": { "type": "text/javascript", "exec": [
+              "// Driver sends a message, then tries to mark it as read themselves",
+              "const req = {",
+              "    url: pm.collectionVariables.get('baseUrl') + '/api/bookings/' + pm.collectionVariables.get('bookingId') + '/messages',",
+              "    method: 'POST',",
+              "    header: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + pm.collectionVariables.get('driverToken') },",
+              "    body: { mode: 'raw', raw: JSON.stringify({ content: 'ข้อความที่จะ mark ตัวเอง' }) }",
+              "};",
+              "pm.sendRequest(req, (err, res) => {",
+              "    pm.collectionVariables.set('ownMessageId', res.json().data.id);",
+              "});"
+            ]}},
+            { "listen": "test", "script": { "type": "text/javascript", "exec": [
+              "pm.test('TC-29: Status 400 — cannot mark own message', () => pm.response.to.have.status(400));"
+            ]}}
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{driverToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/{{ownMessageId}}/read", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages","{{ownMessageId}}","read"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-30] Mark Read Without Token — 401",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-30: Status 401', () => pm.response.to.have.status(401));"
+          ]}}],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/messages/{{messageId}}/read", "host": ["{{baseUrl}}"], "path": ["api","bookings","{{bookingId}}","messages","{{messageId}}","read"] }
+          }, "response": []
+        },
+        {
+          "name": "[TC-31] Access Chat with Non-existent Booking ID — 404",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('TC-31: Status 404 or 400', () => {",
+            "    pm.expect([400, 404]).to.include(pm.response.code);",
+            "});"
+          ]}}],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{passengerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/bookings/clzzzzzzzzzzzzzzzzzzzzzzzz/chat", "host": ["{{baseUrl}}"], "path": ["api","bookings","clzzzzzzzzzzzzzzzzzzzzzzzz","chat"] }
+          }, "response": []
+        }
+      ]
+    }
+
+  ]
+}

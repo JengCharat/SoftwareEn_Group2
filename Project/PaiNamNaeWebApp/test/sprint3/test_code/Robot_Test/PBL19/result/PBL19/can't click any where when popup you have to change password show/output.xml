@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.2 (Python 3.9.6 on darwin)" generated="2026-03-17T21:33:37.292502" rpa="false" schemaversion="5">
+<suite id="s1" name="UAT-PBL19-003" source="/Users/jengcharat/Desktop/softwareEN_real/SoftwareEn_Group2/Project/PaiNamNaeWebApp/test/sprint3/test_code/Robot_Test/PBL19/UAT-PBL19-003.robot">
+<test id="s1-t1" name="Check Password Expired Popup And Block Interaction" line="11">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:33:37.418048" level="INFO">Opening browser 'Chrome' to base url 'https://csse0269.cpkku.com/login'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2026-03-17T21:33:37.417869" elapsed="2.061520"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2026-03-17T21:33:39.480218" elapsed="0.365407"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>id=identifier</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-17T21:33:39.845918" elapsed="0.017953"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:33:39.864289" level="INFO">Typing text 'user17' into text field 'id=identifier'.</msg>
+<arg>id=identifier</arg>
+<arg>${USERNAME}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T21:33:39.864057" elapsed="0.116297"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:33:39.980832" level="INFO">Typing text 'user17user17' into text field 'id=password'.</msg>
+<arg>id=password</arg>
+<arg>${PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T21:33:39.980563" elapsed="0.043621"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:33:40.024538" level="INFO">Clicking button 'xpath=//button[@type='submit']'.</msg>
+<arg>xpath=//button[@type='submit']</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2026-03-17T21:33:40.024375" elapsed="0.047356"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>id=swal2-html-container</arg>
+<arg>10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-17T21:33:40.071915" elapsed="0.644404"/>
+</kw>
+<kw name="Element Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:33:40.735877" level="INFO">Element 'id=swal2-title' contains text 'Password หมดอายุ'.</msg>
+<arg>id=swal2-title</arg>
+<arg>Password หมดอายุ</arg>
+<doc>Verifies that element ``locator`` contains text ``expected``.</doc>
+<status status="PASS" start="2026-03-17T21:33:40.716700" elapsed="0.019406"/>
+</kw>
+<kw name="Element Should Contain" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:33:40.745474" level="INFO">Element 'id=swal2-html-container' contains text 'รหัสผ่านครบ 90 วันแล้ว กรุณาเปลี่ยนรหัสผ่าน'.</msg>
+<arg>id=swal2-html-container</arg>
+<arg>รหัสผ่านครบ 90 วันแล้ว กรุณาเปลี่ยนรหัสผ่าน</arg>
+<doc>Verifies that element ``locator`` contains text ``expected``.</doc>
+<status status="PASS" start="2026-03-17T21:33:40.736748" elapsed="0.008819"/>
+</kw>
+<kw name="Element Should Be Visible" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:33:40.758884" level="INFO">Element 'class=swal2-popup' is displayed.</msg>
+<arg>class=swal2-popup</arg>
+<doc>Verifies that the element identified by ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-17T21:33:40.745762" elapsed="0.013217"/>
+</kw>
+<kw name="Element Should Be Visible" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:33:40.768652" level="INFO">Element 'class=swal2-container' is displayed.</msg>
+<arg>class=swal2-container</arg>
+<doc>Verifies that the element identified by ``locator`` is visible.</doc>
+<status status="PASS" start="2026-03-17T21:33:40.759179" elapsed="0.009556"/>
+</kw>
+<kw name="Run Keyword And Expect Error" owner="BuiltIn">
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2026-03-17T21:33:40.769629" level="INFO">Clicking element 'id=identifier'.</msg>
+<msg time="2026-03-17T21:33:41.988873" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="selenium-screenshot-2.png"&gt;&lt;img src="selenium-screenshot-2.png" width="800px"&gt;&lt;/a&gt;</msg>
+<msg time="2026-03-17T21:33:41.989233" level="FAIL">ElementClickInterceptedException: Message: element click intercepted: Element &lt;input type="text" id="identifier" value="" required="" placeholder="กรอกชื่อผู้ใช้หรืออีเมล" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"&gt; is not clickable at point (960, 379). Other element would receive the click: &lt;div class="swal2-icon-content"&gt;...&lt;/div&gt;
+  (Session info: chrome=145.0.7632.160); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+0   chromedriver                        0x00000001031096b4 cxxbridge1$str$ptr + 3127600
+1   chromedriver                        0x0000000103101a50 cxxbridge1$str$ptr + 3095756
+2   chromedriver                        0x0000000102bde56c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 75432
+3   chromedriver                        0x0000000102c2d55c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 399000
+4   chromedriver                        0x0000000102c2ba84 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 392128
+5   chromedriver                        0x0000000102c297ec _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 383272
+6   chromedriver                        0x0000000102c28b8c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 380104
+7   chromedriver                        0x0000000102c1d7e0 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 334108
+8   chromedriver                        0x0000000102c1d25c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 332696
+9   chromedriver                        0x0000000102c66620 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 632668
+10  chromedriver                        0x0000000102c1bb9c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 326872
+11  chromedriver                        0x00000001030c8680 cxxbridge1$str$ptr + 2861308
+12  chromedriver                        0x00000001030cbdd4 cxxbridge1$str$ptr + 2875472
+13  chromedriver                        0x00000001030ada7c cxxbridge1$str$ptr + 2751736
+14  chromedriver                        0x00000001030cc658 cxxbridge1$str$ptr + 2877652
+15  chromedriver                        0x000000010309dffc cxxbridge1$str$ptr + 2687608
+16  chromedriver                        0x00000001030f0d78 cxxbridge1$str$ptr + 3026932
+17  chromedriver                        0x00000001030f0ef4 cxxbridge1$str$ptr + 3027312
+18  chromedriver                        0x00000001031016a8 cxxbridge1$str$ptr + 3094820
+19  libsystem_pthread.dylib             0x00000001883ddc0c _pthread_start + 136
+20  libsystem_pthread.dylib             0x00000001883d8b80 thread_start + 8
+</msg>
+<arg>id=identifier</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="FAIL" start="2026-03-17T21:33:40.769480" elapsed="1.227027">ElementClickInterceptedException: Message: element click intercepted: Element &lt;input type="text" id="identifier" value="" required="" placeholder="กรอกชื่อผู้ใช้หรืออีเมล" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"&gt; is not clickable at point (960, 379). Other element would receive the click: &lt;div class="swal2-icon-content"&gt;...&lt;/div&gt;
+  (Session info: chrome=145.0.7632.160); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+0   chromedriver                        0x00000001031096b4 cxxbridge1$str$ptr + 3127600
+1   chromedriver                        0x0000000103101a50 cxxbridge1$str$ptr + 3095756
+2   chromedriver                        0x0000000102bde56c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 75432
+3   chromedriver                        0x0000000102c2d55c _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 399000
+4   chromedriver                        0x0000000102c2ba84 _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 392128
+    [ Message content over the limit has been removed. ]
+... _RNvCsdExgN8vFLbb_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 326872
+11  chromedriver                        0x00000001030c8680 cxxbridge1$str$ptr + 2861308
+12  chromedriver                        0x00000001030cbdd4 cxxbridge1$str$ptr + 2875472
+13  chromedriver                        0x00000001030ada7c cxxbridge1$str$ptr + 2751736
+14  chromedriver                        0x00000001030cc658 cxxbridge1$str$ptr + 2877652
+15  chromedriver                        0x000000010309dffc cxxbridge1$str$ptr + 2687608
+16  chromedriver                        0x00000001030f0d78 cxxbridge1$str$ptr + 3026932
+17  chromedriver                        0x00000001030f0ef4 cxxbridge1$str$ptr + 3027312
+18  chromedriver                        0x00000001031016a8 cxxbridge1$str$ptr + 3094820
+19  libsystem_pthread.dylib             0x00000001883ddc0c _pthread_start + 136
+20  libsystem_pthread.dylib             0x00000001883d8b80 thread_start + 8</status>
+</kw>
+<arg>*ElementClickInterceptedException*</arg>
+<arg>Click Element</arg>
+<arg>id=identifier</arg>
+<doc>Runs the keyword and checks that the expected error occurred.</doc>
+<status status="PASS" start="2026-03-17T21:33:40.768961" elapsed="1.227887"/>
+</kw>
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2026-03-17T21:33:41.997002" elapsed="0.085846"/>
+</kw>
+<status status="PASS" start="2026-03-17T21:33:37.417170" elapsed="4.666102"/>
+</test>
+<status status="PASS" start="2026-03-17T21:33:37.293220" elapsed="4.790395"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="UAT-PBL19-003" id="s1" pass="1" fail="0" skip="0">UAT-PBL19-003</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

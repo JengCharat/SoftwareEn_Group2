@@ -1,0 +1,1187 @@
+{
+	"id": "9cd8bc7f-154d-49fd-b285-f308e4a669d3",
+	"name": "Chat API Tests — SC#10",
+	"timestamp": "2026-03-17T13:38:18.070Z",
+	"collection_id": "42521469-ffaea5ad-1d70-4ff3-a083-a645f43256de",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 57,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2026-03-17T13:38:13.939Z",
+	"totalFail": 8,
+	"results": [
+		{
+			"id": "c7c9ec89-4591-4a1b-93f2-2e0cae938243",
+			"name": "[TC-01] Login as Passenger",
+			"url": "http://10.198.200.88:3002/api/auth/login",
+			"time": 162,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-01: Status 200": true,
+				"TC-01: Has token": true
+			},
+			"testPassFailCounts": {
+				"TC-01: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-01: Has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				162
+			],
+			"allTests": [
+				{
+					"TC-01: Status 200": true,
+					"TC-01: Has token": true
+				}
+			]
+		},
+		{
+			"id": "7fa44ba6-cf53-4af8-b635-604ea094b176",
+			"name": "[TC-02] Login as Driver",
+			"url": "http://10.198.200.88:3002/api/auth/login",
+			"time": 156,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-02: Status 200": true,
+				"TC-02: Has token": true
+			},
+			"testPassFailCounts": {
+				"TC-02: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-02: Has token": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				156
+			],
+			"allTests": [
+				{
+					"TC-02: Status 200": true,
+					"TC-02: Has token": true
+				}
+			]
+		},
+		{
+			"id": "ac19e66c-4e8b-457a-93d5-9a4c137c87eb",
+			"name": "[TC-03] Get Confirmed Booking ID",
+			"url": "http://10.198.200.88:3002/api/bookings/my",
+			"time": 9,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"TC-03: Status 200": false,
+				"TC-03: WARNING — No confirmed booking found": true
+			},
+			"testPassFailCounts": {
+				"TC-03: Status 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-03: WARNING — No confirmed booking found": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"TC-03: Status 200": false,
+					"TC-03: WARNING — No confirmed booking found": true
+				}
+			]
+		},
+		{
+			"id": "1c183e65-5bd0-4a56-96ea-b06d9f7ac9dc",
+			"name": "[TC-04] Passenger Gets Chat Room — 200",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/chat",
+			"time": 29,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-04: Status 200": true,
+				"TC-04: Response has bookingId": true
+			},
+			"testPassFailCounts": {
+				"TC-04: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-04: Response has bookingId": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				29
+			],
+			"allTests": [
+				{
+					"TC-04: Status 200": true,
+					"TC-04: Response has bookingId": true
+				}
+			]
+		},
+		{
+			"id": "19f6f642-02de-4dce-bac9-eed510e7c991",
+			"name": "[TC-05] Unauthenticated Cannot Get Chat Room — 401",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/chat",
+			"time": 8,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-05: Status 401": true
+			},
+			"testPassFailCounts": {
+				"TC-05: Status 401": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"TC-05: Status 401": true
+				}
+			]
+		},
+		{
+			"id": "21a86bf4-d1b4-4f40-9046-2de243499d55",
+			"name": "[TC-06] Driver Sends Normal Message — 201",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 55,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-06: Status 201": true,
+				"TC-06: Has message id": true,
+				"TC-06: No PII warning (normal message)": true
+			},
+			"testPassFailCounts": {
+				"TC-06: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-06: Has message id": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-06: No PII warning (normal message)": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				55
+			],
+			"allTests": [
+				{
+					"TC-06: Status 201": true,
+					"TC-06: Has message id": true,
+					"TC-06: No PII warning (normal message)": true
+				}
+			]
+		},
+		{
+			"id": "1f03227f-1c5a-40bd-a3a4-33156fd1e1d5",
+			"name": "[TC-07] Passenger Sends Normal Message — 201",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 44,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-07: Status 201": true,
+				"TC-07: senderRole = PASSENGER": true
+			},
+			"testPassFailCounts": {
+				"TC-07: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-07: senderRole = PASSENGER": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				44
+			],
+			"allTests": [
+				{
+					"TC-07: Status 201": true,
+					"TC-07: senderRole = PASSENGER": true
+				}
+			]
+		},
+		{
+			"id": "1ba408cf-6f84-4b66-948c-d6e4e94cebe2",
+			"name": "[TC-08] Send Message Without Token — 401",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 8,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-08: Status 401": true
+			},
+			"testPassFailCounts": {
+				"TC-08: Status 401": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"TC-08: Status 401": true
+				}
+			]
+		},
+		{
+			"id": "af365517-d3ec-4148-9306-84149befe64c",
+			"name": "[TC-09] Send Empty Message — 400",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 10,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"TC-09: Status 400": true
+			},
+			"testPassFailCounts": {
+				"TC-09: Status 400": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				10
+			],
+			"allTests": [
+				{
+					"TC-09: Status 400": true
+				}
+			]
+		},
+		{
+			"id": "a0c63d50-c39e-4504-81a4-3ba843215c96",
+			"name": "[TC-10] Send Message Over 1000 Characters — 400",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 38,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-10: Status 400": false
+			},
+			"testPassFailCounts": {
+				"TC-10: Status 400": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				38
+			],
+			"allTests": [
+				{
+					"TC-10: Status 400": false
+				}
+			]
+		},
+		{
+			"id": "e8935fcf-b4ae-483f-8b61-cf15d99dd4f2",
+			"name": "[TC-11] Third Party Cannot Send Message — 403",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 10,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-11: Status 403": false
+			},
+			"testPassFailCounts": {
+				"TC-11: Status 403": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				10
+			],
+			"allTests": [
+				{
+					"TC-11: Status 403": false
+				}
+			]
+		},
+		{
+			"id": "fc587cae-39a2-4981-8e10-99c46bf7cf98",
+			"name": "[TC-12] Phone Number Triggers PII Warning",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 37,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-12: Status 201": true,
+				"TC-12: PII detected": true,
+				"TC-12: Type = เบอร์โทรศัพท์": true
+			},
+			"testPassFailCounts": {
+				"TC-12: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-12: PII detected": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-12: Type = เบอร์โทรศัพท์": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				37
+			],
+			"allTests": [
+				{
+					"TC-12: Status 201": true,
+					"TC-12: PII detected": true,
+					"TC-12: Type = เบอร์โทรศัพท์": true
+				}
+			]
+		},
+		{
+			"id": "db6967ba-51e5-420c-aebe-857b7bec072a",
+			"name": "[TC-13] Email Address Triggers PII Warning",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 34,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-13: Status 201": true,
+				"TC-13: PII detected": true,
+				"TC-13: Type = อีเมล": true
+			},
+			"testPassFailCounts": {
+				"TC-13: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-13: PII detected": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-13: Type = อีเมล": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				34
+			],
+			"allTests": [
+				{
+					"TC-13: Status 201": true,
+					"TC-13: PII detected": true,
+					"TC-13: Type = อีเมล": true
+				}
+			]
+		},
+		{
+			"id": "ba4ba21c-8bab-4058-b977-490adc91f6d0",
+			"name": "[TC-14] LINE ID Triggers PII Warning",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 36,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-14: Status 201": true,
+				"TC-14: PII detected": true,
+				"TC-14: Type = LINE ID": true
+			},
+			"testPassFailCounts": {
+				"TC-14: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-14: PII detected": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-14: Type = LINE ID": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				36
+			],
+			"allTests": [
+				{
+					"TC-14: Status 201": true,
+					"TC-14: PII detected": true,
+					"TC-14: Type = LINE ID": true
+				}
+			]
+		},
+		{
+			"id": "0a9c66c8-8171-483f-8178-14a299cb3040",
+			"name": "[TC-15] Thai Address Triggers PII Warning",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 34,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-15: Status 201": true,
+				"TC-15: PII detected": true,
+				"TC-15: Type = ที่อยู่": true
+			},
+			"testPassFailCounts": {
+				"TC-15: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-15: PII detected": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-15: Type = ที่อยู่": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				34
+			],
+			"allTests": [
+				{
+					"TC-15: Status 201": true,
+					"TC-15: PII detected": true,
+					"TC-15: Type = ที่อยู่": true
+				}
+			]
+		},
+		{
+			"id": "fa5df9f4-4d17-48db-a149-ea63d28aa074",
+			"name": "[TC-16] National ID 13 Digits Triggers PII Warning",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 36,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-16: Status 201": true,
+				"TC-16: PII detected": true,
+				"TC-16: Type = เลขบัตรประชาชน": true
+			},
+			"testPassFailCounts": {
+				"TC-16: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-16: PII detected": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-16: Type = เลขบัตรประชาชน": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				36
+			],
+			"allTests": [
+				{
+					"TC-16: Status 201": true,
+					"TC-16: PII detected": true,
+					"TC-16: Type = เลขบัตรประชาชน": true
+				}
+			]
+		},
+		{
+			"id": "22c5c996-51bb-4168-8f7e-921770407554",
+			"name": "[TC-17] Facebook Triggers PII Warning",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 35,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-17: Status 201": true,
+				"TC-17: PII detected": true,
+				"TC-17: Type = Facebook": true
+			},
+			"testPassFailCounts": {
+				"TC-17: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-17: PII detected": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-17: Type = Facebook": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				35
+			],
+			"allTests": [
+				{
+					"TC-17: Status 201": true,
+					"TC-17: PII detected": true,
+					"TC-17: Type = Facebook": true
+				}
+			]
+		},
+		{
+			"id": "7416387c-aaaa-4b37-8714-ad3d2f8c40cf",
+			"name": "[TC-18] Bank Account Number Triggers PII Warning",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 34,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-18: Status 201": true,
+				"TC-18: PII detected": true,
+				"TC-18: Type = เลขบัญชีธนาคาร": true
+			},
+			"testPassFailCounts": {
+				"TC-18: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-18: PII detected": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-18: Type = เลขบัญชีธนาคาร": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				34
+			],
+			"allTests": [
+				{
+					"TC-18: Status 201": true,
+					"TC-18: PII detected": true,
+					"TC-18: Type = เลขบัญชีธนาคาร": true
+				}
+			]
+		},
+		{
+			"id": "30bb0ca1-0ff8-4e66-9667-f2e019369a00",
+			"name": "[TC-19] URL Link Triggers PII Warning",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 35,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-19: Status 201": true,
+				"TC-19: PII detected": true,
+				"TC-19: Type = ลิงก์/URL": true
+			},
+			"testPassFailCounts": {
+				"TC-19: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-19: PII detected": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-19: Type = ลิงก์/URL": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				35
+			],
+			"allTests": [
+				{
+					"TC-19: Status 201": true,
+					"TC-19: PII detected": true,
+					"TC-19: Type = ลิงก์/URL": true
+				}
+			]
+		},
+		{
+			"id": "f5f823ef-0070-4710-a1d2-de48ce77d67b",
+			"name": "[TC-20] Obfuscated Phone Number (dots) Triggers PII Warning",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 42,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-20: Status 201": true,
+				"TC-20: PII detected (obfuscated phone)": true,
+				"TC-20: Type = เบอร์โทรศัพท์": true
+			},
+			"testPassFailCounts": {
+				"TC-20: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-20: PII detected (obfuscated phone)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-20: Type = เบอร์โทรศัพท์": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				42
+			],
+			"allTests": [
+				{
+					"TC-20: Status 201": true,
+					"TC-20: PII detected (obfuscated phone)": true,
+					"TC-20: Type = เบอร์โทรศัพท์": true
+				}
+			]
+		},
+		{
+			"id": "ff45ed4f-722a-4a5a-825a-e8fae3daf863",
+			"name": "[TC-21] Thai Zip Code Triggers PII Warning",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 34,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"TC-21: Status 201": true,
+				"TC-21: PII detected (zip code)": true,
+				"TC-21: Type = ที่อยู่": true
+			},
+			"testPassFailCounts": {
+				"TC-21: Status 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-21: PII detected (zip code)": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-21: Type = ที่อยู่": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				34
+			],
+			"allTests": [
+				{
+					"TC-21: Status 201": true,
+					"TC-21: PII detected (zip code)": true,
+					"TC-21: Type = ที่อยู่": true
+				}
+			]
+		},
+		{
+			"id": "f54f3c1b-a239-4c42-bf56-ee9944fdcb1d",
+			"name": "[TC-22] Passenger Gets Message List — No Personal Info in Response",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 24,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-22: Status 200": true,
+				"TC-22: Has messages array": false,
+				"TC-22: Messages do not expose personal info fields": false
+			},
+			"testPassFailCounts": {
+				"TC-22: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-22: Has messages array": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-22: Messages do not expose personal info fields": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				24
+			],
+			"allTests": [
+				{
+					"TC-22: Status 200": true,
+					"TC-22: Has messages array": false,
+					"TC-22: Messages do not expose personal info fields": false
+				}
+			]
+		},
+		{
+			"id": "05d0711d-7079-4207-8950-f8a1c036a298",
+			"name": "[TC-23] Get Messages with Pagination (limit=5)",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages?page=1&limit=5",
+			"time": 20,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-23: Status 200": true,
+				"TC-23: Returns at most 5 messages": false
+			},
+			"testPassFailCounts": {
+				"TC-23: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-23: Returns at most 5 messages": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				20
+			],
+			"allTests": [
+				{
+					"TC-23: Status 200": true,
+					"TC-23: Returns at most 5 messages": false
+				}
+			]
+		},
+		{
+			"id": "1dc36bfc-9ee1-470d-976a-9c0090622424",
+			"name": "[TC-24] Get Messages Without Token — 401",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages",
+			"time": 8,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-24: Status 401": true
+			},
+			"testPassFailCounts": {
+				"TC-24: Status 401": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"TC-24: Status 401": true
+				}
+			]
+		},
+		{
+			"id": "ae4977fa-efde-4779-955c-3dd09d15a38c",
+			"name": "[TC-25] Driver Gets Unread Message Count — 200",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages/unread-count",
+			"time": 16,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-25: Status 200": true,
+				"TC-25: Has unreadCount >= 0": true
+			},
+			"testPassFailCounts": {
+				"TC-25: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-25: Has unreadCount >= 0": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				16
+			],
+			"allTests": [
+				{
+					"TC-25: Status 200": true,
+					"TC-25: Has unreadCount >= 0": true
+				}
+			]
+		},
+		{
+			"id": "3daef079-fb5f-41b3-9af4-f01f2b918a96",
+			"name": "[TC-26] Passenger Marks All Messages as Read — 200",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages/read-all",
+			"time": 26,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-26: Status 200": true,
+				"TC-26: Has count >= 0": true
+			},
+			"testPassFailCounts": {
+				"TC-26: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-26: Has count >= 0": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				26
+			],
+			"allTests": [
+				{
+					"TC-26: Status 200": true,
+					"TC-26: Has count >= 0": true
+				}
+			]
+		},
+		{
+			"id": "784062b6-560a-4e5b-b4a5-00fc7f21c2d0",
+			"name": "[TC-27] After Mark All Read — Unread Count = 0 for Passenger",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages/unread-count",
+			"time": 18,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"TC-27: Status 200": true,
+				"TC-27: unreadCount = 0 after mark all read": true
+			},
+			"testPassFailCounts": {
+				"TC-27: Status 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"TC-27: unreadCount = 0 after mark all read": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				18
+			],
+			"allTests": [
+				{
+					"TC-27: Status 200": true,
+					"TC-27: unreadCount = 0 after mark all read": true
+				}
+			]
+		},
+		{
+			"id": "afb38f2d-077d-425f-8ec5-0021fcef572b",
+			"name": "[TC-28] Driver Marks Single Message as Read — 200",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages/{{freshMessageId}}/read",
+			"time": 10,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"TC-28: Status 200": false,
+				"TC-28: readAt is not null": false
+			},
+			"testPassFailCounts": {
+				"TC-28: Status 200": {
+					"pass": 0,
+					"fail": 1
+				},
+				"TC-28: readAt is not null": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				10
+			],
+			"allTests": [
+				{
+					"TC-28: Status 200": false,
+					"TC-28: readAt is not null": false
+				}
+			]
+		},
+		{
+			"id": "10504f8f-42e5-43bf-bd7f-77df0d77b480",
+			"name": "[TC-29] Cannot Mark Own Message as Read — 400",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages/{{ownMessageId}}/read",
+			"time": 10,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"TC-29: Status 400 — cannot mark own message": true
+			},
+			"testPassFailCounts": {
+				"TC-29: Status 400 — cannot mark own message": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				10
+			],
+			"allTests": [
+				{
+					"TC-29: Status 400 — cannot mark own message": true
+				}
+			]
+		},
+		{
+			"id": "cc2c02f7-27d3-449e-acf1-e4d2f25b956f",
+			"name": "[TC-30] Mark Read Without Token — 401",
+			"url": "http://10.198.200.88:3002/api/bookings/cmmuch9cl007uz40cbbikojjc/messages/cmmunrbni0059eesq6xncxbnl/read",
+			"time": 8,
+			"responseCode": {
+				"code": 401,
+				"name": "Unauthorized"
+			},
+			"tests": {
+				"TC-30: Status 401": true
+			},
+			"testPassFailCounts": {
+				"TC-30: Status 401": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"TC-30: Status 401": true
+				}
+			]
+		},
+		{
+			"id": "52b1d36a-f18c-45d6-8507-8e2a78644dbe",
+			"name": "[TC-31] Access Chat with Non-existent Booking ID — 404",
+			"url": "http://10.198.200.88:3002/api/bookings/clzzzzzzzzzzzzzzzzzzzzzzzz/chat",
+			"time": 14,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"TC-31: Status 404 or 400": true
+			},
+			"testPassFailCounts": {
+				"TC-31: Status 404 or 400": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				14
+			],
+			"allTests": [
+				{
+					"TC-31: Status 404 or 400": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 1040,
+	"collection": {
+		"requests": [
+			{
+				"id": "c7c9ec89-4591-4a1b-93f2-2e0cae938243",
+				"method": "POST"
+			},
+			{
+				"id": "7fa44ba6-cf53-4af8-b635-604ea094b176",
+				"method": "POST"
+			},
+			{
+				"id": "ac19e66c-4e8b-457a-93d5-9a4c137c87eb",
+				"method": "GET"
+			},
+			{
+				"id": "1c183e65-5bd0-4a56-96ea-b06d9f7ac9dc",
+				"method": "GET"
+			},
+			{
+				"id": "19f6f642-02de-4dce-bac9-eed510e7c991",
+				"method": "GET"
+			},
+			{
+				"id": "21a86bf4-d1b4-4f40-9046-2de243499d55",
+				"method": "POST"
+			},
+			{
+				"id": "1f03227f-1c5a-40bd-a3a4-33156fd1e1d5",
+				"method": "POST"
+			},
+			{
+				"id": "1ba408cf-6f84-4b66-948c-d6e4e94cebe2",
+				"method": "POST"
+			},
+			{
+				"id": "af365517-d3ec-4148-9306-84149befe64c",
+				"method": "POST"
+			},
+			{
+				"id": "a0c63d50-c39e-4504-81a4-3ba843215c96",
+				"method": "POST"
+			},
+			{
+				"id": "e8935fcf-b4ae-483f-8b61-cf15d99dd4f2",
+				"method": "POST"
+			},
+			{
+				"id": "fc587cae-39a2-4981-8e10-99c46bf7cf98",
+				"method": "POST"
+			},
+			{
+				"id": "db6967ba-51e5-420c-aebe-857b7bec072a",
+				"method": "POST"
+			},
+			{
+				"id": "ba4ba21c-8bab-4058-b977-490adc91f6d0",
+				"method": "POST"
+			},
+			{
+				"id": "0a9c66c8-8171-483f-8178-14a299cb3040",
+				"method": "POST"
+			},
+			{
+				"id": "fa5df9f4-4d17-48db-a149-ea63d28aa074",
+				"method": "POST"
+			},
+			{
+				"id": "22c5c996-51bb-4168-8f7e-921770407554",
+				"method": "POST"
+			},
+			{
+				"id": "7416387c-aaaa-4b37-8714-ad3d2f8c40cf",
+				"method": "POST"
+			},
+			{
+				"id": "30bb0ca1-0ff8-4e66-9667-f2e019369a00",
+				"method": "POST"
+			},
+			{
+				"id": "f5f823ef-0070-4710-a1d2-de48ce77d67b",
+				"method": "POST"
+			},
+			{
+				"id": "ff45ed4f-722a-4a5a-825a-e8fae3daf863",
+				"method": "POST"
+			},
+			{
+				"id": "f54f3c1b-a239-4c42-bf56-ee9944fdcb1d",
+				"method": "GET"
+			},
+			{
+				"id": "05d0711d-7079-4207-8950-f8a1c036a298",
+				"method": "GET"
+			},
+			{
+				"id": "1dc36bfc-9ee1-470d-976a-9c0090622424",
+				"method": "GET"
+			},
+			{
+				"id": "ae4977fa-efde-4779-955c-3dd09d15a38c",
+				"method": "GET"
+			},
+			{
+				"id": "3daef079-fb5f-41b3-9af4-f01f2b918a96",
+				"method": "PATCH"
+			},
+			{
+				"id": "784062b6-560a-4e5b-b4a5-00fc7f21c2d0",
+				"method": "GET"
+			},
+			{
+				"id": "afb38f2d-077d-425f-8ec5-0021fcef572b",
+				"method": "PATCH"
+			},
+			{
+				"id": "10504f8f-42e5-43bf-bd7f-77df0d77b480",
+				"method": "PATCH"
+			},
+			{
+				"id": "cc2c02f7-27d3-449e-acf1-e4d2f25b956f",
+				"method": "PATCH"
+			},
+			{
+				"id": "52b1d36a-f18c-45d6-8507-8e2a78644dbe",
+				"method": "GET"
+			}
+		]
+	}
+}
