@@ -2,6 +2,7 @@ const prisma = require("../utils/prisma");
 const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcrypt");
 const { sendEmail } = require('../utils/email');
+const { isCommonPassword } = require('../utils/commonPasswords');
 
 const SALT_ROUNDS = 10;
 
@@ -205,6 +206,17 @@ const updatePassword = async (userId, currentPassword, newPassword) => {
 
   if (!isPasswordCorrect) {
     return { success: false, error: "INCORRECT_PASSWORD" };
+  }
+
+  // ตรวจสอบว่า newPassword ไม่ใช่ anagram (สลับตำแหน่ง) ของ currentPassword
+  const sortChars = (str) => str.toLowerCase().split('').sort().join('');
+  if (sortChars(currentPassword) === sortChars(newPassword)) {
+    return { success: false, error: "PASSWORD_IS_PERMUTATION" };
+  }
+
+  // ตรวจสอบ NCSC UK word list
+  if (isCommonPassword(newPassword)) {
+    return { success: false, error: "PASSWORD_TOO_COMMON" };
   }
 
   const hashedNewPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);

@@ -78,19 +78,24 @@ const COMMON_PASSWORDS = new Set([
 
 /**
  * ตรวจสอบว่ารหัสผ่านที่กรอกอยู่ใน word list ที่ใช้ Brute Force หรือไม่
- * - Exact match: ตรวจทุกคำใน list
- * - Substring match: ตรวจคำที่ยาว >= 5 ตัวอักษร
- *   (ป้องกัน aaaaaa x2, aaaaaaaaaaaa ฯลฯ)
+ * - Exact match: ทุกคำใน list
+ * - Substring match: เฉพาะคำที่ยาว >= 5 ตัว **และรหัสผ่านไม่ใช่ passphrase** (ไม่มี - คั่น)
+ *   เหตุผล: passphrase เช่น summer-coffee-pizza มีความปลอดภัยจาก combination entropy
+ *   ไม่ใช่ความหายากของแต่ละคำ การ block substring บน passphrase จะทำให้ระบบสุ่มใช้ไม่ได้
  * @param {string} password
  * @returns {boolean} คืนค่า true ถ้าอยู่ใน list หรือ มีคำใน list (อันตราย)
  */
 export function isCommonPassword(password) {
   if (!password) return false;
   const lower = password.toLowerCase();
-  for (const word of COMMON_PASSWORDS) {
-    // exact match ทุกคำ หรือ substring match เฉพาะคำที่ยาว >= 5 ตัว
-    if (lower === word) return true;
-    if (word.length >= 5 && lower.includes(word)) return true;
+  // Exact match ก่อน (O(1))
+  if (COMMON_PASSWORDS.has(lower)) return true;
+  // Substring match: ข้ามถ้าเป็น passphrase (มี - คั่นคำ) เพราะความปลอดภัยมาจาก combination
+  const isPassphrase = lower.includes('-');
+  if (!isPassphrase) {
+    for (const word of COMMON_PASSWORDS) {
+      if (word.length >= 5 && lower.includes(word)) return true;
+    }
   }
   return false;
 }

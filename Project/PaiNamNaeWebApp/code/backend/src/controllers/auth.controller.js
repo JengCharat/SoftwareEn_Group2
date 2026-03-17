@@ -137,6 +137,12 @@ const changePassword = asyncHandler(async (req, res) => {
     if (result.error === "INCORRECT_PASSWORD") {
       throw new ApiError(401, "Incorrect current password.");
     }
+    if (result.error === "PASSWORD_IS_PERMUTATION") {
+      throw new ApiError(400, "New password must not be a rearrangement of the current password.");
+    }
+    if (result.error === "PASSWORD_TOO_COMMON") {
+      throw new ApiError(400, "New password is in the common brute-force word list (NCSC UK). Please choose a longer or more unique password.");
+    }
     throw new ApiError(500, "Could not update password.");
   }
 

@@ -202,6 +202,7 @@ import 'dayjs/locale/th'
 
 
 import { generate } from "random-words"
+import { isCommonPassword } from '~/utils/commonPasswords';
 
 
 dayjs.locale('th')
@@ -232,6 +233,12 @@ const fileInput = ref(null)
 const previewUrl = ref('')
 const isLoading = ref(false)
 const showNameWarning = ref(false);
+
+// ตรวจสอบว่า a และ b เป็น anagram (สลับตำแหน่งตัวอักษรกัน) หรือไม่
+const isPermutation = (a, b) => {
+    const sort = (str) => str.toLowerCase().split('').sort().join('');
+    return sort(a) === sort(b);
+};
 
 const form = reactive({
     firstName: '',
@@ -319,8 +326,14 @@ async function handleProfileUpdate() {
             if (form.newPassword !== form.confirmNewPassword) {
                 throw new Error("รหัสผ่านใหม่และการยืนยันรหัสผ่านไม่ตรงกัน");
             }
-            if (form.newPassword.length < 6) {
-                throw new Error("รหัสผ่านใหม่ต้องมีอย่างน้อย 6 ตัวอักษร");
+            if (form.newPassword.length < 10) {
+                throw new Error("รหัสผ่านใหม่ต้องมีอย่างน้อย 10 ตัวอักษร");
+            }
+            if (isPermutation(form.currentPassword, form.newPassword)) {
+                throw new Error("รหัสผ่านใหม่ต้องไม่เป็นการสลับตำแหน่งตัวอักษรของรหัสผ่านเดิม");
+            }
+            if (isCommonPassword(form.newPassword)) {
+                throw new Error("รหัสผ่านใหม่อยู่ใน word list ที่ใช้โจมตีบัญชีผู้ใช้ (NCSC UK) กรุณาตั้งรหัสผ่านที่ยาวกว่านี้หรือใช้ประโยค");
             }
 
             await $api('/auth/change-password', {
